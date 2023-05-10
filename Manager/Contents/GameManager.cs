@@ -1,0 +1,225 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+[Serializable]
+public class GameData
+{
+    public string Name;
+
+	public float Exp;
+
+	public int Level;
+    public int Hp;
+    public int MaxHp;
+    public int Mp;
+    public int MaxMp;
+    public int STR;
+    public int Speed;
+    public int LUK;
+
+    public int Gold;        // 골드 (게임 재화)
+
+    // 스킬 : 스킬 능력, 레벨, 흭득 횟수
+    // 등록된 스킬 : 스킬 능력
+    // 퀘스트 : 퀘스트 내용, 완료 보상, 클리어 유/무
+}
+
+// 컨텐츠에서 사용될 매니저 (플레이어, 몬스터 등..)
+public class GameManager
+{
+    GameObject _player;
+
+    HashSet<GameObject> _monsters = new HashSet<GameObject>();
+
+    public GameObject GetPlayer() { return _player; }
+
+    public Action<int> OnSpawnEvent;
+
+    GameData _gameData = new GameData();
+    public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
+
+    public string Name
+	{
+		get { return _gameData.Name; }
+		set { _gameData.Name = value; }
+	}
+
+    public float Exp
+	{
+		get { return _gameData.Exp; }
+		set { _gameData.Exp = value; RefreshStat(); }
+	}
+	
+	public int Level
+	{
+		get { return _gameData.Level; }
+		set { _gameData.Level = value; }
+	}
+
+    public int Hp
+	{
+		get { return _gameData.Hp; }
+		set { _gameData.Hp = Mathf.Clamp(value, 0, MaxHp); }
+	}
+
+    public int MaxHp
+	{
+		get { return _gameData.MaxHp; }
+		set { _gameData.MaxHp = value; }
+	}
+
+    public int Mp
+	{
+		get { return _gameData.Mp; }
+		set { _gameData.Mp = Mathf.Clamp(value, 0, MaxMp); }
+	}
+
+    public int MaxMp
+	{
+		get { return _gameData.MaxMp; }
+		set { _gameData.MaxMp = value; }
+	}
+
+    public int STR
+	{
+		get { return _gameData.STR; }
+		set { _gameData.STR = value; }
+	}
+
+    public int Speed
+	{
+		get { return _gameData.Speed; }
+		set { _gameData.Speed = value; }
+	}
+
+    public int LUK
+	{
+		get { return _gameData.LUK; }
+		set { _gameData.LUK = value; }
+	}
+
+    public int Gold
+	{
+		get { return _gameData.Gold; }
+		set { _gameData.Gold = value; }
+	}
+
+	public void RefreshStat()
+	{
+		if (Exp >= 100)
+		{
+			++Level;
+			Exp = 0;
+		}
+	}
+
+    public void Init()
+    {
+        // TODO (정리)
+        // Application.persistentDataPath을 변수 선언할때 바로 초기화하여 넣을 수 없음.
+        // 무조건 Awake, Start에서 넣어줘야 함.
+        _savePath = $"{Application.persistentDataPath}/SaveData.json";
+
+        // TODO : 데이터 넣으면 활성화
+		// StartData data = Managers.Data.Start;
+
+        // Name = "NoName";
+        // Exp = data.exp;
+		// Level = data.level;
+		// MaxHp = data.maxHp;
+		// Hp = MaxHp;
+        // MaxMp = data.maxMp;
+        // Mp = MaxMp;
+		// STR = data.STR;
+        // Speed = data.Speed;
+        // LUK = data.LUK;
+		
+		// Gold = data.gold;
+    }
+
+    // 캐릭터 소환
+    public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
+    {
+        GameObject go = Managers.Resource.Instantiate(path, parent);
+
+        switch(type){
+            case Define.WorldObject.Monster:
+                _monsters.Add(go);
+                if (OnSpawnEvent != null)
+                    OnSpawnEvent.Invoke(1);
+                break;
+            case Define.WorldObject.Player:
+                _player = go;
+                break;
+            default:
+                Debug.Log("GameManager : Null Type");
+                break;
+        }
+
+        return go;
+    }
+
+    // 타입 확인
+    public Define.WorldObject GetWorldObjectType(GameObject go)
+    {
+        BaseController bc = go.GetComponent<BaseController>();
+        if (bc == null)
+            return Define.WorldObject.Unknown;
+
+        return bc.WorldObjectType;
+    }
+
+    // 캐릭터 삭제
+    public void Despawn(GameObject go)
+    {
+        switch(GetWorldObjectType(go)){
+            case Define.WorldObject.Monster:
+                {
+                    if (_monsters.Contains(go)){ // 존재 여부 확인
+                        _monsters.Remove(go);
+                        if (OnSpawnEvent != null)
+                            OnSpawnEvent.Invoke(-1);
+                    }
+                }
+                break;
+            case Define.WorldObject.Player:
+                {
+                    if (_player == go)
+                        _player = null;
+                }
+                break;
+        }
+
+        Managers.Resource.Destroy(go);
+    }
+
+    #region Save & Load	
+	public string _savePath;
+
+	public void SaveGame()
+	{
+		string jsonStr = JsonUtility.ToJson(Managers.Game.SaveData);
+		File.WriteAllText(_savePath, jsonStr);
+		Debug.Log($"Save Game Completed : {_savePath}");
+	}
+
+	public bool LoadGame()
+	{
+		if (File.Exists(_savePath) == false)
+			return false;
+
+		string fileStr = File.ReadAllText(_savePath);
+		GameData data = JsonUtility.FromJson<GameData>(fileStr);
+		if (data != null)
+		{
+			Managers.Game.SaveData = data;
+		}
+
+		Debug.Log($"Save Game Loaded : {_savePath}");
+		return true;
+	}
+	#endregion
+}
