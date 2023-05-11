@@ -43,6 +43,8 @@ public class DataManager
         string[] lines = data.Split("\n");
         string[] row = lines[1].Replace("\r", "").Split(',');
 
+        Debug.Log("StartData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
+
         StartData startData = new StartData()
         {
             Id = int.Parse(row[0]),
@@ -51,7 +53,7 @@ public class DataManager
             maxHp = int.Parse(row[3]),
             maxMp = int.Parse(row[4]),
             STR = int.Parse(row[5]),
-            Speed = int.Parse(row[6]),
+            MoveSpeed = int.Parse(row[6]),
             LUK = int.Parse(row[7]),
         };
     }
@@ -61,9 +63,9 @@ public class DataManager
         Level = new Dictionary<int, LevelData>();
 
         string[] lines = data.Split("\n");
+        Debug.Log("LevelData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
         for(int y = 1; y < lines.Length; y++)
         {
-            Debug.Log(lines[y]);
             string[] row = lines[y].Replace("\r", "").Split(',');
             if (row.Length == 0)
 				continue;

@@ -11,7 +11,7 @@ public class StartData
     public int maxHp;
     public int maxMp;
     public int STR;
-    public int Speed;
+    public int MoveSpeed;
     public int LUK;
     public int gold;
 }

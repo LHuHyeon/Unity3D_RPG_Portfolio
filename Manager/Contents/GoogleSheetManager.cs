@@ -42,7 +42,7 @@ public class GoogleSheetManager
                 maxHp = int.Parse(row[3]),
                 maxMp = int.Parse(row[4]),
                 STR = int.Parse(row[5]),
-                Speed = int.Parse(row[6]),
+                MoveSpeed = int.Parse(row[6]),
                 LUK = int.Parse(row[7]),
             };
 

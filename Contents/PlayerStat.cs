@@ -55,7 +55,7 @@ public class PlayerStat : Stat
             _exp = startData.exp;
             _str = startData.STR;
             _luk = startData.LUK;
-            _movespeed = startData.Speed;
+            _movespeed = startData.MoveSpeed;
             _gold = startData.gold;
         }
         else

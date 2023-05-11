@@ -17,7 +17,7 @@ public class GameData
     public int Mp;
     public int MaxMp;
     public int STR;
-    public int Speed;
+    public int MoveSpeed;
     public int LUK;
     public int StatPoint;
     public int MaxStatPoint;
@@ -91,10 +91,10 @@ public class GameManager
 		set { _gameData.STR = value; }
 	}
 
-    public int Speed
+    public int MoveSpeed
 	{
-		get { return _gameData.Speed; }
-		set { _gameData.Speed = value; }
+		get { return _gameData.MoveSpeed; }
+		set { _gameData.MoveSpeed = value; }
 	}
 
     public int LUK
@@ -179,11 +179,13 @@ public class GameManager
             MaxMp = data.maxMp;
             Mp = MaxMp;
             STR = data.STR;
-            Speed = data.Speed;
+            MoveSpeed = data.MoveSpeed;
             LUK = data.LUK;
             
             Gold = data.gold;
         }
+
+        MoveSpeed = 5;
     }
 
     // 캐릭터 소환

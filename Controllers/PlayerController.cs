@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class PlayerController : BaseController
 {
-    PlayerStat _stat;   // 플레이어 스탯
-
     bool _stopAttack = true;   // 공격 가능 여부 
     bool _stopSkill = true;    // 스킬 가능 여부
+    bool _isDiveRoll = false;    // 구르기 여부
 
     // LayerMask 변수
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
@@ -23,7 +22,6 @@ public class PlayerController : BaseController
     {
         WorldObjectType = Define.WorldObject.Player;
         
-        _stat = gameObject.GetComponent<PlayerStat>();
         anim = GetComponent<Animator>();
 
         Managers.Input.KeyAction -= OnKeyEvent;
@@ -71,7 +69,7 @@ public class PlayerController : BaseController
                 return;
             }
 
-            float moveDist = Mathf.Clamp(_stat.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
+            float moveDist = Mathf.Clamp(Managers.Game.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
             
             transform.position += dir.normalized * moveDist;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
@@ -102,16 +100,17 @@ public class PlayerController : BaseController
 
     protected override void UpdateSkill()
     {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Skill") &&
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
+        if ((anim.GetCurrentAnimatorStateInfo(0).IsTag("Skill") &&
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f) ||
+            _isDiveRoll == true)
         {
+            skillEffect1.SetActive(false);
+            skillEffect2.SetActive(false);
+
             if (_destPos == transform.position)
                 State = Define.State.Idle;
             else
                 State = Define.State.Moving;
-
-            skillEffect1.SetActive(false);
-            skillEffect2.SetActive(false);
         }
     }
 
@@ -186,6 +185,9 @@ public class PlayerController : BaseController
             // 마우스를 클릭했을 때 [ 클릭한 위치로 이동 ]
             case Define.MouseEvent.RightDown:
                 {
+                    if (_isDiveRoll == true)
+                        return;
+
                     _destPos = hit.point;   // 해당 좌표 저장
                     if (raycastHit && _stopAttack)
                     {
@@ -228,13 +230,35 @@ public class PlayerController : BaseController
     void OnKeyEvent()
     {
         OnSkill();
+        OnDiveRoll();
+    }
+
+    void OnDiveRoll()
+    {
+        if (_isDiveRoll == true &&
+            anim.GetCurrentAnimatorStateInfo(0).IsName("DIVEROLL") &&
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
+        {
+            _isDiveRoll = false;
+            Managers.Game.MoveSpeed = 5;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && _isDiveRoll == false)
+        {
+            _isDiveRoll = true;
+            State = Define.State.Moving;
+            anim.CrossFade("DIVEROLL", 0.1f, -1, 0);
+            Managers.Game.MoveSpeed = 8;
+            skillEffect1.SetActive(false);
+            skillEffect2.SetActive(false);
+        }
     }
 
     // 스킬 사용
     void OnSkill()
     {
         // TODO : 스킬 관리코드 구현 (확장성)
-        if (State == Define.State.Skill)
+        if (State == Define.State.Skill || _isDiveRoll == true)
             return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
