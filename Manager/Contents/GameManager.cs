@@ -19,6 +19,8 @@ public class GameData
     public int STR;
     public int Speed;
     public int LUK;
+    public int StatPoint;
+    public int MaxStatPoint;
 
     public int Gold;        // 골드 (게임 재화)
 
@@ -50,7 +52,7 @@ public class GameManager
     public float Exp
 	{
 		get { return _gameData.Exp; }
-		set { _gameData.Exp = value; RefreshStat(); }
+		set { _gameData.Exp = value; RefreshExp(); }
 	}
 	
 	public int Level
@@ -107,37 +109,81 @@ public class GameManager
 		set { _gameData.Gold = value; }
 	}
 
-	public void RefreshStat()
+    public int StatPoint
 	{
-		if (Exp >= 100)
-		{
-			++Level;
-			Exp = 0;
-		}
+		get { return _gameData.StatPoint; }
+		set { _gameData.StatPoint = value; }
 	}
+
+    public int MaxStatPoint
+	{
+		get { return _gameData.MaxStatPoint; }
+		set { _gameData.MaxStatPoint = value; }
+	}
+
+	public void RefreshExp()
+	{
+        int level = Level;
+
+        while (true)
+        {
+            LevelData stat;
+            
+            // 해당 Key에 Value가 존재 하는지 여부
+            if (Managers.Data.Level.TryGetValue(level + 1, out stat) == false)
+                break;
+
+            // 경험치가 다음 레벨 경험치보다 작은지 확인
+            if (Exp < stat.totalExp)
+                break;
+            
+            level++;
+        }
+
+        if (level != Level)
+        {
+            Level = level;
+            RefreshStat(Level);
+            Debug.Log("Level UP!!");
+        }
+	}
+
+    public void RefreshStat(int level)
+    {
+        LevelData stat = Managers.Data.Level[level];
+
+        StatPoint = stat.statPoint;
+        MaxStatPoint += StatPoint;
+        MaxHp = stat.maxHp;
+        Hp = MaxHp;
+        MaxMp = stat.maxMp;
+        Mp = MaxMp;
+    }
 
     public void Init()
     {
-        // TODO (정리)
+        // TODO : (정리)
         // Application.persistentDataPath을 변수 선언할때 바로 초기화하여 넣을 수 없음.
         // 무조건 Awake, Start에서 넣어줘야 함.
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
 
-        // TODO : 데이터 넣으면 활성화
-		// StartData data = Managers.Data.Start;
+        if (Managers.Data.Start != null)
+        {
+            StartData data = Managers.Data.Start;
 
-        // Name = "NoName";
-        // Exp = data.exp;
-		// Level = data.level;
-		// MaxHp = data.maxHp;
-		// Hp = MaxHp;
-        // MaxMp = data.maxMp;
-        // Mp = MaxMp;
-		// STR = data.STR;
-        // Speed = data.Speed;
-        // LUK = data.LUK;
-		
-		// Gold = data.gold;
+            Name = "NoName";
+            Exp = data.exp;
+            Level = data.level;
+            MaxHp = data.maxHp;
+            Hp = MaxHp;
+            MaxMp = data.maxMp;
+            Mp = MaxMp;
+            STR = data.STR;
+            Speed = data.Speed;
+            LUK = data.LUK;
+            
+            Gold = data.gold;
+        }
     }
 
     // 캐릭터 소환

@@ -4,49 +4,84 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using UnityEngine;
-
-public interface ILoader<Key, Item>
-{
-    Dictionary<Key, Item> MakeDic();
-    bool Validate();
-}
+using UnityEngine.Networking;
 
 public class DataManager
 {
-    // 플레이어 스탯 데이터
-    public Dictionary<int, Data.Stat> StatDict { get; private set; } = new Dictionary<int, Data.Stat>();
-    
-    // public StartData Start { get; private set; }
+    const string URL = "https://docs.google.com/spreadsheets/d/1wGzHHrNKnq8LYkQHWN3DWJLY5zRBllqKT69KmzN5oWo/export?format=csv&gid=";
+
+    public StartData Start { get; private set; }
+    public Dictionary<int, LevelData> Level { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
 
-	public void Init()
+    // 게임 시작 시 호출 (GameScene)
+    public IEnumerator DataRequest(string dataNumber)
     {
-        StatDict = LoadJson<Data.StatData, int, Data.Stat>("StatData").MakeDic();
+        UnityWebRequest www = UnityWebRequest.Get(URL+dataNumber);
 
-        // TODO : 데이터 있으면 활성화
-        // Start = LoadSingleXml<StartData>("StartData");
-		// Texts = LoadXml<TextDataLoader, int, TextData>("TextData").MakeDic();
+        yield return www.SendWebRequest();
+
+        string data = www.downloadHandler.text;
+
+        switch(dataNumber)
+        {
+            case Define.StartNumber:
+                StartRequest(data);
+                break;
+            case Define.LevelNumber:
+                LevelRequest(data);
+                break;
+        }
     }
 
-	private Item LoadSingleXml<Item>(string name)
-	{
-		XmlSerializer xs = new XmlSerializer(typeof(Item));
-		TextAsset textAsset = Resources.Load<TextAsset>("Data/" + name);
-		using (MemoryStream stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(textAsset.text)))
-			return (Item)xs.Deserialize(stream);
-	}
+#region 데이터 파싱
 
-	private Loader LoadXml<Loader, Key, Item>(string name) where Loader : ILoader<Key, Item>, new()
+    void StartRequest(string data)
     {
-        XmlSerializer xs = new XmlSerializer(typeof(Loader));
-        TextAsset textAsset = Resources.Load<TextAsset>("Data/" + name);
-        using (MemoryStream stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(textAsset.text)))
-            return (Loader)xs.Deserialize(stream);
+        Start = new StartData();
+
+        string[] lines = data.Split("\n");
+        string[] row = lines[1].Replace("\r", "").Split(',');
+
+        StartData startData = new StartData()
+        {
+            Id = int.Parse(row[0]),
+            exp = int.Parse(row[1]),
+            level = int.Parse(row[2]),
+            maxHp = int.Parse(row[3]),
+            maxMp = int.Parse(row[4]),
+            STR = int.Parse(row[5]),
+            Speed = int.Parse(row[6]),
+            LUK = int.Parse(row[7]),
+        };
     }
 
-    Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
+    void LevelRequest(string data)
     {
-        TextAsset textAsset = Managers.Resource.Load<TextAsset>($"Data/{path}");
-        return JsonUtility.FromJson<Loader>(textAsset.text);
+        Level = new Dictionary<int, LevelData>();
+
+        string[] lines = data.Split("\n");
+        for(int y = 1; y < lines.Length; y++)
+        {
+            Debug.Log(lines[y]);
+            string[] row = lines[y].Replace("\r", "").Split(',');
+            if (row.Length == 0)
+				continue;
+			if (string.IsNullOrEmpty(row[0]))
+				continue;
+
+            LevelData levelData = new LevelData()
+            {
+                level = int.Parse(row[0]),
+                totalExp = int.Parse(row[1]),
+                statPoint = int.Parse(row[2]),
+                maxHp = int.Parse(row[3]),
+                maxMp = int.Parse(row[4]),
+            };
+
+            Level.Add(levelData.level, levelData);
+        }
     }
+
+#endregion
 }

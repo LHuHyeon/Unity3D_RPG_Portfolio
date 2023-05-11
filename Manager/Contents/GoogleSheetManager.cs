@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+// TODO : 참고용으로 쓰고 나중에 삭제
 public class GoogleSheetManager
 {
     const string URL = "https://docs.google.com/spreadsheets/d/1wGzHHrNKnq8LYkQHWN3DWJLY5zRBllqKT69KmzN5oWo/export?format=csv&gid=";
@@ -15,18 +16,17 @@ public class GoogleSheetManager
 
     public IEnumerator DataRequest()
     {
-        UnityWebRequest www = UnityWebRequest.Get(URL+Define.StartNumber);
+        UnityWebRequest www = UnityWebRequest.Get(URL+"0");
 
         yield return www.SendWebRequest();
 
         string data = www.downloadHandler.text;
         Debug.Log(data);
 
-        // [ 데이터 받기 ] (TODO : 블로그 기록하기)
         Start = new Dictionary<int, StartData>();
 
         string[] lines = data.Split("\n");
-        for(int y=1; y < lines.Length; y++)
+        for(int y = 1; y < lines.Length; y++)
         {
             string[] row = lines[y].Replace("\r", "").Split(',');
             if (row.Length == 0)

@@ -11,12 +11,19 @@ public class GameScene : BaseScene
         base.Init();
         SceneType = Define.Scene.Game;  // 타입 설정
 
-        StartCoroutine(Managers.Google.DataRequest());
+        OnDataRequest();
 
         gameObject.GetOrAddComponent<CursorController>();   // 마우스 커서 생성
 
         // GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "UnityChan");
         // Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(_player);
+    }
+
+    // 나중엔 로그인 시 진행
+    void OnDataRequest()
+    {
+        StartCoroutine(Managers.Data.DataRequest(Define.StartNumber));
+        StartCoroutine(Managers.Data.DataRequest(Define.LevelNumber));
     }
 
     public override void Clear()

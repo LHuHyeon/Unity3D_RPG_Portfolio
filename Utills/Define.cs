@@ -123,4 +123,5 @@ public class Define : MonoBehaviour
     }
 
     public const string StartNumber = "0";
+    public const string LevelNumber = "2089499917";
 }
