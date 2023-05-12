@@ -26,21 +26,24 @@ public abstract class BaseController : MonoBehaviour
         set {
             _state = value;
 
-            if (WorldObjectType != Define.WorldObject.Player)
+            // anim.CrossFade(재생 클립 이름, 바뀌는데에 지연 시간, 레이어, 재생 시작 시점)
+            switch (_state)
             {
-                switch (_state){
-                    case Define.State.Moving:
-                        anim.CrossFade("RUN", 0.1f);    // CrossFade는 애니메이션의 부드러움, 반복도 등 설정이 가능하다.
-                        break;
-                    case Define.State.Idle:
-                        anim.CrossFade("WAIT", 0.1f);
-                        break;
-                    case Define.State.Attack:
+                case Define.State.Moving:
+                    anim.CrossFade("RUN", 0.1f);
+                    break;
+                case Define.State.Idle:
+                    anim.CrossFade("WAIT", 0.4f);
+                    break;
+                case Define.State.DiveRoll:
+                    anim.CrossFade("DIVEROLL", 0.1f, -1, 0);
+                    break;
+                case Define.State.Attack:
+                    if (WorldObjectType != Define.WorldObject.Player)
                         anim.CrossFade("ATTACK", 0.1f, -1, 0);
-                        break;
-                    case Define.State.Die:
-                        break;
-                }
+                    break;
+                case Define.State.Die:
+                    break;
             }
         }
     }

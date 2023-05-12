@@ -9,8 +9,6 @@ public class PlayerController : BaseController
     [SerializeField]
     bool _isDiveRoll = false;    // 구르기 여부
 
-    bool raycastHit = false;
-
     // LayerMask 변수
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
 
@@ -22,7 +20,6 @@ public class PlayerController : BaseController
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
-        State = Define.State.Idle;
         
         anim = GetComponent<Animator>();
 
@@ -30,15 +27,11 @@ public class PlayerController : BaseController
         Managers.Input.KeyAction += OnKeyEvent;
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
-
-        // if (gameObject.GetComponentInChildren<UI_HPBar>() == null)  // 자식 객체안에 존재하는 지
-        //     Managers.UI.MakeWorldSpaceUI<UI_HPBar>(transform);  // 체력바 생성
     }
 
     protected override void UpdateIdle()
     {
         // TODO : 가만히 있을때의 모션 있으면 사용
-        anim.SetBool("IsMoving", false);
     }
 
     Vector3 dir;
@@ -81,7 +74,9 @@ public class PlayerController : BaseController
 
     protected override void UpdateDiveRoll()
     {
-        _destPos = SetMouseRayCast();
+        StopAttack();
+
+        _destPos = GetMousePoint();
 
         float moveDist = Mathf.Clamp(Managers.Game.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
 
@@ -94,21 +89,17 @@ public class PlayerController : BaseController
     {
         _attackCloseTime += Time.deltaTime;
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false &&
-            _attackCloseTime > 0.94f)
+        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") &&
+            _attackCloseTime > 0.94f &&
+            _onComboAttack == false)
         {
-            _onAttack = false;
-            _stopAttack = true;
-            _attackCloseTime = 0;
+            StopAttack();
             State = Define.State.Idle;
-
-            Debug.Log("공격 중단");
             return;
         }
 
         dir = _destPos - transform.position;
-        Quaternion quat = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
     }
 
     protected override void UpdateSkill()
@@ -148,7 +139,8 @@ public class PlayerController : BaseController
     void GetMouseEvent(Define.MouseEvent evt)
     {
         // 메인 카메라에서 마우스가 가르키는 위치의 ray를 저장
-        Vector3 hitPoint = SetMouseRayCast();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool raycastHit = Physics.Raycast(ray, out hit, 150f, _mask);
         
         switch (evt)
         {
@@ -158,7 +150,6 @@ public class PlayerController : BaseController
                     _destPos = hit.point;   // 해당 좌표 저장
                     if (raycastHit && _stopAttack)
                     {
-                        anim.SetBool("IsMoving", true);
                         State = Define.State.Moving;
 
                         if (hit.collider.gameObject.layer == (int)Define.Layer.Npc)
@@ -174,10 +165,7 @@ public class PlayerController : BaseController
                     if (_stopAttack)
                     {
                         if (State == Define.State.Idle)
-                        {
                             State = Define.State.Moving;
-                            anim.SetBool("IsMoving", true);
-                        }
 
                         if (_lockTarget != null)
                             _destPos = _lockTarget.transform.position;
@@ -189,10 +177,14 @@ public class PlayerController : BaseController
             // 왼쪽 클릭 시 공격
             case Define.MouseEvent.LeftDown:
                 {
-                    anim.SetBool("IsMoving", false);
                     _stopAttack = false;
                     _destPos = hit.point;
-                    State = Define.State.Attack;
+                    OnAttack();
+                }
+                break;
+            case Define.MouseEvent.LeftPress:
+                {
+                    _destPos = hit.point;
                     OnAttack();
                 }
                 break;
@@ -200,30 +192,52 @@ public class PlayerController : BaseController
     }
 
     bool _onAttack = false;
-    int doubleClickCheck = 0;
+    bool _onComboAttack = false;
+    int attackClipNumber = 0;
+    string[] _attackClipList = new string[] {"ATTACK1", "ATTACK2"};
     void OnAttack()
     {
         // 콤보 체크
-        if (_onAttack && doubleClickCheck == 0 &&
+        if (_onAttack &&
             anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") &&
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.91f &&
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.75f)
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.3f)
         {
-            _onAttack = false;
-            doubleClickCheck++;
+            _onComboAttack = true;
         }
 
         // 공격!
         if (!_onAttack)
         {
-            anim.SetTrigger("OnAttack");
+            anim.CrossFade(_attackClipList[attackClipNumber], 0.1f, -1, 0);
             State = Define.State.Attack;
 
             _onAttack = true;
-            Invoke("DelayClick", 0.2f);
         }
     }
-    void DelayClick() { doubleClickCheck = 0; }
+
+    // [ Anim Event ]
+    public void ExitAttack()
+    {
+        if (_onComboAttack == true)
+        {
+            if (attackClipNumber == 1)
+                attackClipNumber = 0;
+            else if (attackClipNumber == 0)
+                attackClipNumber = 1;
+
+            anim.CrossFade(_attackClipList[attackClipNumber], 0.1f, -1, 0);
+            _onComboAttack = false;
+        }
+    }
+
+    void StopAttack()
+    {
+        _onAttack = false;
+        _onComboAttack = false;
+        _stopAttack = true;
+        _attackCloseTime = 0;
+        attackClipNumber = 0;
+    }
 
     // 키보드 클릭
     void OnKeyEvent()
@@ -235,7 +249,7 @@ public class PlayerController : BaseController
         }
     }
 
-    // Anim Event
+    // [ Anim Event ]
     public void EventDiveRoll()
     {
         _isDiveRoll = false;
@@ -250,10 +264,9 @@ public class PlayerController : BaseController
             _isDiveRoll = true;
             State = Define.State.DiveRoll;
 
-            _destPos = SetMouseRayCast();
+            _destPos = GetMousePoint();
             dir = _destPos - transform.position;
-
-            anim.CrossFade("DIVEROLL", 0.1f, -1, 0);
+            
             Managers.Game.MoveSpeed = 8;
 
             skillEffect1.SetActive(false);
@@ -268,7 +281,7 @@ public class PlayerController : BaseController
         if (State == Define.State.Skill)
             return;
 
-        _destPos = SetMouseRayCast();
+        _destPos = GetMousePoint();
 
         dir = _destPos - transform.position;
         transform.rotation = Quaternion.LookRotation(dir);
@@ -288,11 +301,10 @@ public class PlayerController : BaseController
     }
 
     // 마우스 Ray
-    public Vector3 SetMouseRayCast()
+    public Vector3 GetMousePoint()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        raycastHit = Physics.Raycast(ray, out hit, 150f, _mask);
-        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+        Physics.Raycast(ray, out hit, 150f, _mask);
         
         Vector3 hitPoint = hit.point;
         hitPoint.y = 0;
