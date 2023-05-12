@@ -57,6 +57,9 @@ public abstract class BaseController : MonoBehaviour
             case Define.State.Moving:    // 움직임
                 UpdateMoving();
                 break;
+            case Define.State.DiveRoll:  // 구르기
+                UpdateDiveRoll();       
+                break;
             case Define.State.Idle:      // 가만히 있기
                 UpdateIdle();
                 break;
@@ -75,6 +78,7 @@ public abstract class BaseController : MonoBehaviour
     public abstract void Init();
 
     protected virtual void UpdateMoving() {}
+    protected virtual void UpdateDiveRoll() {}
     protected virtual void UpdateIdle() {}
     protected virtual void UpdateAttack() {}
     protected virtual void UpdateSkill() {}

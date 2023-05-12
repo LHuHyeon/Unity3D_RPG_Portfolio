@@ -14,6 +14,9 @@ public class DataManager
     public Dictionary<int, LevelData> Level { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
 
+    // TODO : 보기 좋게 바꾸기 ( 아니면 안쓰기 )
+    public bool[] isDataRequest = new bool[] {false, false};
+
     // 게임 시작 시 호출 (GameScene)
     public IEnumerator DataRequest(string dataNumber)
     {
@@ -27,9 +30,11 @@ public class DataManager
         {
             case Define.StartNumber:
                 StartRequest(data);
+                isDataRequest[0] = true;
                 break;
             case Define.LevelNumber:
                 LevelRequest(data);
+                isDataRequest[1] = true;
                 break;
         }
     }
@@ -45,16 +50,17 @@ public class DataManager
 
         Debug.Log("StartData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
 
-        StartData startData = new StartData()
+        Start = new StartData()
         {
             Id = int.Parse(row[0]),
-            exp = int.Parse(row[1]),
-            level = int.Parse(row[2]),
-            maxHp = int.Parse(row[3]),
-            maxMp = int.Parse(row[4]),
-            STR = int.Parse(row[5]),
-            MoveSpeed = int.Parse(row[6]),
-            LUK = int.Parse(row[7]),
+            totalExp = int.Parse(row[1]),
+            exp = int.Parse(row[2]),
+            level = int.Parse(row[3]),
+            maxHp = int.Parse(row[4]),
+            maxMp = int.Parse(row[5]),
+            STR = int.Parse(row[6]),
+            MoveSpeed = int.Parse(row[7]),
+            LUK = int.Parse(row[8]),
         };
     }
 

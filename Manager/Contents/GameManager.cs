@@ -10,6 +10,7 @@ public class GameData
     public string Name;
 
 	public float Exp;
+    public float TotalExp;
 
 	public int Level;
     public int Hp;
@@ -53,6 +54,12 @@ public class GameManager
 	{
 		get { return _gameData.Exp; }
 		set { _gameData.Exp = value; RefreshExp(); }
+	}
+
+    public float TotalExp
+	{
+		get { return _gameData.TotalExp; }
+		set { _gameData.TotalExp = value; }
 	}
 	
 	public int Level
@@ -131,7 +138,10 @@ public class GameManager
             
             // 해당 Key에 Value가 존재 하는지 여부
             if (Managers.Data.Level.TryGetValue(level + 1, out stat) == false)
+            {
+                Debug.Log("만렙 입니다!");
                 break;
+            }
 
             // 경험치가 다음 레벨 경험치보다 작은지 확인
             if (Exp < stat.totalExp)
@@ -143,6 +153,7 @@ public class GameManager
         if (level != Level)
         {
             Level = level;
+            
             RefreshStat(Level);
             Debug.Log("Level UP!!");
         }
@@ -152,6 +163,7 @@ public class GameManager
     {
         LevelData stat = Managers.Data.Level[level];
 
+        TotalExp = stat.totalExp;
         StatPoint = stat.statPoint;
         MaxStatPoint += StatPoint;
         MaxHp = stat.maxHp;
@@ -169,9 +181,11 @@ public class GameManager
 
         if (Managers.Data.Start != null)
         {
+            Debug.Log("GameManager Init : StartData True!");
             StartData data = Managers.Data.Start;
 
             Name = "NoName";
+            TotalExp = data.totalExp;
             Exp = data.exp;
             Level = data.level;
             MaxHp = data.maxHp;

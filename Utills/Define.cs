@@ -63,6 +63,7 @@ public class Define : MonoBehaviour
     public enum State
     {
         Moving,
+        DiveRoll,
         Idle,
         Die,
         Attack,

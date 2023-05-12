@@ -21,6 +21,7 @@ public class UI_QuestPopup : UI_Popup
         QuestSceneCountText,
     }
 
+    // PlayScene에 띄울 퀘스트 창 개수
     int maxQuestSceneCount = 5;
 
     public override bool Init()

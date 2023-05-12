@@ -6,6 +6,7 @@ using UnityEngine;
 public class StartData
 {
     public int Id;
+    public int totalExp;
     public int exp;
     public int level;
     public int maxHp;
