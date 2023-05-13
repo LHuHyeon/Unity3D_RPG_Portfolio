@@ -37,10 +37,13 @@ public class Stat : MonoBehaviour
     // 공격을 받았을 때
     public virtual void OnAttacked()
     {
+        GetComponent<MonsterController>().State = Define.State.Hit;
         int damage = Mathf.Max(0, Managers.Game.Attack);
         Hp -= damage;
+        Debug.Log("Hit Damage : " + damage + "\nSTR : " + Managers.Game.STR);
 
-        if (Hp <= 0){
+        if (Hp <= 0)
+        {
             Hp = 0;
             OnDead();
         }
@@ -50,6 +53,6 @@ public class Stat : MonoBehaviour
     protected virtual void OnDead()
     {
         Managers.Game.Exp += _deadExp;
-        Managers.Game.Despawn(gameObject);
+        GetComponent<MonsterController>().State = Define.State.Die;
     }
 }

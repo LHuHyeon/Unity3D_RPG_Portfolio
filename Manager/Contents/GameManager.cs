@@ -100,6 +100,7 @@ public class GameManager
         {
             // TODO : 공격력 설정
             // 장착 무기 데미지, STR 확인
+            Debug.Log("STR" + STR);
             return (STR * 10);
         }
 		private set {}

@@ -17,11 +17,15 @@ public class PlayerController : BaseController
     [SerializeField]
     private GameObject skillEffect2;
 
+    private GameObject boxColider;
+
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
         
         anim = GetComponent<Animator>();
+
+        boxColider = transform.GetChild(0).gameObject;
 
         Managers.Input.KeyAction -= OnKeyEvent;
         Managers.Input.KeyAction += OnKeyEvent;
@@ -181,12 +185,14 @@ public class PlayerController : BaseController
                 {
                     _stopAttack = false;
                     _destPos = hit.point;
+                    _destPos.y = 0;
                     OnAttack();
                 }
                 break;
             case Define.MouseEvent.LeftPress:
                 {
                     _destPos = hit.point;
+                    _destPos.y = 0;
                     OnAttack();
                 }
                 break;
@@ -220,6 +226,7 @@ public class PlayerController : BaseController
     // [ Anim Event ]
     public void ExitAttack()
     {
+        // boxColider.SetActive(false);
         if (_onComboAttack == true)
         {
             if (attackClipNumber == 1)

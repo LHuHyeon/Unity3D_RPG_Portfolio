@@ -19,6 +19,8 @@ public abstract class BaseController : MonoBehaviour
     [SerializeField]
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
 
+    int number = 1;
+
     // 캐릭터 상태에 따라 애니메이션이 작동하는 _state의 프로퍼티
     public virtual Define.State State
     {
@@ -40,9 +42,24 @@ public abstract class BaseController : MonoBehaviour
                     break;
                 case Define.State.Attack:
                     if (WorldObjectType != Define.WorldObject.Player)
-                        anim.CrossFade("ATTACK", 0.1f, -1, 0);
+                    {
+                        anim.CrossFade("ATTACK"+number, 0.1f, -1, 0);
+
+                        if (number == 1)
+                            number = 2;
+                        else if (number == 2)
+                            number = 1;
+                    }
+                    break;
+                case Define.State.Hit:
+                    {
+                        anim.CrossFade("HIT", 0.1f, -1, 0);
+                    }
                     break;
                 case Define.State.Die:
+                    {
+                        anim.CrossFade("DIE", 0.1f, -1, 0);
+                    }
                     break;
             }
         }
@@ -75,6 +92,9 @@ public abstract class BaseController : MonoBehaviour
             case Define.State.Skill:     // 스킬
                 UpdateSkill();
                 break;
+            case Define.State.Hit:       // 피격
+                UpdateHit();
+                break;
             case Define.State.Die:       // 죽음
                 UpdateDie();
                 break;
@@ -100,6 +120,9 @@ public abstract class BaseController : MonoBehaviour
             case Define.State.Skill:     // 스킬
                 UpdateSkill();
                 break;
+            case Define.State.Hit:       // 피격
+                UpdateHit();
+                break;
             case Define.State.Die:       // 죽음
                 UpdateDie();
                 break;
@@ -113,5 +136,6 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void UpdateIdle() {}
     protected virtual void UpdateAttack() {}
     protected virtual void UpdateSkill() {}
+    protected virtual void UpdateHit() {}
     protected virtual void UpdateDie() {}
 }

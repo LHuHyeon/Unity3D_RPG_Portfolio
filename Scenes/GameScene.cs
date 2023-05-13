@@ -15,7 +15,7 @@ public class GameScene : BaseScene
 
         gameObject.GetOrAddComponent<CursorController>();   // 마우스 커서 생성
 
-        // Invoke("DelayScene", 3f);
+        Invoke("DelayScene", 3f);
 
         // GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "UnityChan");
         // Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(_player);
@@ -24,7 +24,7 @@ public class GameScene : BaseScene
     void DelayScene()
     {
         Managers.Game.Init();
-        Managers.UI.ShowSceneUI<UI_PlayScene>();
+        // Managers.UI.ShowSceneUI<UI_PlayScene>();
     }
 
     // 나중엔 로그인 시 진행

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitEvent : MonoBehaviour
+public class PlayerAnimEvent : MonoBehaviour
 {
     [SerializeField]
     private BoxCollider boxCollider;
@@ -10,6 +10,6 @@ public class HitEvent : MonoBehaviour
     // 기본 검 공격
     public void OnBasicAttack()
     {
-
+        boxCollider.gameObject.SetActive(true);
     }
 }

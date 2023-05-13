@@ -59,7 +59,17 @@ public class MonsterController : BaseController
         }
     }
 
-    // TODO : Mixamo에서 애니메이션 찾아 적용
+    // TODO : hit 구현하기
+
+    // protected override void UpdateAttack()
+    // {
+    //     if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") &&
+    //         anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 7f)
+    //     {
+            
+    //     }
+    // }
+
     protected void OnAttackEvent()
     {
         distance = TargetDistance(Managers.Game.GetPlayer());
@@ -74,9 +84,24 @@ public class MonsterController : BaseController
         State = Define.State.Moving;
     }
 
+    protected override void UpdateHit()
+    {
+        nav.SetDestination(transform.position);
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("HIT") &&
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+        {
+            State = Define.State.Moving;
+        }
+    }
+
     protected override void UpdateDie()
     {
-
+        nav.SetDestination(transform.position);
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("DIE") &&
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+        {
+            Managers.Game.Despawn(gameObject);
+        }
     }
 
     protected float TargetDistance(GameObject _target)

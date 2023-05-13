@@ -65,6 +65,7 @@ public class Define : MonoBehaviour
         Moving,
         DiveRoll,
         Idle,
+        Hit,
         Die,
         Attack,
         Skill,
