@@ -11,7 +11,8 @@ public class Item
     public Define.itemGrade itemGrade = Define.itemGrade.Common;
     public int itemPrice;
     public int itemMaxCount = 99;
-    public GameObject itemPrefab;
+    // TODO : 기타 아이템은 부스러기 모양으로 통일
+    public GameObject itemObject;
 
     [TextArea]
     public string itemDesc;

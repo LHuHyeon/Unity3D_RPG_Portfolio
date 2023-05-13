@@ -22,6 +22,8 @@ public class GameData
     public int LUK;
     public int StatPoint;
     public int MaxStatPoint;
+    public int HpPoint;
+    public int MpPoint;
 
     public int Gold;        // 골드 (게임 재화)
 
@@ -92,6 +94,27 @@ public class GameManager
 		set { _gameData.MaxMp = value; }
 	}
 
+    public int Attack
+	{
+		get 
+        {
+            // TODO : 공격력 설정
+            // 장착 무기 데미지, STR 확인
+            return (STR * 10);
+        }
+		private set {}
+	}
+
+    public int Defense
+    {
+        get 
+        {
+            // TODO : 장비 장착 시 증가
+            return 0;
+        }
+		private set {}
+    }
+
     public int STR
 	{
 		get { return _gameData.STR; }
@@ -126,6 +149,18 @@ public class GameManager
 	{
 		get { return _gameData.MaxStatPoint; }
 		set { _gameData.MaxStatPoint = value; }
+	}
+
+    public int HpPoint
+	{
+		get { return _gameData.HpPoint; }
+		set { _gameData.HpPoint = value; }
+	}
+
+    public int MpPoint
+	{
+		get { return _gameData.MpPoint; }
+		set { _gameData.MpPoint = value; }
 	}
 
 	public void RefreshExp()
@@ -172,6 +207,21 @@ public class GameManager
         Mp = MaxMp;
     }
 
+    public void OnAttacked(Stat attacker)
+    {
+        Hp -= Mathf.Max(0, attacker.Attack - Defense);
+
+        if (Hp <= 0){
+            Hp = 0;
+            OnDead();
+        }
+    }
+
+    public void OnDead()
+    {
+        // TODO : 재시작
+    }
+
     public void Init()
     {
         // TODO : (정리)
@@ -179,6 +229,7 @@ public class GameManager
         // 무조건 Awake, Start에서 넣어줘야 함.
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
 
+        _player = GameObject.FindWithTag("Player");
         if (Managers.Data.Start != null)
         {
             Debug.Log("GameManager Init : StartData True!");

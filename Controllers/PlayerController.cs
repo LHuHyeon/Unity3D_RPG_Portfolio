@@ -32,6 +32,8 @@ public class PlayerController : BaseController
     protected override void UpdateIdle()
     {
         // TODO : 가만히 있을때의 모션 있으면 사용
+        if (_stopAttack == false)
+            StopAttack();
     }
 
     Vector3 dir;

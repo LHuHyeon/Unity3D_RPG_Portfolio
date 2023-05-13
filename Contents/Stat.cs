@@ -10,48 +10,46 @@ public class Stat : MonoBehaviour
     [SerializeField] protected int _mp;
     [SerializeField] protected int _maxMp;
     [SerializeField] protected int _attack;
-    [SerializeField] protected int _defense;
+    [SerializeField] protected int _deadExp;
     [SerializeField] protected float _movespeed;
-
+    
     public int Level { get { return _level; } set { _level = value; } }
     public int Hp { get { return _hp; } set { _hp = value; } }
     public int Mp { get { return _mp; } set { _mp = value; } }
     public int MaxHp { get { return _maxHp; } set { _maxHp = value; } }
     public int MaxMp { get { return _maxMp; } set { _maxMp = value; } }
     public int Attack { get { return _attack; } set { _attack = value; } }
-    public int Defense { get { return _defense; } set { _defense = value; } }
+    public int DeadExp { get { return _deadExp; } set { _deadExp = value; } }
     public float MoveSpeed { get { return _movespeed; } set { _movespeed = value; } }
-
+    
     void Start()
     {
         _level = 1;
         _hp = 100;
         _maxHp = 100;
+        _mp = 100;
+        _maxMp = 100;
         _attack = 10;
-        _defense = 5;
+        _deadExp = 5;
         _movespeed = 5.0f;
     }
 
     // 공격을 받았을 때
-    public virtual void OnAttacked(Stat attacker)
+    public virtual void OnAttacked()
     {
-        int damage = Mathf.Max(0, attacker.Attack - Defense);
+        int damage = Mathf.Max(0, Managers.Game.Attack);
         Hp -= damage;
 
         if (Hp <= 0){
             Hp = 0;
-            OnDead(attacker);
+            OnDead();
         }
     }
 
     // 죽었을 때
-    protected virtual void OnDead(Stat attacker)
+    protected virtual void OnDead()
     {
-        // attacker가 Player라면 경험치 흭득.
-        PlayerStat playerStat = attacker as PlayerStat;
-        if (playerStat != null){
-            playerStat.Exp += 5;
-        }
+        Managers.Game.Exp += _deadExp;
         Managers.Game.Despawn(gameObject);
     }
 }

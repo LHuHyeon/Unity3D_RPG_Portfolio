@@ -55,13 +55,41 @@ public abstract class BaseController : MonoBehaviour
 
     void Update()
     {
-        // State 패턴
-        switch (State){
+        if (WorldObjectType != Define.WorldObject.Player)
+            return;
+
+        switch (State)
+        {
             case Define.State.Moving:    // 움직임
                 UpdateMoving();
                 break;
             case Define.State.DiveRoll:  // 구르기
                 UpdateDiveRoll();       
+                break;
+            case Define.State.Idle:      // 가만히 있기
+                UpdateIdle();
+                break;
+            case Define.State.Attack:     // 일반 공격
+                UpdateAttack();
+                break;
+            case Define.State.Skill:     // 스킬
+                UpdateSkill();
+                break;
+            case Define.State.Die:       // 죽음
+                UpdateDie();
+                break;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (WorldObjectType != Define.WorldObject.Monster)
+            return;
+
+        switch (State)
+        {
+            case Define.State.Moving:    // 움직임
+                UpdateMoving();
                 break;
             case Define.State.Idle:      // 가만히 있기
                 UpdateIdle();
