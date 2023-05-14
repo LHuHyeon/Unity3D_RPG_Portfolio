@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class Define : MonoBehaviour
 {
+    public enum KeySkill
+    {
+        Q,
+        W,
+        E,
+        R,
+        A,
+        S,
+        D,
+    }
+
     public enum ShopType
     {
         Unknown,
@@ -126,4 +137,5 @@ public class Define : MonoBehaviour
 
     public const string StartNumber = "0";
     public const string LevelNumber = "2089499917";
+    public const string SkillNumber = "160891494";
 }

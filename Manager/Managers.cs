@@ -45,6 +45,7 @@ public class Managers : MonoBehaviour
     void Update()
     {
         Input.OnUpdate();   // 키입력 메소드 호출
+        Game.OnUpdate();
     }
 
     // 싱글톤 메소드

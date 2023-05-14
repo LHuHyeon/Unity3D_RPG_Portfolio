@@ -41,7 +41,7 @@ public abstract class BaseController : MonoBehaviour
                     anim.CrossFade("DIVEROLL", 0.1f, -1, 0);
                     break;
                 case Define.State.Attack:
-                    if (WorldObjectType != Define.WorldObject.Player)
+                    if (WorldObjectType == Define.WorldObject.Monster)
                     {
                         anim.CrossFade("ATTACK"+number, 0.1f, -1, 0);
 

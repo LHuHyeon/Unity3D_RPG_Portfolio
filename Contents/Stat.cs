@@ -35,10 +35,16 @@ public class Stat : MonoBehaviour
     }
 
     // 공격을 받았을 때
-    public virtual void OnAttacked()
+    public virtual void OnAttacked(int skillAttack=0)
     {
         GetComponent<MonsterController>().State = Define.State.Hit;
-        int damage = Mathf.Max(0, Managers.Game.Attack);
+
+        int damage;
+        if (skillAttack != 0)
+            damage = Mathf.Max(0, skillAttack);
+        else 
+            damage = Mathf.Max(0, Managers.Game.Attack);
+            
         Hp -= damage;
         Debug.Log("Hit Damage : " + damage + "\nSTR : " + Managers.Game.STR);
 

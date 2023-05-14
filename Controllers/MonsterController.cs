@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class MonsterController : BaseController
 {
+    public int id;
+
     [SerializeField] private float scanRange;
     [SerializeField] private float attackRange;
 
@@ -35,7 +37,6 @@ public class MonsterController : BaseController
         {
             // hpBarUI.SetActive(true);
             _lockTarget = Managers.Game.GetPlayer();
-            Debug.Log(_lockTarget.name);
             State = Define.State.Moving;
         }
     }
@@ -54,12 +55,8 @@ public class MonsterController : BaseController
             }
         }
         else
-        {
             BattleClose();
-        }
     }
-
-    // TODO : hit 구현하기
 
     // protected override void UpdateAttack()
     // {
@@ -70,15 +67,16 @@ public class MonsterController : BaseController
     //     }
     // }
 
+    // Anim Event
     protected void OnAttackEvent()
     {
         distance = TargetDistance(Managers.Game.GetPlayer());
+
         if (distance <= attackRange)
-        {
             Managers.Game.OnAttacked(_stat);
-        }
     }
 
+    // Anim Event
     protected void ExitAttack()
     {
         State = Define.State.Moving;
@@ -97,6 +95,10 @@ public class MonsterController : BaseController
     protected override void UpdateDie()
     {
         nav.SetDestination(transform.position);
+
+        if (GetComponent<CapsuleCollider>() != null)
+            Destroy(GetComponent<CapsuleCollider>());
+
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("DIE") &&
             anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {

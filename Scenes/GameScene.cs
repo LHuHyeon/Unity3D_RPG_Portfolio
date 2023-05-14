@@ -32,6 +32,7 @@ public class GameScene : BaseScene
     {
         StartCoroutine(Managers.Data.DataRequest(Define.StartNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.LevelNumber));
+        StartCoroutine(Managers.Data.DataRequest(Define.SkillNumber));
     }
 
     public override void Clear()

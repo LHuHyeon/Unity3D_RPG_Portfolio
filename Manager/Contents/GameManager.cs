@@ -27,6 +27,12 @@ public class GameData
 
     public int Gold;        // 골드 (게임 재화)
 
+    // 스킬바에 등록된 리스트
+    public Dictionary<Define.KeySkill, SkillData> SkillBarList = new Dictionary<Define.KeySkill, SkillData>();
+
+    // 현재 가지고 있는 스킬
+    public List<SkillData> Skills = new List<SkillData>();
+
     // 스킬 : 스킬 능력, 레벨, 흭득 횟수
     // 등록된 스킬 : 스킬 능력
     // 퀘스트 : 퀘스트 내용, 완료 보상, 클리어 유/무
@@ -101,7 +107,7 @@ public class GameManager
             // TODO : 공격력 설정
             // 장착 무기 데미지, STR 확인
             Debug.Log("STR" + STR);
-            return (STR * 10);
+            return (STR * 5);
         }
 		private set {}
 	}
@@ -164,6 +170,23 @@ public class GameManager
 		set { _gameData.MpPoint = value; }
 	}
 
+    public Dictionary<Define.KeySkill, SkillData> SkillBarList
+    {
+        get { return _gameData.SkillBarList; }
+        set { _gameData.SkillBarList = value; }
+    }
+
+    public List<SkillData> Skills
+    {
+        get { return _gameData.Skills; }
+        set { _gameData.Skills = value; }
+    }
+
+    public void OnUpdate()
+    {
+        
+    }
+
 	public void RefreshExp()
 	{
         int level = Level;
@@ -206,6 +229,30 @@ public class GameManager
         Hp = MaxHp;
         MaxMp = stat.maxMp;
         Mp = MaxMp;
+    }
+
+    // 해당 키 스킬 반환 (스킬 ui 완성되면 사용)
+    // public SkillData GetSkill(Define.KeySkill keySkill)
+    // {
+    //     SkillData skill;
+    //     if (SkillBarList.TryGetValue(keySkill, out skill) == false)
+    //         return null;
+
+    //     if (Skills.Contains(skill) == false)
+    //         return null;
+
+    //     return skill;
+    // }
+
+    // TODO : 스킬 ui 완성되면 삭제
+    // 스킬 Id로 데이터 불러오기
+    public SkillData GetSkill(int skillId)
+    {
+        SkillData skill;
+        if (Managers.Data.Skill.TryGetValue(skillId, out skill) == false)
+            return null;
+
+        return skill;
     }
 
     public void OnAttacked(Stat attacker)

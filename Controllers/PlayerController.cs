@@ -6,26 +6,23 @@ using UnityEngine;
 public class PlayerController : BaseController
 {
     bool _stopAttack = true;   // 공격 가능 여부
-    [SerializeField]
+    
     bool _isDiveRoll = false;    // 구르기 여부
 
     // LayerMask 변수
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
 
     [SerializeField]
-    private GameObject skillEffect1;
-    [SerializeField]
-    private GameObject skillEffect2;
+    private List<ObjectData> effects = new List<ObjectData>();
+    private GameObject currentEffect;
 
-    private GameObject boxColider;
+    public SkillData currentSkill;
 
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
         
         anim = GetComponent<Animator>();
-
-        boxColider = transform.GetChild(0).gameObject;
 
         Managers.Input.KeyAction -= OnKeyEvent;
         Managers.Input.KeyAction += OnKeyEvent;
@@ -111,11 +108,9 @@ public class PlayerController : BaseController
     protected override void UpdateSkill()
     {
         if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Skill") &&
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f)
         {
-            skillEffect1.SetActive(false);
-            skillEffect2.SetActive(false);
-
+            EffectClose();
             State = Define.State.Idle;
         }
     }
@@ -123,7 +118,8 @@ public class PlayerController : BaseController
     // 마우스 클릭
     void OnMouseEvent(Define.MouseEvent evt)
     {
-        switch(State){
+        switch(State)
+        {
             case Define.State.Moving:
                 GetMouseEvent(evt);
                 break;
@@ -133,20 +129,20 @@ public class PlayerController : BaseController
             case Define.State.Attack:
                 GetMouseEvent(evt);
                 break;
-            case Define.State.Skill:
-                {
-                    // TODO : 스킬 진행 중일 때 마우스 입력한다면 스킬이 끝날때까지 마우스 입력 못함.
-                    // TODO : 스페이스바로 구르기 가능 
-                }
-                break;
         }
     }
 
+    float minDistance = 0.3f;
     void GetMouseEvent(Define.MouseEvent evt)
     {
         // 메인 카메라에서 마우스가 가르키는 위치의 ray를 저장
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool raycastHit = Physics.Raycast(ray, out hit, 150f, _mask);
+        
+        // 자신 캐릭터 클릭 시 진행 X
+        float distance = (hit.point - transform.position).magnitude;
+        if (distance <= minDistance)
+            return;
         
         switch (evt)
         {
@@ -189,6 +185,7 @@ public class PlayerController : BaseController
                     OnAttack();
                 }
                 break;
+            // 왼쪽 누르는 중이면 다음 공격 진행
             case Define.MouseEvent.LeftPress:
                 {
                     _destPos = hit.point;
@@ -278,35 +275,64 @@ public class PlayerController : BaseController
             
             Managers.Game.MoveSpeed = 8;
 
-            skillEffect1.SetActive(false);
-            skillEffect2.SetActive(false);
+            EffectClose();
         }
     }
 
     // 스킬 사용
     void GetSkill()
     {
-        // TODO : 스킬 관리코드 구현 (확장성)
         if (State == Define.State.Skill)
             return;
 
+        // 마우스 방향으로 회전
         _destPos = GetMousePoint();
-
         dir = _destPos - transform.position;
         transform.rotation = Quaternion.LookRotation(dir);
 
+        // TEST CODE
         if (Input.GetKeyDown(KeyCode.Q))
+            OnSkill(Managers.Game.GetSkill(101));
+
+        // 스킬 진행 (스킬 ui 완성되면 사용)
+        // if (Input.GetKeyDown(KeyCode.Q))
+        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.Q));
+        // else if (Input.GetKeyDown(KeyCode.W))
+        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.W));
+        // else if (Input.GetKeyDown(KeyCode.E))
+        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.E));
+        // else if (Input.GetKeyDown(KeyCode.A))
+        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.A));
+        // else if (Input.GetKeyDown(KeyCode.S))
+        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.S));
+        // else if (Input.GetKeyDown(KeyCode.D))
+        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.D));
+        // else if (Input.GetKeyDown(KeyCode.R))
+        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.R));
+    }
+
+    // 스킬 진행
+    void OnSkill(SkillData skill)
+    {
+        currentSkill = skill;
+        if (currentSkill == null)
         {
-            State = Define.State.Skill;
-            anim.CrossFade("COMBO_1", 0.1f, -1, 0);
-            skillEffect1.SetActive(true);
+            Debug.Log("등록된 스킬이 없습니다!");
+            return;
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+
+        foreach(ObjectData value in effects)
         {
-            State = Define.State.Skill;
-            anim.CrossFade("COMBO_2", 0.1f, -1, 0);
-            skillEffect2.SetActive(true);
+            if (currentSkill.skillId == value.id)
+            {
+                currentEffect = value.gameObject;
+                break;
+            }
         }
+
+        State = Define.State.Skill;
+        anim.CrossFade("SKILL"+currentSkill.skillId, 0.1f, -1, 0);
+        currentEffect.SetActive(true);
     }
 
     // 마우스 Ray
@@ -318,5 +344,11 @@ public class PlayerController : BaseController
         Vector3 hitPoint = hit.point;
         hitPoint.y = 0;
         return hitPoint;
+    }
+
+    public void EffectClose()
+    {
+        if (currentEffect != null)
+            currentEffect.SetActive(false);
     }
 }
