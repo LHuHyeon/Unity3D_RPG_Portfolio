@@ -293,6 +293,8 @@ public class PlayerController : BaseController
         // TEST CODE
         if (Input.GetKeyDown(KeyCode.Q))
             OnSkill(Managers.Game.GetSkill(101));
+        if (Input.GetKeyDown(KeyCode.W))
+            OnSkill(Managers.Game.GetSkill(102));
 
         // 스킬 진행 (스킬 ui 완성되면 사용)
         // if (Input.GetKeyDown(KeyCode.Q))

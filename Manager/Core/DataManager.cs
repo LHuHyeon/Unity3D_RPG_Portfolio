@@ -130,7 +130,7 @@ public class DataManager
 
             // 공격력 7
             List<int> powerList = new List<int>();
-            foreach(string attackNumber in row[7].Split("/"))
+            foreach(string attackNumber in row[7].Split("|"))
                 powerList.Add(int.Parse(attackNumber));
 
             skillData.powerList = powerList;
