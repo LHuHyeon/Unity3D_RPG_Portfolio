@@ -38,7 +38,7 @@ public class AttackCollistion : MonoBehaviour
 
     void OnEnable()
     {
-        Invoke("DelayActiveFalse", 0.03f);
+        Invoke("DelayActiveFalse", 0.015f);
     }
 
     void OnDisable()

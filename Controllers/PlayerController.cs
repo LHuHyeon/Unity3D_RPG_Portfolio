@@ -14,7 +14,7 @@ public class PlayerController : BaseController
 
     [SerializeField]
     private List<ObjectData> effects = new List<ObjectData>();
-    private GameObject currentEffect;
+    public GameObject currentEffect;
 
     public SkillData currentSkill;
 

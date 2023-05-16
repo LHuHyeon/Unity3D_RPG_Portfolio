@@ -11,6 +11,8 @@ public class PlayerAnimEvent : MonoBehaviour
 
     private const int X_Axis = 0, Y_Axis = 1, Z_Axis = 2;
 
+#region 공격 사거리
+
     // 공격 사이즈 클래스
     public class AttackSize
     {
@@ -85,25 +87,12 @@ public class PlayerAnimEvent : MonoBehaviour
     };
 
     // Id 107 공격 범위 (궁극의 칼날)
-    private AttackSize[] skill107 = new AttackSize[]
+    private AttackSize skill107 = new AttackSize()
     {
-        new AttackSize()
-        {
-            x = 0f, y = 0, z = 0.13f, redius = 1.23f, height = 3.4f, direction = X_Axis,
-        },
-        new AttackSize()
-        {
-            x = 0f, y = 0f, z = 3.5f, redius = 3f, height = 9.4f, direction = X_Axis,
-        },
-        new AttackSize()
-        {
-            x = 0f, y = 0f, z = 3.5f, redius = 3f, height = 9.4f, direction = X_Axis,
-        },
-        new AttackSize()
-        {
-            x = 0f, y = 0f, z = 3.5f, redius = 3f, height = 9.4f, direction = X_Axis,
-        },
+        x = 0f, y = 0f, z = -0.4f, redius = 7f, height = 0f, direction = Y_Axis,
     };
+
+#endregion
 
     // 기본 검 공격
     public void OnBasicAttack()
@@ -114,15 +103,13 @@ public class PlayerAnimEvent : MonoBehaviour
     // skill 101 : 트리플 슬래쉬
     public void OnTripleSlash()
     {
-        capsuleCollider.gameObject.SetActive(true);
-        SetSize(skill101);
+        OnSize(skill101);
     }
 
     // skill 102 : 라이징 슬래쉬
     public void OnRisingSlash()
     {
-        capsuleCollider.gameObject.SetActive(true);
-        SetSize(skill102[nextSkillIndex]);
+        OnSize(skill102[nextSkillIndex]);
         
         ++nextSkillIndex;
         if (nextSkillIndex == skill102.Length)
@@ -132,44 +119,41 @@ public class PlayerAnimEvent : MonoBehaviour
     // skill 103 : 회전의 칼날
     public void OnRotationBlade()
     {
-        capsuleCollider.gameObject.SetActive(true);
-        SetSize(skill103);
+        OnSize(skill103);
     }
 
     // skill 104 : 어둠의 칼날
     public void OnDarkBlade()
     {
-        capsuleCollider.gameObject.SetActive(true);
-        SetSize(skill104);
+        OnSize(skill104);
     }
 
     // skill 105 : 궁극의 일격
     public void OnBigSwordSlash()
     {
-        capsuleCollider.gameObject.SetActive(true);
-        SetSize(skill105);
+        OnSize(skill105);
     }
 
     // skill 106 : 칼날 섬멸
     public void OnBladeAnnihilation()
     {
-        capsuleCollider.gameObject.SetActive(true);
-        SetSize(skill106[nextSkillIndex]);
+        OnSize(skill106[nextSkillIndex]);
         
         ++nextSkillIndex;
-        if (nextSkillIndex == skill102.Length)
+        if (nextSkillIndex == skill106.Length)
             nextSkillIndex = 0;
     }
 
     // skill 107 : 궁극의 칼날
     public void OnEventualityBlade()
     {
+        OnSize(skill107);
+    }
+
+    private void OnSize(AttackSize size)
+    {
         capsuleCollider.gameObject.SetActive(true);
-        SetSize(skill107[nextSkillIndex]);
-        
-        ++nextSkillIndex;
-        if (nextSkillIndex == skill102.Length)
-            nextSkillIndex = 0;
+        SetSize(size);
     }
 
     private void SetSize(AttackSize size)

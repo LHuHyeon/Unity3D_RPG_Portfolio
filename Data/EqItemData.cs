@@ -8,7 +8,7 @@ public class EquipmentStat
     public int vlaue; // 수치
 }
 
-public class EqItem : Item
+public class EqItemData : ItemData
 {
     public Define.EquipmentType equipmentType = Define.EquipmentType.Unknown;
     public int minLevel;

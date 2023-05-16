@@ -277,6 +277,7 @@ public class GameManager
         // 무조건 Awake, Start에서 넣어줘야 함.
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
 
+        // 나중에 프리팹 생성하며 넣기
         _player = GameObject.FindWithTag("Player");
         if (Managers.Data.Start != null)
         {

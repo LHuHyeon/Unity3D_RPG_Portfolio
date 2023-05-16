@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Reward
 {
-    public Item item;       // 또는 id 사용
+    public ItemData item;       // 또는 id 사용
     public int itemCount;
 }
 

@@ -24,7 +24,7 @@ public class GameScene : BaseScene
     void DelayScene()
     {
         Managers.Game.Init();
-        // Managers.UI.ShowSceneUI<UI_PlayScene>();
+        Managers.UI.ShowSceneUI<UI_PlayScene>();
     }
 
     // 나중엔 로그인 시 진행
