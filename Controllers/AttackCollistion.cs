@@ -62,7 +62,7 @@ public class AttackCollistion : MonoBehaviour
 
     void BasicColliderSize()
     {
-        capsuleCollider.center.Set(0, 0, 0.3f);
+        capsuleCollider.center = new Vector3(0, 0, 0.3f);
         capsuleCollider.radius = 0.85f;
         capsuleCollider.height = 1.7f;
     }

@@ -119,13 +119,13 @@ public class DataManager
                 skillId = int.Parse(row[0]),
                 skillName = row[1],
                 minLevel = int.Parse(row[2]),
-                skillCollTime = int.Parse(row[3]),
+                skillCoolDown = int.Parse(row[3]),
                 skillConsumMp = int.Parse(row[4]),
                 discription = row[5],
             };
             Debug.Log($"Id : {skillData.skillId}, Name : {skillData.skillName}");
 
-            // Sprite 6
+            // Sprite 6 (TODO : 잘 받아졌는지 확인)
             skillData.skillSprite = Managers.Resource.Load<Sprite>("Art/UI/Skill/"+row[6]);
 
             // 공격력 7

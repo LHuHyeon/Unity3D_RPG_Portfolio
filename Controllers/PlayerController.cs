@@ -293,8 +293,18 @@ public class PlayerController : BaseController
         // TEST CODE
         if (Input.GetKeyDown(KeyCode.Q))
             OnSkill(Managers.Game.GetSkill(101));
-        if (Input.GetKeyDown(KeyCode.W))
+        else if (Input.GetKeyDown(KeyCode.W))
             OnSkill(Managers.Game.GetSkill(102));
+        else if (Input.GetKeyDown(KeyCode.E))
+            OnSkill(Managers.Game.GetSkill(103));
+        else if (Input.GetKeyDown(KeyCode.A))
+            OnSkill(Managers.Game.GetSkill(104));
+        else if (Input.GetKeyDown(KeyCode.S))
+            OnSkill(Managers.Game.GetSkill(105));
+        else if (Input.GetKeyDown(KeyCode.D))
+            OnSkill(Managers.Game.GetSkill(106));
+        else if (Input.GetKeyDown(KeyCode.R))
+            OnSkill(Managers.Game.GetSkill(107));
 
         // 스킬 진행 (스킬 ui 완성되면 사용)
         // if (Input.GetKeyDown(KeyCode.Q))
@@ -350,7 +360,30 @@ public class PlayerController : BaseController
 
     public void EffectClose()
     {
-        if (currentEffect != null)
+        if (currentEffect == null)
+            return;
+        
+        if (currentEffect.GetComponent<ObjectData>().disableDelayTime == 0)
             currentEffect.SetActive(false);
+        else
+            StartCoroutine(EffectDisableDelayTime());
+    }
+
+    // 잠시 가만히 있어야할 이펙트가 있다면 사용
+    IEnumerator EffectDisableDelayTime()
+    {
+        GameObject effect = currentEffect;
+        Transform effectParent = effect.transform.parent;
+        Vector3 effectPos = effect.transform.localPosition;
+
+        effect.transform.SetParent(null);
+    
+        yield return new WaitForSeconds(effect.GetComponent<ObjectData>().disableDelayTime);
+
+        effect.transform.SetParent(effectParent);
+        effect.transform.localPosition = effectPos;
+        effect.transform.localRotation = Quaternion.identity;
+
+        effect.SetActive(false);
     }
 }

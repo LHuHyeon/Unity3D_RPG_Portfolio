@@ -246,13 +246,13 @@ public class GameManager
 
     // TODO : 스킬 ui 완성되면 삭제
     // 스킬 Id로 데이터 불러오기
+    public SkillData currentSkill;
     public SkillData GetSkill(int skillId)
     {
-        SkillData skill;
-        if (Managers.Data.Skill.TryGetValue(skillId, out skill) == false)
+        if (Managers.Data.Skill.TryGetValue(skillId, out currentSkill) == false)
             return null;
 
-        return skill;
+        return currentSkill;
     }
 
     public void OnAttacked(Stat attacker)

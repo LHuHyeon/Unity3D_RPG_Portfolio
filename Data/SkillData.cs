@@ -7,7 +7,7 @@ public class SkillData
     public int skillId;
     public string skillName;
     public int minLevel;
-    public int skillCollTime;
+    public int skillCoolDown;
     public int skillConsumMp;
     public string discription;
     public Sprite skillSprite;
