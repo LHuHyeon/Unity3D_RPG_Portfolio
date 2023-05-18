@@ -28,28 +28,32 @@ public class Define : MonoBehaviour
         Mp,
         Attack,
         Defence,
-        Speed,
+        MoveSpeed,
     }
 
-    public enum EquipmentType
+    public enum WeaponType
+    {
+        Unknown,
+        Sword,
+    }
+
+    public enum ArmorType
     {
         Unknown,
         Helm,       // 모자
         Chest,      // 갑옷
         Pants,      // 바지
         Boots,      // 신발
-        Weapon,     // 무기
+        Gloves,     // 장갑
         Necklace,   // 목걸이
         Ring,       // 반지
-        Gloves,     // 장갑
     }
 
-    public enum itemType
+    public enum UseType
     {
         Unknown,
-        Used,       // 사용 아이템
-        Equipment,  // 장비 아이템
-        Quest,      // 퀘스트 아이템
+        Hp,
+        Mp,
     }
 
     public enum itemGrade
@@ -138,4 +142,7 @@ public class Define : MonoBehaviour
     public const string StartNumber = "0";
     public const string LevelNumber = "2089499917";
     public const string SkillNumber = "160891494";
+    public const string UseItemNumber = "1334508722";
+    public const string WeaponItemNumber = "271156662";
+    public const string ArmorItemNumber = "1624069194";
 }

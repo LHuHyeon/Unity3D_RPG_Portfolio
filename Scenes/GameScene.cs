@@ -33,6 +33,9 @@ public class GameScene : BaseScene
         StartCoroutine(Managers.Data.DataRequest(Define.StartNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.LevelNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.SkillNumber));
+        StartCoroutine(Managers.Data.DataRequest(Define.UseItemNumber));
+        StartCoroutine(Managers.Data.DataRequest(Define.WeaponItemNumber));
+        StartCoroutine(Managers.Data.DataRequest(Define.ArmorItemNumber));
     }
 
     public override void Clear()
