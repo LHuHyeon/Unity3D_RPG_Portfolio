@@ -10,6 +10,8 @@ public class ItemData
     public int itemPrice;
     public int itemMaxCount = 99;
 
+    public GameObject itemObject;
+
     [TextArea]
     public string itemDesc;
     

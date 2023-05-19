@@ -72,7 +72,7 @@ public class Stat : MonoBehaviour
         UI_HitEffect hitObject = Managers.UI.MakeWorldSpaceUI<UI_HitEffect>(gameObject.transform);
         hitObject.hitText.text = damage.ToString();
 
-        float randomX = Random.Range(-0.2f, 0.2f);
+        float randomX = Random.Range(-0.5f, 0.5f);
         float valueY = GetComponent<Collider>().bounds.size.y * 0.8f;
         hitObject.transform.position = transform.position + new Vector3(randomX, valueY, 0);
     }

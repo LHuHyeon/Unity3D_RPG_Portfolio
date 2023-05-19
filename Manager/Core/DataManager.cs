@@ -236,6 +236,7 @@ public class DataManager
                 itemDesc = row[11],
                 itemMaxCount = 1,
                 itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Armor/"+row[12]),
+                itemObject = Managers.Resource.Load<GameObject>("Object/Armor"+row[13]),
             };
 
             Item.Add(armorItem.id, armorItem);

@@ -33,7 +33,7 @@ public class PlayerController : BaseController
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Invoke("SetInfo", 0.2f);
+        Invoke("SetInfo", 1f);
     }
 
     void SetInfo()
@@ -52,6 +52,7 @@ public class PlayerController : BaseController
                     armor.charEquipment = new List<GameObject>();
                 
                 armor.charEquipment.Add(obj.gameObject);
+                // TODO : 비활성화 시키고 장착 시 활성화시키기
 
                 // if (charEquipment.ContainsKey(id) == false)
                 //     charEquipment.Add(id, new List<GameObject>());
