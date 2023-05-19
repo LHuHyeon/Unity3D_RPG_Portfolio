@@ -38,7 +38,7 @@ public class AttackCollistion : MonoBehaviour
 
     void OnEnable()
     {
-        Invoke("DelayActiveFalse", 0.015f);
+        Invoke("DelayActiveFalse", 0.1f);
     }
 
     void OnDisable()
@@ -62,8 +62,8 @@ public class AttackCollistion : MonoBehaviour
 
     void BasicColliderSize()
     {
-        capsuleCollider.center = new Vector3(0, 0, 0.3f);
-        capsuleCollider.radius = 0.85f;
-        capsuleCollider.height = 1.7f;
+        capsuleCollider.center = new Vector3(0, 0, 0.4f);
+        capsuleCollider.radius = 1.2f;
+        capsuleCollider.height = 2.4f;
     }
 }

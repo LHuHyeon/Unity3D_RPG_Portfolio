@@ -33,6 +33,12 @@ public class GameData
     // 현재 가지고 있는 스킬
     public List<SkillData> Skills = new List<SkillData>();
 
+    // 현재 장착한 장비
+    public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
+
+    // 현재 무기
+    public WeaponItemData CurrentWeapon;
+
     // 스킬 : 스킬 능력, 레벨, 흭득 횟수
     // 등록된 스킬 : 스킬 능력
     // 퀘스트 : 퀘스트 내용, 완료 보상, 클리어 유/무
@@ -85,7 +91,7 @@ public class GameManager
     public int MaxHp
 	{
 		get { return _gameData.MaxHp; }
-		set { _gameData.MaxHp = value; }
+		set { _gameData.MaxHp = value + (HpPoint * 20); }
 	}
 
     public int Mp
@@ -97,7 +103,7 @@ public class GameManager
     public int MaxMp
 	{
 		get { return _gameData.MaxMp; }
-		set { _gameData.MaxMp = value; }
+		set { _gameData.MaxMp = value + (MpPoint * 20); }
 	}
 
     public int Attack
@@ -107,7 +113,7 @@ public class GameManager
             // TODO : 공격력 설정
             // 장착 무기 데미지, STR 확인
             Debug.Log("STR" + STR);
-            return (STR * 5);
+            return (STR * 2);
         }
 		private set {}
 	}
@@ -182,6 +188,18 @@ public class GameManager
         set { _gameData.Skills = value; }
     }
 
+    public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor
+    {
+        get { return _gameData.CurrentArmor; }
+        set { _gameData.CurrentArmor = value; }
+    }
+
+    public WeaponItemData CurrentWeapon
+    {
+        get { return _gameData.CurrentWeapon; }
+        set { _gameData.CurrentWeapon = value; }
+    }
+
     public void OnUpdate()
     {
         
@@ -231,6 +249,14 @@ public class GameManager
         Mp = MaxMp;
     }
 
+    public void RefreshEquipment()
+    {
+        // TODO : 장비 장착
+        // 1. 각 장비 아이템은 플레이어가 입을 오브젝트를 들고 있기
+        // 2. 옷입는 과정에서 이전 장비의 입는 옷을 비활성화
+        // 3. 현재 입는 옷 활성화
+    }
+
     // 해당 키 스킬 반환 (스킬 ui 완성되면 사용)
     // public SkillData GetSkill(Define.KeySkill keySkill)
     // {
@@ -272,13 +298,8 @@ public class GameManager
 
     public void Init()
     {
-        // TODO : (정리)
-        // Application.persistentDataPath을 변수 선언할때 바로 초기화하여 넣을 수 없음.
-        // 무조건 Awake, Start에서 넣어줘야 함.
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
 
-        // 나중에 프리팹 생성하며 넣기
-        _player = GameObject.FindWithTag("Player");
         if (Managers.Data.Start != null)
         {
             Debug.Log("GameManager Init : StartData True!");

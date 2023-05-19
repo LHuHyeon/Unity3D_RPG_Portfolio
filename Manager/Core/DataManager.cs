@@ -71,8 +71,6 @@ public class DataManager
         string[] lines = data.Split("\n");
         string[] row = lines[1].Replace("\r", "").Split(',');
 
-        Debug.Log("StartData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
-
         Start = new StartData()
         {
             Id = int.Parse(row[0]),
@@ -92,11 +90,9 @@ public class DataManager
         Level = new Dictionary<int, LevelData>();
 
         string[] lines = data.Split("\n");
-        Debug.Log("LevelData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
         for(int y = 1; y < lines.Length; y++)
         {
             string[] row = lines[y].Replace("\r", "").Split(',');
-            Debug.Log("row length : " + row.Length);
             if (row.Length == 0)
 				continue;
 			if (string.IsNullOrEmpty(row[0]))
@@ -120,7 +116,6 @@ public class DataManager
         Skill = new Dictionary<int, SkillData>();
 
         string[] lines = data.Split("\n");
-        Debug.Log("SkillData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
 
         for(int y = 1; y < lines.Length; y++)
         {
@@ -141,9 +136,8 @@ public class DataManager
                 skillConsumMp = int.Parse(row[4]),
                 discription = row[5],
             };
-            Debug.Log($"Id : {skillData.skillId}, Name : {skillData.skillName}");
 
-            // Sprite 6 (TODO : 잘 받아졌는지 확인)
+            // Sprite 6
             skillData.skillSprite = Managers.Resource.Load<Sprite>("Art/UI/Skill/"+row[6]);
 
             // 공격력 7
@@ -160,11 +154,9 @@ public class DataManager
     void UseItemRequest(string data)
     {
         string[] lines = data.Split("\n");
-        Debug.Log("UseItemData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
         for(int y = 1; y < lines.Length; y++)
         {
             string[] row = lines[y].Replace("\r", "").Split(',');
-            Debug.Log("row length : " + row.Length);
             if (row.Length == 0)
 				continue;
 			if (string.IsNullOrEmpty(row[0]))
@@ -180,9 +172,7 @@ public class DataManager
                 itemPrice = int.Parse(row[5]),
                 itemDesc = row[6],
                 itemMaxCount = 99,
-                // TODO : asset 있으면 주석 풀기
-                // itemObject = Managers.Resource.Load<GameObject>(""+row[7]),
-                // itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/"+row[8]),
+                itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Use/"+row[7]),
             };
 
             Item.Add(useItem.id, useItem);
@@ -192,11 +182,9 @@ public class DataManager
     void WeaponItemRequest(string data)
     {
         string[] lines = data.Split("\n");
-        Debug.Log("WeaponItemData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
         for(int y = 1; y < lines.Length; y++)
         {
             string[] row = lines[y].Replace("\r", "").Split(',');
-            Debug.Log("row length : " + row.Length);
             if (row.Length == 0)
 				continue;
 			if (string.IsNullOrEmpty(row[0]))
@@ -214,9 +202,7 @@ public class DataManager
                 itemPrice = int.Parse(row[7]),
                 itemDesc = row[8],
                 itemMaxCount = 1,
-                // TODO : asset 있으면 주석 풀기
-                // itemObject = Managers.Resource.Load<GameObject>(""+row[7]),
-                // itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/"+row[8]),
+                itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Weapon/"+row[9]),
             };
 
             Item.Add(weaponItem.id, weaponItem);
@@ -226,11 +212,9 @@ public class DataManager
     void ArmorItemRequest(string data)
     {
         string[] lines = data.Split("\n");
-        Debug.Log("ArmorItemData\n[0] : " + lines[0] + "\n[1] : " + lines[1]);
         for(int y = 1; y < lines.Length; y++)
         {
             string[] row = lines[y].Replace("\r", "").Split(',');
-            Debug.Log("row length : " + row.Length);
             if (row.Length == 0)
 				continue;
 			if (string.IsNullOrEmpty(row[0]))
@@ -251,9 +235,7 @@ public class DataManager
                 moveSpeed = int.Parse(row[10]),
                 itemDesc = row[11],
                 itemMaxCount = 1,
-                // TODO : asset 있으면 주석 풀기
-                // itemObject = Managers.Resource.Load<GameObject>(""+row[7]),
-                // itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/"+row[8]),
+                itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Armor/"+row[12]),
             };
 
             Item.Add(armorItem.id, armorItem);

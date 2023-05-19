@@ -12,4 +12,6 @@ public class ArmorItemData : ItemData
     public int hp=0;
     public int mp=0;
     public int moveSpeed=0;
+
+    public List<GameObject> charEquipment;
 }

@@ -9,4 +9,6 @@ public class WeaponItemData : ItemData
     public int upgradeValue = 0;
     public int upgradeCount = 0;
     public int attack=0;
+
+    public GameObject charEquipment;
 }

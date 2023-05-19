@@ -14,11 +14,10 @@ public class GameScene : BaseScene
         OnDataRequest();
 
         gameObject.GetOrAddComponent<CursorController>();   // 마우스 커서 생성
+        GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "Characters/TestPlayer2");
+        Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(_player);
 
         Invoke("DelayScene", 3f);
-
-        // GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "UnityChan");
-        // Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(_player);
     }
 
     void DelayScene()

@@ -24,6 +24,7 @@ public class Stat : MonoBehaviour
     
     void Start()
     {
+        _monster = GetComponent<MonsterController>();
         _level = 1;
         _hp = 100;
         _maxHp = 100;
@@ -35,9 +36,10 @@ public class Stat : MonoBehaviour
     }
 
     // 공격을 받았을 때
+    MonsterController _monster;
     public virtual void OnAttacked(int skillAttack=0)
     {
-        GetComponent<MonsterController>().State = Define.State.Hit;
+        _monster.State = Define.State.Hit;
 
         int damage;
         if (skillAttack != 0)
@@ -47,6 +49,8 @@ public class Stat : MonoBehaviour
             
         Hp -= damage;
         Debug.Log("Hit Damage : " + damage + "\nSTR : " + Managers.Game.STR);
+
+        HitEffect(damage);
 
         if (Hp <= 0)
         {
@@ -59,6 +63,17 @@ public class Stat : MonoBehaviour
     protected virtual void OnDead()
     {
         Managers.Game.Exp += _deadExp;
-        GetComponent<MonsterController>().State = Define.State.Die;
+        _monster.State = Define.State.Die;
+        _monster.hpBarUI.SetActive(false);
+    }
+
+    void HitEffect(int damage)
+    {
+        UI_HitEffect hitObject = Managers.UI.MakeWorldSpaceUI<UI_HitEffect>(gameObject.transform);
+        hitObject.hitText.text = damage.ToString();
+
+        float randomX = Random.Range(-0.2f, 0.2f);
+        float valueY = GetComponent<Collider>().bounds.size.y * 0.8f;
+        hitObject.transform.position = transform.position + new Vector3(randomX, valueY, 0);
     }
 }

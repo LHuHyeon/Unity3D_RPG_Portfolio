@@ -18,7 +18,7 @@ public class MonsterController : BaseController
     Stat _stat;
     NavMeshAgent nav;
     
-    protected GameObject hpBarUI;
+    public GameObject hpBarUI;
 
     public override void Init()
     {
@@ -27,6 +27,8 @@ public class MonsterController : BaseController
         _stat = GetComponent<Stat>();
         anim = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
+
+        hpBarUI = Managers.UI.MakeWorldSpaceUI<UI_HpBar>(transform).gameObject;
     }
 
     protected override void UpdateIdle()
@@ -35,7 +37,7 @@ public class MonsterController : BaseController
         distance = TargetDistance(Managers.Game.GetPlayer());
         if (distance <= scanRange)
         {
-            // hpBarUI.SetActive(true);
+            hpBarUI.SetActive(true);
             _lockTarget = Managers.Game.GetPlayer();
             State = Define.State.Moving;
         }
@@ -115,7 +117,7 @@ public class MonsterController : BaseController
     {
         _lockTarget = null;
         nav.SetDestination(transform.position);
-        // hpBarUI.SetActive(false);
+        hpBarUI.SetActive(false);
         State = Define.State.Idle;
     }
 }

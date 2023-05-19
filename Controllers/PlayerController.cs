@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using UnityEngine;
 
@@ -18,16 +19,46 @@ public class PlayerController : BaseController
 
     public SkillData currentSkill;
 
+    public Dictionary<int, List<GameObject>> charEquipment;
+
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
         
+        charEquipment = new Dictionary<int, List<GameObject>>();
         anim = GetComponent<Animator>();
 
         Managers.Input.KeyAction -= OnKeyEvent;
         Managers.Input.KeyAction += OnKeyEvent;
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
+
+        Invoke("SetInfo", 0.2f);
+    }
+
+    void SetInfo()
+    {
+        // 장착할 장비 객체 데이터 넣기
+        GameObject goChild = Util.FindChild(gameObject, "Modular_Characters");
+        foreach(Transform obj in goChild.GetComponentsInChildren<Transform>())
+        {
+            if (obj.CompareTag("Equipment"))
+            {
+                string result = Regex.Replace(obj.name, @"\D", "");
+                int id = int.Parse(result);
+
+                ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
+                if (armor.charEquipment == null)
+                    armor.charEquipment = new List<GameObject>();
+                
+                armor.charEquipment.Add(obj.gameObject);
+
+                // if (charEquipment.ContainsKey(id) == false)
+                //     charEquipment.Add(id, new List<GameObject>());
+
+                // charEquipment[id].Add(obj.gameObject);
+            }
+        }
     }
 
     protected override void UpdateIdle()
@@ -92,9 +123,11 @@ public class PlayerController : BaseController
     {
         _attackCloseTime += Time.deltaTime;
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") &&
-            _attackCloseTime > 0.94f &&
-            _onComboAttack == false)
+        // 공격이 시간이 끝나면 종료 || 공격이 끝났는데 다른 애니메이션에 있다면 종료
+        if ((anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == true &&
+            _attackCloseTime > 0.94f && _onComboAttack == false) || 
+            (anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false &&
+            _attackCloseTime > 0.99f && _onComboAttack == false))
         {
             StopAttack();
             State = Define.State.Idle;
