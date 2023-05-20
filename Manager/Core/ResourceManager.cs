@@ -26,6 +26,24 @@ public class ResourceManager
         return Resources.Load<T>(path);
     }
 
+    public GameObject Instantiate(GameObject obj, Transform parent = null)
+    {
+        if (obj == null){
+            Debug.Log("객체가 존재하지 않습니다.");
+            return null;
+        }
+
+        // 풀링이 적용된 객체인지 확인
+        if (obj.GetComponent<Poolable>() != null)
+            return Managers.Pool.Pop(obj, parent).gameObject;
+
+        // 해당 original 프리팹을 parent의 자식 객체로 생성하기
+        GameObject go = Object.Instantiate(obj, parent);
+        go.name = obj.name;    // (Clone) 이름을 없애기 위한 코드
+
+        return go;
+    }
+
     // 프리팹 생성
     public GameObject Instantiate(string path, Transform parent = null)
     {

@@ -13,11 +13,12 @@ public class DataManager
     public StartData Start { get; private set; }
     public Dictionary<int, LevelData> Level { get; private set; }
     public Dictionary<int, SkillData> Skill { get; private set; }
-    public Dictionary<int, ItemData> Item {get; private set; }
+    public Dictionary<int, ItemData> Item { get; private set; }
+    public Dictionary<int, List<int>> DropItem { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
 
     // TODO : 보기 좋게 바꾸기 ( 아니면 안쓰기 )
-    public bool[] isDataRequest = new bool[] {false, false, false, false, false, false};
+    public bool[] isDataRequest = new bool[] {false, false, false, false, false, false, false};
 
     public void Init()
     {
@@ -58,6 +59,10 @@ public class DataManager
             case Define.ArmorItemNumber:
                 ArmorItemRequest(data);
                 isDataRequest[5] = true;
+                break;
+            case Define.DropItemNumber:
+                DropItemRequest(data);
+                isDataRequest[6] = true;
                 break;
         }
     }
@@ -173,6 +178,7 @@ public class DataManager
                 itemDesc = row[6],
                 itemMaxCount = 99,
                 itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Use/"+row[7]),
+                itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Use/"+row[8]),
             };
 
             Item.Add(useItem.id, useItem);
@@ -203,6 +209,7 @@ public class DataManager
                 itemDesc = row[8],
                 itemMaxCount = 1,
                 itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Weapon/"+row[9]),
+                itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Weapon/"+row[10]),
             };
 
             Item.Add(weaponItem.id, weaponItem);
@@ -236,10 +243,33 @@ public class DataManager
                 itemDesc = row[11],
                 itemMaxCount = 1,
                 itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Armor/"+row[12]),
-                itemObject = Managers.Resource.Load<GameObject>("Object/Armor"+row[13]),
+                itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Armor/"+row[13]),
             };
 
             Item.Add(armorItem.id, armorItem);
+        }
+    }
+
+    void DropItemRequest(string data)
+    {
+        DropItem = new Dictionary<int, List<int>>();
+
+        string[] lines = data.Split("\n");
+
+        for(int y = 1; y < lines.Length; y++)
+        {
+            string[] row = lines[y].Replace("\r", "").Split(',');
+            
+            if (row.Length == 0)
+				continue;
+			if (string.IsNullOrEmpty(row[0]))
+				continue;
+
+            List<int> itemDatas = new List<int>();
+            foreach(string itemdata in row[1].Split("|"))
+                itemDatas.Add(int.Parse(itemdata));
+
+            DropItem.Add(int.Parse(row[0]), itemDatas);
         }
     }
 

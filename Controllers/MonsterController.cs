@@ -17,6 +17,8 @@ public class MonsterController : BaseController
 
     Stat _stat;
     NavMeshAgent nav;
+
+    public int dropItemId = 1;
     
     public GameObject hpBarUI;
 
@@ -99,12 +101,37 @@ public class MonsterController : BaseController
         nav.SetDestination(transform.position);
 
         if (GetComponent<CapsuleCollider>() != null)
-            Destroy(GetComponent<CapsuleCollider>());
+            StartCoroutine(DelayDestroy());
+    }
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("DIE") &&
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+    IEnumerator DelayDestroy()
+    {
+        Destroy(GetComponent<CapsuleCollider>());
+
+        yield return new WaitForSeconds(0.5f);
+
+        OnDropItem();
+
+        yield return new WaitForSeconds(2.5f);
+
+        Managers.Game.Despawn(gameObject);
+    }
+
+    protected void OnDropItem()
+    {
+        Debug.Log("OnDropItem"); 
+        List<int> idList = Managers.Data.DropItem[dropItemId];
+
+        for(int i=0; i<Random.Range(1, 3); i++)
         {
-            Managers.Game.Despawn(gameObject);
+            int randomId = Random.Range(0, idList.Count-1);
+            Debug.Log("id : " + randomId);
+
+            GameObject go = Managers.Resource.Instantiate(Managers.Data.Item[idList[randomId]].itemObject);
+            go.GetOrAddComponent<ObjectData>().id = idList[randomId];
+
+            float ranPos = Random.Range(-0.2f, 0.2f);
+            go.transform.position = transform.position + new Vector3(ranPos, ranPos, ranPos);
         }
     }
 

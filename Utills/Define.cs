@@ -146,4 +146,5 @@ public class Define : MonoBehaviour
     public const string UseItemNumber = "1334508722";
     public const string WeaponItemNumber = "271156662";
     public const string ArmorItemNumber = "1624069194";
+    public const string DropItemNumber = "563258933";
 }
