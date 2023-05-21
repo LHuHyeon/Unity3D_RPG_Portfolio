@@ -15,10 +15,11 @@ public class DataManager
     public Dictionary<int, SkillData> Skill { get; private set; }
     public Dictionary<int, ItemData> Item { get; private set; }
     public Dictionary<int, List<int>> DropItem { get; private set; }
+    public Dictionary<int, GameObject> Monster { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
 
     // TODO : 보기 좋게 바꾸기 ( 아니면 안쓰기 )
-    public bool[] isDataRequest = new bool[] {false, false, false, false, false, false, false};
+    public bool[] isDataRequest = new bool[] {false, false, false, false, false, false, false, false};
 
     public void Init()
     {
@@ -63,6 +64,10 @@ public class DataManager
             case Define.DropItemNumber:
                 DropItemRequest(data);
                 isDataRequest[6] = true;
+                break;
+            case Define.MonsterNumber:
+                MonsterRequest(data);
+                isDataRequest[7] = true;
                 break;
         }
     }
@@ -270,6 +275,35 @@ public class DataManager
                 itemDatas.Add(int.Parse(itemdata));
 
             DropItem.Add(int.Parse(row[0]), itemDatas);
+        }
+    }
+
+    void MonsterRequest(string data)
+    {
+        Monster = new Dictionary<int, GameObject>();
+
+        string[] lines = data.Split("\n");
+        for(int y = 1; y < lines.Length; y++)
+        {
+            string[] row = lines[y].Replace("\r", "").Split(',');
+            if (row.Length == 0)
+				continue;
+			if (string.IsNullOrEmpty(row[0]))
+				continue;
+
+            GameObject monsterObject = Managers.Resource.Load<GameObject>("Prefabs/Monster/"+row[8]);
+            MonsterStat monsterStat = monsterObject.GetOrAddComponent<MonsterStat>();
+
+            monsterStat.Id = int.Parse(row[0]);
+            monsterStat.Name = row[1];
+            monsterStat.MaxHp = int.Parse(row[2]);
+            monsterStat.Attack = int.Parse(row[3]);
+            monsterStat.MoveSpeed = int.Parse(row[4]);
+            monsterStat.DropExp = int.Parse(row[5]);
+            monsterStat.DropGold = int.Parse(row[6]);
+            monsterStat.DropItemId = int.Parse(row[7]);
+
+            Monster.Add(monsterStat.Id, monsterObject);
         }
     }
 

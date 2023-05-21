@@ -281,7 +281,7 @@ public class GameManager
         return currentSkill;
     }
 
-    public void OnAttacked(Stat attacker)
+    public void OnAttacked(MonsterStat attacker)
     {
         Hp -= Mathf.Max(0, attacker.Attack - Defense);
 
@@ -323,10 +323,32 @@ public class GameManager
         MoveSpeed = 5;
     }
 
-    // 캐릭터 소환
+    // 캐릭터 소환 (주소)
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
         GameObject go = Managers.Resource.Instantiate(path, parent);
+
+        switch(type){
+            case Define.WorldObject.Monster:
+                _monsters.Add(go);
+                if (OnSpawnEvent != null)
+                    OnSpawnEvent.Invoke(1);
+                break;
+            case Define.WorldObject.Player:
+                _player = go;
+                break;
+            default:
+                Debug.Log("GameManager : Null Type");
+                break;
+        }
+
+        return go;
+    }
+
+    // 캐릭터 소환 (객체)
+    public GameObject Spawn(Define.WorldObject type, GameObject obj, Transform parent = null)
+    {
+        GameObject go = Managers.Resource.Instantiate(obj, parent);
 
         switch(type){
             case Define.WorldObject.Monster:

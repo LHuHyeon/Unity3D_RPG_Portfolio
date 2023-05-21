@@ -147,4 +147,5 @@ public class Define : MonoBehaviour
     public const string WeaponItemNumber = "271156662";
     public const string ArmorItemNumber = "1624069194";
     public const string DropItemNumber = "563258933";
+    public const string MonsterNumber = "1085946242";
 }

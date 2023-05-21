@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UI_HpBar : UI_Base
 {
-    Stat _stat;
+    MonsterStat _stat;
 
     enum GameObjects
     {
@@ -18,13 +18,13 @@ public class UI_HpBar : UI_Base
             return false;
 
         Bind<GameObject>(typeof(GameObjects));
-        _stat = transform.parent.GetComponent<Stat>();
+        _stat = transform.parent.GetComponent<MonsterStat>();
         gameObject.SetActive(false);
 
         return true;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // 체력 설정
         Transform parent = transform.parent;

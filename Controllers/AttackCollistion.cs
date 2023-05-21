@@ -29,10 +29,10 @@ public class AttackCollistion : MonoBehaviour
             {
                 // 스킬 공격
                 int skillDamage = player.currentSkill.powerList[skillIndex] * Managers.Game.STR;
-                other.GetComponent<Stat>().OnAttacked(skillDamage);
+                other.GetComponent<MonsterStat>().OnAttacked(skillDamage);
             }
             else
-                other.GetComponent<Stat>().OnAttacked(); // 기본 공격
+                other.GetComponent<MonsterStat>().OnAttacked(); // 기본 공격
         }   
     }
 

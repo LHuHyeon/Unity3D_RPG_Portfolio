@@ -14,7 +14,7 @@ public class GameScene : BaseScene
         OnDataRequest();
 
         gameObject.GetOrAddComponent<CursorController>();   // 마우스 커서 생성
-        GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "Characters/TestPlayer2");
+        GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "TestPlayer2");
         Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(_player);
 
         Invoke("DelayScene", 3f);
@@ -24,6 +24,7 @@ public class GameScene : BaseScene
     {
         Managers.Game.Init();
         Managers.UI.ShowSceneUI<UI_PlayScene>();
+        Managers.Game.Spawn(Define.WorldObject.Monster, "Monster/Skeleton1");
     }
 
     // 나중엔 로그인 시 진행
@@ -36,6 +37,7 @@ public class GameScene : BaseScene
         StartCoroutine(Managers.Data.DataRequest(Define.WeaponItemNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.ArmorItemNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.DropItemNumber));
+        StartCoroutine(Managers.Data.DataRequest(Define.MonsterNumber));
     }
 
     public override void Clear()

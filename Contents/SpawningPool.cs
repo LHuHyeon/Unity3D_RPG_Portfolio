@@ -6,6 +6,8 @@ using UnityEngine.AI;
 // 몬스터 자동 생성
 public class SpawningPool : MonoBehaviour
 {
+    public GameObject _spawnMonsterNumber;
+
     [SerializeField]
     int _monsterCount = 0;      // 현재 몬스터 수
     int _reserveCount = 0;      // 임시 변수 (에러 방지)
@@ -50,7 +52,7 @@ public class SpawningPool : MonoBehaviour
         _reserveCount++;
         yield return new WaitForSeconds(Random.Range(1, _spawnTime));
 
-        GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, "Knight");
+        GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, _spawnMonsterNumber);
         NavMeshAgent nav = obj.GetOrAddComponent<NavMeshAgent>();
 
         Vector3 randPos;
@@ -70,5 +72,10 @@ public class SpawningPool : MonoBehaviour
 
         // while의 에러 예방 목적인 변수이므로 코루틴이 끝날땐 --를 해준다.
         _reserveCount--;
+    }
+
+    void SetMonster()
+    {
+        
     }
 }

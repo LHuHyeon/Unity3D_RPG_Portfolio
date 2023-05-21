@@ -1,0 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class UI_NameBar : UI_Base
+{
+    enum Gameobjects
+    {
+        Background,
+    }
+
+    enum Texts
+    {
+        NameText,
+    }
+
+    public string nameText;
+
+    public override bool Init()
+    {
+        if (base.Init() == false)
+            return false;
+
+        BindObject(typeof(Gameobjects));
+        BindText(typeof(Texts));
+
+        GetText((int)Texts.NameText).text = nameText;
+
+        return true;
+    }
+
+    void FixedUpdate()
+    {
+        Transform parent = transform.parent;
+        transform.position = parent.position + Vector3.up * (parent.GetComponent<Collider>().bounds.size.y);
+        GetObject((int)Gameobjects.Background).transform.rotation = Camera.main.transform.rotation;
+    }
+}

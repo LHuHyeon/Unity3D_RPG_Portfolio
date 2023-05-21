@@ -5,8 +5,6 @@ using UnityEngine.AI;
 
 public class MonsterController : BaseController
 {
-    public int id;
-
     [SerializeField] private float scanRange;
     [SerializeField] private float attackRange;
 
@@ -15,10 +13,8 @@ public class MonsterController : BaseController
 
     protected bool isAttack = false;    // 공격 시 true
 
-    Stat _stat;
+    MonsterStat _stat;
     NavMeshAgent nav;
-
-    public int dropItemId = 1;
     
     public GameObject hpBarUI;
 
@@ -26,7 +22,7 @@ public class MonsterController : BaseController
     {
         WorldObjectType = Define.WorldObject.Monster;
 
-        _stat = GetComponent<Stat>();
+        _stat = GetComponent<MonsterStat>();
         anim = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
 
@@ -59,7 +55,10 @@ public class MonsterController : BaseController
             }
         }
         else
+        {
+            State = Define.State.Idle;
             BattleClose();
+        }
     }
 
     // protected override void UpdateAttack()
@@ -108,31 +107,9 @@ public class MonsterController : BaseController
     {
         Destroy(GetComponent<CapsuleCollider>());
 
-        yield return new WaitForSeconds(0.5f);
-
-        OnDropItem();
-
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(3f);
 
         Managers.Game.Despawn(gameObject);
-    }
-
-    protected void OnDropItem()
-    {
-        Debug.Log("OnDropItem"); 
-        List<int> idList = Managers.Data.DropItem[dropItemId];
-
-        for(int i=0; i<Random.Range(1, 3); i++)
-        {
-            int randomId = Random.Range(0, idList.Count-1);
-            Debug.Log("id : " + randomId);
-
-            GameObject go = Managers.Resource.Instantiate(Managers.Data.Item[idList[randomId]].itemObject);
-            go.GetOrAddComponent<ObjectData>().id = idList[randomId];
-
-            float ranPos = Random.Range(-0.2f, 0.2f);
-            go.transform.position = transform.position + new Vector3(ranPos, ranPos, ranPos);
-        }
     }
 
     protected float TargetDistance(GameObject _target)
@@ -145,6 +122,5 @@ public class MonsterController : BaseController
         _lockTarget = null;
         nav.SetDestination(transform.position);
         hpBarUI.SetActive(false);
-        State = Define.State.Idle;
     }
 }
