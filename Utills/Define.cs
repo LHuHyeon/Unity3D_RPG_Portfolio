@@ -119,8 +119,13 @@ public class Define : MonoBehaviour
 
     public enum UIEvent
     {
+        Enter,
+        Exit,
         Click,
+        BeginDrag,
         Drag,
+        EndDrag,
+        Drop,
     }
 
     public enum MouseEvent

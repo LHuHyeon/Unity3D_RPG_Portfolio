@@ -39,6 +39,8 @@ public class GameData
     // 현재 무기
     public WeaponItemData CurrentWeapon;
 
+    public List<UI_InvenItem> invenSlots;
+
     // 스킬 : 스킬 능력, 레벨, 흭득 횟수
     // 등록된 스킬 : 스킬 능력
     // 퀘스트 : 퀘스트 내용, 완료 보상, 클리어 유/무
@@ -57,6 +59,8 @@ public class GameManager
 
     GameData _gameData = new GameData();
     public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
+
+    public bool isInventory = false;
 
     public string Name
 	{
@@ -198,6 +202,12 @@ public class GameManager
     {
         get { return _gameData.CurrentWeapon; }
         set { _gameData.CurrentWeapon = value; }
+    }
+
+    public List<UI_InvenItem> InvenSlots
+    {
+        get { return _gameData.invenSlots; }
+        set { _gameData.invenSlots = value; }
     }
 
     public void OnUpdate()

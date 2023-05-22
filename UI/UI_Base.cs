@@ -80,13 +80,33 @@ public abstract class UI_Base : MonoBehaviour
 
         // UI_EventHandler 안에 action을 받을 Action 델리게이트가 있음!
         switch (type){
+            case Define.UIEvent.Enter:
+                evt.OnEnterHandler -= action;
+                evt.OnEnterHandler += action;
+                break;
+            case Define.UIEvent.Exit:
+                evt.OnExitHandler -= action;
+                evt.OnExitHandler += action;
+                break;
             case Define.UIEvent.Click:
-                evt.OnClickHandler -= action;   // 중복 방지로 제거 후 추가함.
+                evt.OnClickHandler -= action;
                 evt.OnClickHandler += action;
                 break;
             case Define.UIEvent.Drag:
                 evt.OnDragHandler -= action;
                 evt.OnDragHandler += action;
+                break;
+            case Define.UIEvent.BeginDrag:
+                evt.OnBeginDragHandler -= action;
+                evt.OnBeginDragHandler += action;
+                break;
+            case Define.UIEvent.EndDrag:
+                evt.OnEndDragHandler -= action;
+                evt.OnEndDragHandler += action;
+                break;
+            case Define.UIEvent.Drop:
+                evt.OnDropHandler -= action;
+                evt.OnDropHandler += action;
                 break;
         }
     }

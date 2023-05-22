@@ -75,9 +75,11 @@ public class MonsterStat : MonoBehaviour
             int randomId = Random.Range(0, idList.Count-1);
 
             GameObject go = Managers.Resource.Instantiate(Managers.Data.Item[idList[randomId]].itemObject);
-            go.GetOrAddComponent<ObjectData>().id = idList[randomId];
+            ObjectData goData = go.GetOrAddComponent<ObjectData>();
 
-            float ranPos = Random.Range(-0.2f, 0.2f);
+            goData.id = idList[randomId];
+
+            float ranPos = Random.Range(-1f, 1f);
             go.transform.position = transform.position * ranPos;
         }
     }

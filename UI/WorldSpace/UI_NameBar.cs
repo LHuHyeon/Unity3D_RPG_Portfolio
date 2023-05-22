@@ -33,7 +33,9 @@ public class UI_NameBar : UI_Base
     void FixedUpdate()
     {
         Transform parent = transform.parent;
-        transform.position = parent.position + Vector3.up * (parent.GetComponent<Collider>().bounds.size.y);
+        float valueY = (parent.GetComponent<Collider>().bounds.size.y * 1.3f);
+
+        transform.position = parent.position + Vector3.up * valueY;
         GetObject((int)Gameobjects.Background).transform.rotation = Camera.main.transform.rotation;
     }
 }
