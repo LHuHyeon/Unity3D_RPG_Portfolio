@@ -57,7 +57,12 @@ public class ResourceManager
 
         // 풀링이 적용된 객체인지 확인
         if (original.GetComponent<Poolable>() != null)
+        {
+            // if (original.GetComponent<UI_Popup>() != null)
+            //     Managers.Pool.CreatePool(original, 1);
+
             return Managers.Pool.Pop(original, parent).gameObject;
+        }
 
         // 해당 original 프리팹을 parent의 자식 객체로 생성하기
         GameObject go = Object.Instantiate(original, parent);

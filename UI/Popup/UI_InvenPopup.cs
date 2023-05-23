@@ -13,7 +13,6 @@ public class UI_InvenPopup : UI_Popup
     
     enum Gameobjects
     {
-        Background,
         Content,
         Title,
         ExitButton,
@@ -35,12 +34,9 @@ public class UI_InvenPopup : UI_Popup
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
-        Managers.Input.KeyAction -= OnInventory;
-        Managers.Input.KeyAction += OnInventory;
-
         SetInfo();
 
-        GetObject((int)Gameobjects.Background).SetActive(false);
+        gameObject.SetActive(false);
 
         return true;
     }
@@ -50,14 +46,27 @@ public class UI_InvenPopup : UI_Popup
         ResetSlot();
         SetEventHandler();
     }
-    
-    void OnInventory()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            Managers.Game.isInventory = !Managers.Game.isInventory;
 
-            GetObject((int)Gameobjects.Background).SetActive(Managers.Game.isInventory);
+    public void AcquireItem(ItemData item, int count = 1)
+    {
+        foreach(UI_InvenItem slot in Managers.Game.InvenSlots)
+        {
+            // 아이템이 없으면 넣기
+            if (slot.item == null)
+            {
+                slot.AddItem(item, count);
+                break;
+            }
+
+            if (item is UseItemData)
+            {
+                // 같은 아이템이 존재하면 개수 추가
+                if (item.id == slot.item.id)
+                {
+                    slot.SetCount(count);
+                    break;
+                }
+            }
         }
     }
 
@@ -70,7 +79,7 @@ public class UI_InvenPopup : UI_Popup
             Managers.Resource.Destroy(child.gameObject);
 
         for(int i=0; i<invenCount; i++)
-            Managers.Game.InvenSlots.Add(Managers.UI.MakeSubItem<UI_InvenItem>(parent: grid.transform, name: "Slot"));
+            Managers.Game.InvenSlots.Add(Managers.UI.MakeSubItem<UI_InvenItem>(parent: grid.transform));
     }
 
     void SetEventHandler()

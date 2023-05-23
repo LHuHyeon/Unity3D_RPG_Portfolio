@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectData : MonoBehaviour
+public class ItemPickUp : MonoBehaviour
 {
     public int id=0;
-    public float disableDelayTime=0;    // effect 전용 비활성화 딜레이
+    public int itemCount = 1;   // 아이템 전용 개수
 
     UI_NameBar nameBarUI = null;
 
@@ -13,11 +13,11 @@ public class ObjectData : MonoBehaviour
 
     void Start()
     {
-        if (gameObject.CompareTag("Item"))
-        {
-            nameBarUI = Managers.UI.MakeWorldSpaceUI<UI_NameBar>(transform);
+        nameBarUI = Managers.UI.MakeWorldSpaceUI<UI_NameBar>(transform);
+        if (itemCount > 1)
+            nameBarUI.nameText = Managers.Data.Item[id].itemName + $" ({itemCount})";
+        else
             nameBarUI.nameText = Managers.Data.Item[id].itemName;
-        }
     }
 
     void FixedUpdate()

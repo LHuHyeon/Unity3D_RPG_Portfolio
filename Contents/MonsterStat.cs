@@ -69,17 +69,17 @@ public class MonsterStat : MonoBehaviour
         List<int> idList = Managers.Data.DropItem[_dropItemId];
 
         // 아이탬 개수 0~2 + Luk (최대 5개까지)
-        int maxCount = Mathf.Clamp(3 + Managers.Game.LUK, 0, 5);
+        int maxCount = Mathf.Clamp(1 + Managers.Game.LUK, 0, 5);
         for(int i=0; i<Random.Range(0, maxCount); i++)
         {
             int randomId = Random.Range(0, idList.Count-1);
 
             GameObject go = Managers.Resource.Instantiate(Managers.Data.Item[idList[randomId]].itemObject);
-            ObjectData goData = go.GetOrAddComponent<ObjectData>();
+            ItemPickUp goData = go.GetOrAddComponent<ItemPickUp>();
 
             goData.id = idList[randomId];
 
-            float ranPos = Random.Range(-1f, 1f);
+            float ranPos = Random.Range(-0.5f, 0.5f);
             go.transform.position = transform.position * ranPos;
         }
     }

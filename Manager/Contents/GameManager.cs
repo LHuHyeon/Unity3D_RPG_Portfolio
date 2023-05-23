@@ -61,6 +61,7 @@ public class GameManager
     public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
 
     public bool isInventory = false;
+    public UI_InvenPopup _inventory;
 
     public string Name
 	{

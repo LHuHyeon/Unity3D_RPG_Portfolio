@@ -14,7 +14,7 @@ public class PlayerController : BaseController
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
 
     [SerializeField]
-    private List<ObjectData> effects = new List<ObjectData>();
+    private List<EffectData> effects = new List<EffectData>();
     public GameObject currentEffect;
 
     public SkillData currentSkill;
@@ -94,7 +94,7 @@ public class PlayerController : BaseController
         {
             // 건물을 클릭하여 이동하면 건물 앞에 멈추기 (1.0f 거리에서 멈추기)
             Debug.DrawRay(transform.position + (Vector3.up * 0.5f), dir.normalized, Color.red);
-            if (Physics.Raycast(transform.position + (Vector3.up * 0.5f), dir, 1.0f, LayerMask.GetMask("Block"))){
+            if (Physics.Raycast(transform.position + (Vector3.up * 0.5f), dir, 1.0f, 1 << 10)){ // 10 : Block
                 if (Input.GetMouseButton(0) == false)
                     State = Define.State.Idle;
                 return;
@@ -287,6 +287,34 @@ public class PlayerController : BaseController
             GetDiveRoll();
             GetSkill();
         }
+
+        GetPickUp();
+    }
+
+    // 아이템 줍기
+    [SerializeField]
+    float itemMaxRadius = 5f;
+    void GetPickUp()
+    {
+        // 주변 아이템 탐색
+        Collider[] colliders = Physics.OverlapSphere(transform.position, itemMaxRadius, 1 << 12); // 12 : Item
+        
+        // F 키를 누르면 줍기
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            for(int i=0; i<colliders.Length; i++)
+            {
+                ItemPickUp _item = colliders[i].GetComponent<ItemPickUp>();
+                if (_item != null)
+                {
+                    // 인벤에 넣기
+                    Managers.Game._inventory.AcquireItem(Managers.Data.Item[_item.id], _item.itemCount);
+                    Destroy(colliders[i].gameObject);
+
+                    return;
+                }
+            }
+        }
     }
 
     // [ Anim Event ]
@@ -318,11 +346,6 @@ public class PlayerController : BaseController
     {
         if (State == Define.State.Skill)
             return;
-
-        // 마우스 방향으로 회전
-        _destPos = GetMousePoint();
-        dir = _destPos - transform.position;
-        transform.rotation = Quaternion.LookRotation(dir);
 
         // TEST CODE
         if (Input.GetKeyDown(KeyCode.Q))
@@ -360,6 +383,11 @@ public class PlayerController : BaseController
     // 스킬 진행
     void OnSkill(SkillData skill)
     {
+        // 마우스 방향으로 회전
+        _destPos = GetMousePoint();
+        dir = _destPos - transform.position;
+        transform.rotation = Quaternion.LookRotation(dir);
+
         currentSkill = skill;
         if (currentSkill == null)
         {
@@ -367,7 +395,7 @@ public class PlayerController : BaseController
             return;
         }
 
-        foreach(ObjectData value in effects)
+        foreach(EffectData value in effects)
         {
             if (currentSkill.skillId == value.id)
             {
@@ -397,7 +425,7 @@ public class PlayerController : BaseController
         if (currentEffect == null)
             return;
         
-        if (currentEffect.GetComponent<ObjectData>().disableDelayTime == 0)
+        if (currentEffect.GetComponent<EffectData>().disableDelayTime == 0)
             currentEffect.SetActive(false);
         else
             StartCoroutine(EffectDisableDelayTime());
@@ -412,7 +440,7 @@ public class PlayerController : BaseController
 
         effect.transform.SetParent(null);
     
-        yield return new WaitForSeconds(effect.GetComponent<ObjectData>().disableDelayTime);
+        yield return new WaitForSeconds(effect.GetComponent<EffectData>().disableDelayTime);
 
         effect.transform.SetParent(effectParent);
         effect.transform.localPosition = effectPos;

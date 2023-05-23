@@ -51,6 +51,12 @@ public class UI_PlayScene : UI_Scene
         BindText(typeof(Texts));
         Bind<Slider>(typeof(Sliders));
 
+        Managers.Game._inventory = Managers.UI.ShowPopupUI<UI_InvenPopup>();
+        Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
+
+        Managers.Input.KeyAction -= OnInventory;
+        Managers.Input.KeyAction += OnInventory;
+
         SetInfo();
 
 		return true;
@@ -83,6 +89,16 @@ public class UI_PlayScene : UI_Scene
         SetRatio(Get<Slider>((int)Sliders.HpBar), (float)Managers.Game.Hp / Managers.Game.MaxHp);
         SetRatio(Get<Slider>((int)Sliders.MpBar), (float)Managers.Game.Mp / Managers.Game.MaxMp);
         SetRatio(Get<Slider>((int)Sliders.ExpBar), (float)Managers.Game.Exp / Managers.Game.TotalExp);
+    }
+
+    void OnInventory()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Managers.Game.isInventory = !Managers.Game.isInventory;
+
+            Managers.Game._inventory.gameObject.SetActive(Managers.Game.isInventory);
+        }
     }
 
     public void SetRatio(Slider slider, float ratio)

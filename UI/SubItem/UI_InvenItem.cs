@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ public class UI_InvenItem : UI_Base
 {
     public ItemData item;
     public Image itemImage;
-    public Text itemCountText;
+    public TextMeshProUGUI itemCountText;
     public int itemCount;
 
     public override bool Init()
@@ -37,14 +38,14 @@ public class UI_InvenItem : UI_Base
             UI_DragSlot.instance.dragInvenSlot = this;
             UI_DragSlot.instance.DragSetImage(itemImage);
 
-            UI_DragSlot.instance.transform.position = eventData.position;
+            UI_DragSlot.instance.itemImage.transform.position = eventData.position;
         }, Define.UIEvent.BeginDrag);
 
         // 마우스 드래그 방향으로 아이템 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             if (item != null)
-                UI_DragSlot.instance.transform.position = eventData.position;
+                UI_DragSlot.instance.itemImage.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
 
         // 드래그가 끝났을 때
@@ -64,24 +65,25 @@ public class UI_InvenItem : UI_Base
         // 이 슬롯에 마우스 클릭이 끝나면 아이템 받기
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (UI_DragSlot.instance.dragInvenSlot == this)
+            UI_InvenItem dragSlot = UI_DragSlot.instance.dragInvenSlot;
+            if (dragSlot == this || dragSlot.item.id == item.id)
                 return;
 
-            if (UI_DragSlot.instance.dragInvenSlot != null)
+            if (dragSlot != null)
             {
                 // 두 슬롯의 아이템이 같은 아이템일 경우 개수 체크
-                if (item == UI_DragSlot.instance.dragInvenSlot.item)
+                if (item == dragSlot.item)
                 {
-                    int addValue = itemCount + UI_DragSlot.instance.dragInvenSlot.itemCount;
+                    int addValue = itemCount + dragSlot.itemCount;
                     if (addValue > item.itemMaxCount)
                     {
-                        UI_DragSlot.instance.dragInvenSlot.SetCount(-(item.itemMaxCount-itemCount));
+                        dragSlot.SetCount(-(item.itemMaxCount-itemCount));
                         SetCount(item.itemMaxCount - itemCount);
                     }
                     else
                     {
-                        SetCount(UI_DragSlot.instance.dragInvenSlot.itemCount);
-                        UI_DragSlot.instance.dragInvenSlot.ClearSlot();  // 들고 있었던 슬롯은 초기화
+                        SetCount(dragSlot.itemCount);
+                        dragSlot.ClearSlot();  // 들고 있었던 슬롯은 초기화
                     }
                 }
                 else

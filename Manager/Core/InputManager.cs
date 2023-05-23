@@ -18,14 +18,14 @@ public class InputManager
 
     public void OnUpdate()
     {
-        // UI 클릭 확인
-        if (EventSystem.current.IsPointerOverGameObject())
-            return;
-
         // 키입력 메소드가 KeyAction안에 존재하는가?
         if (Input.anyKey && KeyAction != null)
             KeyAction.Invoke();
 
+        // UI 클릭 확인
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        
         if (MouseAction != null){
             if (Input.GetMouseButton(1)){
                 if (!_rightPressed){

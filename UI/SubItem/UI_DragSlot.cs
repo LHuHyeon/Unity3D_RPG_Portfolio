@@ -11,8 +11,7 @@ public class UI_DragSlot : MonoBehaviour
     public UI_InvenItem dragInvenSlot;
 
     // 아이템 이미지
-    [SerializeField]
-    private Image imageItem;
+    public Image itemImage;
 
     void Start()
     {
@@ -22,14 +21,14 @@ public class UI_DragSlot : MonoBehaviour
     // 드래그 할 경우 활성화
     public void DragSetImage(Image _itemImage)
     {
-        imageItem.sprite = _itemImage.sprite;
+        itemImage.sprite = _itemImage.sprite;
         SetColor(1);
     }
 
     public void SetColor(float _alpha)
     {
-        Color color = imageItem.color;
+        Color color = itemImage.color;
         color.a = _alpha;
-        imageItem.color = color;
+        itemImage.color = color;
     }
 }
