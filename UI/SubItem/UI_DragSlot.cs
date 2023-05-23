@@ -8,7 +8,7 @@ public class UI_DragSlot : MonoBehaviour
 {
     public static UI_DragSlot instance;
 
-    public UI_InvenItem dragInvenSlot;
+    public UI_SlotItem dragSlotItem;
 
     // 아이템 이미지
     public Image itemImage;

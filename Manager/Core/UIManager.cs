@@ -29,13 +29,17 @@ public class UIManager
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.overrideSorting = true;
 
-        if (sort){
-            canvas.sortingOrder = _order;
-            _order++;
-        }
-        else{
+        if (sort)
+            SetOrder(canvas);
+        else
             canvas.sortingOrder = 0;
-        }
+        
+    }
+
+    public void SetOrder(Canvas canvas)
+    {
+        canvas.sortingOrder = _order;
+        _order++;
     }
 
     // 3D 안에 있는 WorldSpace에서 UI 생성 (캐릭터 체력 UI ...)

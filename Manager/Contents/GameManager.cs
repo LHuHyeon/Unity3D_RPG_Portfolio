@@ -63,6 +63,9 @@ public class GameManager
     public bool isInventory = false;
     public UI_InvenPopup _inventory;
 
+    public bool isEquipment = false;
+    public UI_EqStatPopup _equipment;
+
     public string Name
 	{
 		get { return _gameData.Name; }
@@ -196,7 +199,11 @@ public class GameManager
     public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor
     {
         get { return _gameData.CurrentArmor; }
-        set { _gameData.CurrentArmor = value; }
+        set
+        {
+            _gameData.CurrentArmor = value;
+            RefreshEquipment();
+        }
     }
 
     public WeaponItemData CurrentWeapon
@@ -310,6 +317,8 @@ public class GameManager
     public void Init()
     {
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
+
+        CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
 
         if (Managers.Data.Start != null)
         {

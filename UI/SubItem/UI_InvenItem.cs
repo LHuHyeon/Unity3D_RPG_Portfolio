@@ -5,48 +5,20 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_InvenItem : UI_Base
+public class UI_InvenItem : UI_SlotItem
 {
-    public ItemData item;
-    public Image itemImage;
     public TextMeshProUGUI itemCountText;
     public int itemCount;
 
-    public override bool Init()
+    public override void SetInfo()
     {
-        if (base.Init() == false)
-            return false;
-
-        SetInfo();
-
-        return true;
+        slotType = Define.SlotType.Inven;
+        base.SetInfo();
     }
 
-    public void SetInfo()
+    protected override void SetEventHandler()
     {
-        SetEventHandler();
-    }
-
-    void SetEventHandler()
-    {
-        // 아이템이 존재할 시 마우스로 들기 가능.
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (item == null)
-                return;
-
-            UI_DragSlot.instance.dragInvenSlot = this;
-            UI_DragSlot.instance.DragSetImage(itemImage);
-
-            UI_DragSlot.instance.itemImage.transform.position = eventData.position;
-        }, Define.UIEvent.BeginDrag);
-
-        // 마우스 드래그 방향으로 아이템 이동
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (item != null)
-                UI_DragSlot.instance.itemImage.transform.position = eventData.position;
-        }, Define.UIEvent.Drag);
+        base.SetEventHandler();
 
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
@@ -58,21 +30,23 @@ public class UI_InvenItem : UI_Base
             }
 
             UI_DragSlot.instance.SetColor(0);
-            UI_DragSlot.instance.dragInvenSlot = null;
+            UI_DragSlot.instance.dragSlotItem = null;
 
         }, Define.UIEvent.EndDrag);
 
         // 이 슬롯에 마우스 클릭이 끝나면 아이템 받기
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            UI_InvenItem dragSlot = UI_DragSlot.instance.dragInvenSlot;
-            if (dragSlot == this || dragSlot.item.id == item.id)
-                return;
+            UI_InvenItem dragSlot = UI_DragSlot.instance.dragSlotItem as UI_InvenItem;
 
             if (dragSlot != null)
             {
+                // 자기 자신이라면
+                if (dragSlot == this)
+                    return;
+
                 // 두 슬롯의 아이템이 같은 아이템일 경우 개수 체크
-                if (item == dragSlot.item)
+                if (item == dragSlot.item && (dragSlot.item is UseItemData))
                 {
                     int addValue = itemCount + dragSlot.itemCount;
                     if (addValue > item.itemMaxCount)
@@ -100,30 +74,28 @@ public class UI_InvenItem : UI_Base
         int _tempItemCount = itemCount;
 
         // 드래그된 슬롯을 현재 슬롯에 Add
-        UI_InvenItem dragSlot = UI_DragSlot.instance.dragInvenSlot;
+        UI_InvenItem dragSlot = UI_DragSlot.instance.dragSlotItem as UI_InvenItem;
         AddItem(dragSlot.item, dragSlot.itemCount);
 
         // 현재 슬롯 아이템을 드래그된 슬롯에 Add
         if (_tempItem != null)
-            UI_DragSlot.instance.dragInvenSlot.AddItem(_tempItem, _tempItemCount);
+            UI_DragSlot.instance.dragSlotItem.AddItem(_tempItem, _tempItemCount);
         else
-            UI_DragSlot.instance.dragInvenSlot.ClearSlot(false);
+            UI_DragSlot.instance.dragSlotItem.ClearSlot();
     }
 
     // 투명도 설정 (0 ~ 255)
-    void SetColor(float _alpha)
+    protected override void SetColor(float _alpha)
     {
-        Color color = itemImage.color;
-        color.a = _alpha;
-        itemImage.color = color;
-        itemCountText.color = color;
+        base.SetColor(_alpha);
+
+        itemCountText.color = itemImage.color;
     }
 
     // 아이템 등록
-    public void AddItem(ItemData _item, int count = 1)
+    public override void AddItem(ItemData _item, int count = 1)
     {
-        item = _item;
-        itemImage.sprite = item.itemIcon;
+        base.AddItem(_item, count);
 
         // 장비가 아니라면 개수 설정
         if ((item is UseItemData) == true)
@@ -136,9 +108,6 @@ public class UI_InvenItem : UI_Base
             itemCount = 0;
             itemCountText.text = "";
         }
-
-        // 색 활성화
-        SetColor(255);
     }
 
     // 아이템 개수 업데이트
@@ -153,10 +122,10 @@ public class UI_InvenItem : UI_Base
     }
 
     // 슬롯 초기화
-    public void ClearSlot(bool isRemove=true)
+    public override void ClearSlot()
     {
-        item = null;
-        itemImage.sprite = null;
+        base.ClearSlot();
+
         itemCount = 0;
         itemCountText.text = "0";
         

@@ -33,7 +33,7 @@ public class PlayerController : BaseController
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Invoke("SetInfo", 1f);
+        Invoke("SetInfo", 2f);
     }
 
     void SetInfo()
@@ -46,6 +46,7 @@ public class PlayerController : BaseController
             {
                 string result = Regex.Replace(obj.name, @"\D", "");
                 int id = int.Parse(result);
+                Debug.Log(obj.name + " : " + id);
 
                 ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
                 if (armor.charEquipment == null)
