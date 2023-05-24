@@ -54,22 +54,21 @@ public class UI_ArmorItem : UI_SlotItem
                     return;
 
                 // 장비 장착 (or 교체)
-                ChangeArmor();
+                ChangeArmor(dragSlot);
             }
 
         }, Define.UIEvent.Drop);
     }
 
-    private void ChangeArmor()
+    public void ChangeArmor(UI_SlotItem itemSlot)
     {
         ItemData _tempItem = item;
 
         // 장비 장착
-        // UI_ArmorItem dragSlot = UI_DragSlot.instance.dragSlotItem as UI_ArmorItem;
-        AddItem(UI_DragSlot.instance.dragSlotItem.item);
+        AddItem(itemSlot.item);
 
         // 기존 장비 인벤 이동
-        UI_InvenItem inven = UI_DragSlot.instance.dragSlotItem as UI_InvenItem;
+        UI_InvenItem inven = itemSlot as UI_InvenItem;
         if (_tempItem != null)
             inven.AddItem(_tempItem);
         else
@@ -100,6 +99,9 @@ public class UI_ArmorItem : UI_SlotItem
 
         // 장비 오브젝트 활성화
         EquipmentActive(armorItem, true);
+
+        // 스탯 적용
+        Managers.Game.RefreshEquipment(armorItem, true);
     }
 
     // 캐릭터의 보여지는 장비 오브젝트 활성화 여부
@@ -132,6 +134,8 @@ public class UI_ArmorItem : UI_SlotItem
     {
         base.ClearSlot();
 
+        EquipmentActive(armorItem, false);                  // 장비 비활성화
+        Managers.Game.RefreshEquipment(armorItem, false);   // 장비 스탯 해제
         armorItem = null;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 공격마다 각 사거리가 다르므로 여기서 관리
 public class PlayerAnimEvent : MonoBehaviour
 {
     [SerializeField]

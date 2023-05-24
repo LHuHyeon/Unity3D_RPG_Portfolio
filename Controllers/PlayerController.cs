@@ -13,12 +13,15 @@ public class PlayerController : BaseController
     // LayerMask 변수
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
 
+    // 이펙트 관리 변수
     [SerializeField]
     private List<EffectData> effects = new List<EffectData>();
     public GameObject currentEffect;
 
+    // 현재 스킬
     public SkillData currentSkill;
 
+    // 입을 수 있는 장비 저장
     public Dictionary<int, List<GameObject>> charEquipment;
 
     public override void Init()
@@ -33,7 +36,7 @@ public class PlayerController : BaseController
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Invoke("SetInfo", 2f);
+        Invoke("SetInfo", 2f);  // TODO : Title 씬이 완성되면 기다리지 않기
     }
 
     void SetInfo()
@@ -65,6 +68,8 @@ public class PlayerController : BaseController
             }
         }
     }
+
+#region State 패턴
 
     protected override void UpdateIdle()
     {
@@ -153,6 +158,10 @@ public class PlayerController : BaseController
         }
     }
 
+#endregion
+
+#region 마우스 입력
+
     // 마우스 클릭
     void OnMouseEvent(Define.MouseEvent evt)
     {
@@ -237,6 +246,10 @@ public class PlayerController : BaseController
         }
     }
 
+#endregion
+
+#region 연속 공격 스크립트
+
     bool _onAttack = false;
     bool _onComboAttack = false;
     int attackClipNumber = 0;
@@ -285,6 +298,10 @@ public class PlayerController : BaseController
         _attackCloseTime = 0;
         attackClipNumber = 0;
     }
+
+#endregion
+
+#region 키입력
 
     // 키보드 클릭
     void OnKeyEvent()
@@ -415,6 +432,8 @@ public class PlayerController : BaseController
         anim.CrossFade("SKILL"+currentSkill.skillId, 0.1f, -1, 0);
         currentEffect.SetActive(true);
     }
+
+#endregion
 
     // 마우스 Ray
     public Vector3 GetMousePoint()

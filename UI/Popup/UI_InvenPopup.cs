@@ -6,13 +6,6 @@ using UnityEngine.UI;
 
 public class UI_InvenPopup : UI_Popup
 {
-    /*
-    1. 타이틀 잡으면 ui 이동 가능 (해상도 밖으로는 못나감.)
-    2. 인벤 슬롯 초기화
-    3. 인벤토리 관련 여기서 모두 관리.
-    4. 스크롤 뷰 마우스 휠 속도 올리기
-    */
-    
     enum Gameobjects
     {
         Background,
@@ -27,7 +20,7 @@ public class UI_InvenPopup : UI_Popup
     }
 
     [SerializeField]
-    int invenCount = 42;
+    int invenCount = 42;    // 인벤 슬롯 개수
 
     public override bool Init()
     {
@@ -37,8 +30,8 @@ public class UI_InvenPopup : UI_Popup
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
-        Managers.Input.KeyAction -= OnInventory;
-        Managers.Input.KeyAction += OnInventory;
+        Managers.Input.KeyAction -= OnInventoryUI;
+        Managers.Input.KeyAction += OnInventoryUI;
 
         SetInfo();
 
@@ -47,8 +40,14 @@ public class UI_InvenPopup : UI_Popup
         return true;
     }
 
+    void FixedUpdate()
+    {
+        if (Managers.Game.isInventory == true)
+            RefreshUI();
+    }
+
     // 인벤토리 활성화
-    void OnInventory()
+    void OnInventoryUI()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -56,9 +55,6 @@ public class UI_InvenPopup : UI_Popup
 
             Managers.Game._inventory.gameObject.SetActive(Managers.Game.isInventory);
         }
-
-        if (Managers.Game.isInventory == true)
-            RefreshUI();
     }
 
     // 인벤 슬롯 아이템 넣기
@@ -134,7 +130,6 @@ public class UI_InvenPopup : UI_Popup
 
     void RefreshUI()
     {   
-        // 골드 // 새로고침
         GetText((int)Texts.GoldText).text = Managers.Game.Gold.ToString();
     }
 }

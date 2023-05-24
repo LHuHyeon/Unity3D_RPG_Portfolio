@@ -13,13 +13,32 @@ public class UI_EqStatPopup : UI_Popup
         EqSlot,
         ExitButton,
     }
-    
+
+    enum Buttons
+    {
+        HpAddPointButton,
+        MpAddPointButton,
+        STRAddPointButton,
+        LUKAddPointButton,
+    }
+
+    enum Texts
+    {
+        StatPointText,
+        HpStatPointText,
+        MpStatPointText,
+        STRStatPointText,
+        LUKStatPointText,
+    }
+
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
         BindObject(typeof(Gameobjects));
+        BindButton(typeof(Buttons));
+        BindText(typeof(Texts));
 
         Managers.Input.KeyAction -= OnEquipmentUI;
         Managers.Input.KeyAction += OnEquipmentUI;
@@ -31,6 +50,13 @@ public class UI_EqStatPopup : UI_Popup
         return true;
     }
 
+    void FixedUpdate()
+    {
+        if (Managers.Game.isEquipment == true)
+            RefreshUI();
+    }
+
+    // 장비/스탯 창 활성화
     void OnEquipmentUI()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -43,19 +69,39 @@ public class UI_EqStatPopup : UI_Popup
 
     public void SetInfo()
     {
-        // GetSlot();
+        // 버튼 클릭 적용
+        GetButton((int)Buttons.HpAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.HpAddPointButton); });
+        GetButton((int)Buttons.MpAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.MpAddPointButton); });
+        GetButton((int)Buttons.STRAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.STRAddPointButton); });
+        GetButton((int)Buttons.LUKAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.LUKAddPointButton); });
+
         SetEventHandler();
     }
 
-    void GetSlot()
+    // 스탯 포인트 적용
+    void AddStat(Buttons stat)
     {
-        Managers.Game.CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
-        
-        foreach(Transform child in GetObject((int)Gameobjects.EqSlot).transform)
+        if (Managers.Game.StatPoint == 0)
+            return;
+
+        switch(stat)
         {
-            UI_ArmorItem eqSlot = child.GetComponent<UI_ArmorItem>();
-            // Managers.Game.CurrentArmor.Add(eqSlot.armorType, eqSlot.armorItem);
+            case Buttons.HpAddPointButton:
+                Managers.Game.HpPoint++;
+                break;
+            case Buttons.MpAddPointButton:
+                Managers.Game.MpPoint++;
+                break;
+            case Buttons.STRAddPointButton:
+                Managers.Game.STR++;
+                break;
+            case Buttons.LUKAddPointButton:
+                Managers.Game.LUK++;
+                break;
         }
+
+        Managers.Game.StatPoint--;
+        RefreshUI();
     }
 
     void SetEventHandler()
@@ -80,13 +126,17 @@ public class UI_EqStatPopup : UI_Popup
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
-            Managers.Game.isInventory = false;
-            Managers.Game._inventory.gameObject.SetActive(Managers.Game.isInventory);
+            Managers.Game.isEquipment = false;
+            Managers.Game._equipment.gameObject.SetActive(Managers.Game.isEquipment);
         }, Define.UIEvent.Click);
     }
 
     void RefreshUI()
-    {   
-
+    {
+        GetText((int)Texts.StatPointText).text = Managers.Game.StatPoint.ToString();
+        GetText((int)Texts.HpStatPointText).text = Managers.Game.HpPoint.ToString();
+        GetText((int)Texts.MpStatPointText).text = Managers.Game.MpPoint.ToString();
+        GetText((int)Texts.STRStatPointText).text = Managers.Game.STR.ToString();
+        GetText((int)Texts.LUKStatPointText).text = Managers.Game.LUK.ToString();
     }
 }

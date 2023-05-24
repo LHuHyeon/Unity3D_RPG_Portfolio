@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 몬스터 Hp바
 public class UI_HpBar : UI_Base
 {
     MonsterStat _stat;

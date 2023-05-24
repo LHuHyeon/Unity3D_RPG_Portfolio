@@ -39,6 +39,7 @@ public class GameData
     // 현재 무기
     public WeaponItemData CurrentWeapon;
 
+    // 현재 인벤토리
     public List<UI_InvenItem> invenSlots;
 
     // 스킬 : 스킬 능력, 레벨, 흭득 횟수
@@ -49,6 +50,9 @@ public class GameData
 // 컨텐츠에서 사용될 매니저 (플레이어, 몬스터 등..)
 public class GameManager
 {
+    GameData _gameData = new GameData();
+    public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
+
     GameObject _player;
 
     HashSet<GameObject> _monsters = new HashSet<GameObject>();
@@ -56,9 +60,6 @@ public class GameManager
     public GameObject GetPlayer() { return _player; }
 
     public Action<int> OnSpawnEvent;
-
-    GameData _gameData = new GameData();
-    public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
 
     public bool isInventory = false;
     public UI_InvenPopup _inventory;
@@ -98,8 +99,8 @@ public class GameManager
 
     public int MaxHp
 	{
-		get { return _gameData.MaxHp; }
-		set { _gameData.MaxHp = value + (HpPoint * 20); }
+		get { return _gameData.MaxHp + (HpPoint * 20) + addHp; }
+		set { _gameData.MaxHp = value; }
 	}
 
     public int Mp
@@ -110,8 +111,8 @@ public class GameManager
 
     public int MaxMp
 	{
-		get { return _gameData.MaxMp; }
-		set { _gameData.MaxMp = value + (MpPoint * 20); }
+		get { return _gameData.MaxMp + (MpPoint * 20) + addMp; }
+		set { _gameData.MaxMp = value; }
 	}
 
     public int Attack
@@ -120,7 +121,7 @@ public class GameManager
         {
             // TODO : 공격력 설정
             // 장착 무기 데미지, STR 확인
-            Debug.Log("STR" + STR);
+            Debug.Log("STR : " + STR);
             return (STR * 2);
         }
 		private set {}
@@ -131,7 +132,7 @@ public class GameManager
         get 
         {
             // TODO : 장비 장착 시 증가
-            return 0;
+            return addDefense;
         }
 		private set {}
     }
@@ -145,7 +146,7 @@ public class GameManager
     public int MoveSpeed
 	{
 		get { return _gameData.MoveSpeed; }
-		set { _gameData.MoveSpeed = value; }
+		set { _gameData.MoveSpeed = value + addMoveSpeed; }
 	}
 
     public int LUK
@@ -175,13 +176,13 @@ public class GameManager
     public int HpPoint
 	{
 		get { return _gameData.HpPoint; }
-		set { _gameData.HpPoint = value; }
+		set { _gameData.HpPoint = value; Hp = MaxHp; }
 	}
 
     public int MpPoint
 	{
 		get { return _gameData.MpPoint; }
-		set { _gameData.MpPoint = value; }
+		set { _gameData.MpPoint = value; Mp = MaxMp; }
 	}
 
     public Dictionary<Define.KeySkill, SkillData> SkillBarList
@@ -202,7 +203,6 @@ public class GameManager
         set
         {
             _gameData.CurrentArmor = value;
-            RefreshEquipment();
         }
     }
 
@@ -223,41 +223,32 @@ public class GameManager
         
     }
 
+    // Exp 증가시 레벨업 확인
 	public void RefreshExp()
 	{
-        int level = Level;
-
-        while (true)
+        // 다음 레벨 확인
+        if (Managers.Data.Level.ContainsKey(Level + 1) == false)
         {
-            LevelData stat;
-            
-            // 해당 Key에 Value가 존재 하는지 여부
-            if (Managers.Data.Level.TryGetValue(level + 1, out stat) == false)
-            {
-                Debug.Log("만렙 입니다!");
-                break;
-            }
-
-            // 경험치가 다음 레벨 경험치보다 작은지 확인
-            if (Exp < stat.totalExp)
-                break;
-            
-            level++;
+            Debug.Log("만렙 입니다!");
+            return;
         }
 
-        if (level != Level)
-        {
-            Level = level;
-            
-            RefreshStat(Level);
-            Debug.Log("Level UP!!");
-        }
+        // 경험치가 다음 레벨 경험치보다 작은지 확인
+        if (Exp < TotalExp)
+            return;
+        
+        // 레벨 업
+        RefreshStat(++Level);
+        Debug.Log("Level UP!!");
 	}
 
+    // 레벨 스탯 가져오기
     public void RefreshStat(int level)
     {
+        Debug.Log("RefreshStat Level : " + level);
         LevelData stat = Managers.Data.Level[level];
 
+        Exp = 0;
         TotalExp = stat.totalExp;
         StatPoint = stat.statPoint;
         MaxStatPoint += StatPoint;
@@ -267,12 +258,52 @@ public class GameManager
         Mp = MaxMp;
     }
 
-    public void RefreshEquipment()
+    public int addDefense = 0;
+    public int addHp = 0;
+    public int addMp = 0;
+    public int addMoveSpeed = 0;
+    // 전체 장비 스탯 적용
+    public void RefreshAllEquipment()
     {
-        // TODO : 장비 장착
-        // 1. 각 장비 아이템은 플레이어가 입을 오브젝트를 들고 있기
-        // 2. 옷입는 과정에서 이전 장비의 입는 옷을 비활성화
-        // 3. 현재 입는 옷 활성화
+        // 장비 스탯 전체 적용
+        ArmorItemData armorData;
+        addDefense = 0;
+        addHp = 0;
+        addMp = 0;
+        addMoveSpeed = 0;
+        for(Define.ArmorType i=0; i<Define.ArmorType.MaxCount; i++)
+        {
+            if (CurrentArmor.TryGetValue(i, out armorData) == true)
+            {
+                // 장비가 있으면 더하고, 없으면 빼야됨.
+                addDefense += armorData.defnece;
+                addHp += armorData.hp;
+                addMp += armorData.mp;
+                addMoveSpeed += armorData.moveSpeed;
+            }
+        }
+    }
+
+    // 장비 스탯 적용
+    public void RefreshEquipment(ArmorItemData armorItem, bool isStat)
+    {
+        if (armorItem != null)
+        {
+            if (isStat == true)
+            {
+                addDefense += armorItem.defnece;
+                addHp += armorItem.hp;
+                addMp += armorItem.mp;
+                addMoveSpeed += armorItem.moveSpeed;
+            }
+            else
+            {
+                addDefense -= armorItem.defnece;
+                addHp -= armorItem.hp;
+                addMp -= armorItem.mp;
+                addMoveSpeed -= armorItem.moveSpeed;
+            }
+        }
     }
 
     // 해당 키 스킬 반환 (스킬 ui 완성되면 사용)
@@ -299,6 +330,7 @@ public class GameManager
         return currentSkill;
     }
 
+    // 공격 받을때
     public void OnAttacked(MonsterStat attacker)
     {
         Hp -= Mathf.Max(0, attacker.Attack - Defense);

@@ -43,6 +43,7 @@ public class UI_InvenItem : UI_SlotItem
             if (dragSlot is UI_ArmorItem)
             {
                 Managers.Game._inventory.AcquireItem(dragSlot.item);
+                (dragSlot as UI_ArmorItem).ClearSlot();
             }
 
             // 인벤토리에서 온거면

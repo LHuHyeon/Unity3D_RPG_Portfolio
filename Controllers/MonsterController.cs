@@ -61,15 +61,6 @@ public class MonsterController : BaseController
         }
     }
 
-    // protected override void UpdateAttack()
-    // {
-    //     if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") &&
-    //         anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 7f)
-    //     {
-            
-    //     }
-    // }
-
     // Anim Event
     protected void OnAttackEvent()
     {

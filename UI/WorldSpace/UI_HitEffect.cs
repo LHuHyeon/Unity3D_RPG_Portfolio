@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 몬스터 피격시 나오는 데미지 이펙트
 public class UI_HitEffect : UI_Base
 {
     public TextMeshProUGUI hitText;
