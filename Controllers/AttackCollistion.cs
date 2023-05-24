@@ -28,7 +28,7 @@ public class AttackCollistion : MonoBehaviour
             if (player.State == Define.State.Skill)
             {
                 // 스킬 공격
-                int skillDamage = player.currentSkill.powerList[skillIndex] * Managers.Game.STR;
+                int skillDamage = player.currentSkill.powerList[skillIndex] * (Managers.Game.Attack / 2);
                 other.GetComponent<MonsterStat>().OnAttacked(skillDamage);
             }
             else

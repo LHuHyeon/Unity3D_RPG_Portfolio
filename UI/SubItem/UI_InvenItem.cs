@@ -20,6 +20,24 @@ public class UI_InvenItem : UI_SlotItem
     {
         base.SetEventHandler();
 
+        gameObject.BindEvent((PointerEventData eventData)=>
+        {
+            // 아이템 사용
+            if (Input.GetMouseButtonUp(1))
+            {
+                if ((item is UseItemData) == false)
+                    return;
+
+                UseItemData useItem = item as UseItemData;
+                if (useItem.useType == Define.UseType.Hp)
+                    Managers.Game.Hp += useItem.useValue;
+                else if (useItem.useType == Define.UseType.Mp)
+                    Managers.Game.Mp += useItem.useValue;
+
+                SetCount(-1);
+            }
+        }, Define.UIEvent.Click);
+
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
@@ -40,10 +58,14 @@ public class UI_InvenItem : UI_SlotItem
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
             // 장비창에서 온거면
-            if (dragSlot is UI_ArmorItem)
+            if (dragSlot is UI_ArmorItem || dragSlot is UI_WeaponItem)
             {
                 Managers.Game._inventory.AcquireItem(dragSlot.item);
-                (dragSlot as UI_ArmorItem).ClearSlot();
+
+                if (dragSlot is UI_ArmorItem)
+                    (dragSlot as UI_ArmorItem).ClearSlot();
+                else if (dragSlot is UI_WeaponItem)
+                    (dragSlot as UI_WeaponItem).ClearSlot();
             }
 
             // 인벤토리에서 온거면

@@ -119,9 +119,9 @@ public class GameManager
 	{
 		get 
         {
-            // TODO : 공격력 설정
-            // 장착 무기 데미지, STR 확인
-            Debug.Log("STR : " + STR);
+            if (CurrentWeapon != null)
+                return (STR * 2) + CurrentWeapon.attack;
+            
             return (STR * 2);
         }
 		private set {}
@@ -285,7 +285,7 @@ public class GameManager
     }
 
     // 장비 스탯 적용
-    public void RefreshEquipment(ArmorItemData armorItem, bool isStat)
+    public void RefreshArmor(ArmorItemData armorItem, bool isStat)
     {
         if (armorItem != null)
         {

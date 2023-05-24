@@ -92,6 +92,7 @@ public class DataManager
             STR = int.Parse(row[6]),
             MoveSpeed = int.Parse(row[7]),
             LUK = int.Parse(row[8]),
+            gold = int.Parse(row[9]),
         };
     }
 

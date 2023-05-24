@@ -21,8 +21,11 @@ public class PlayerController : BaseController
     // 현재 스킬
     public SkillData currentSkill;
 
-    // 입을 수 있는 장비 저장
+    // 장비 오브젝트 저장 (입는 장비)
     public Dictionary<int, List<GameObject>> charEquipment;
+
+    // 무기 오브젝트 저장 객체
+    public GameObject waeponObjList;
 
     public override void Init()
     {
@@ -66,6 +69,18 @@ public class PlayerController : BaseController
 
                 obj.gameObject.SetActive(false);
             }
+        }
+        
+        // 장착할 무기 객체 아이템 안에 저장
+        foreach(Transform obj in waeponObjList.transform)
+        {
+            string result = Regex.Replace(obj.name, @"\D", "");
+            int id = int.Parse(result);
+
+            WeaponItemData weapon = Managers.Data.Item[id] as WeaponItemData;
+            weapon.charEquipment = obj.gameObject;
+
+            obj.gameObject.SetActive(false);
         }
     }
 

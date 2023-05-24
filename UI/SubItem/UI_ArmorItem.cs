@@ -101,7 +101,7 @@ public class UI_ArmorItem : UI_SlotItem
         EquipmentActive(armorItem, true);
 
         // 스탯 적용
-        Managers.Game.RefreshEquipment(armorItem, true);
+        Managers.Game.RefreshArmor(armorItem, true);
     }
 
     // 캐릭터의 보여지는 장비 오브젝트 활성화 여부
@@ -126,6 +126,9 @@ public class UI_ArmorItem : UI_SlotItem
             return;
         }
 
+        // 아이템 안에 넣어주기
+        armor.charEquipment = objList;
+
         foreach(GameObject obj in objList)
             obj.SetActive(isActive);
     }
@@ -134,8 +137,8 @@ public class UI_ArmorItem : UI_SlotItem
     {
         base.ClearSlot();
 
-        EquipmentActive(armorItem, false);                  // 장비 비활성화
-        Managers.Game.RefreshEquipment(armorItem, false);   // 장비 스탯 해제
+        EquipmentActive(armorItem, false);              // 장비 비활성화
+        Managers.Game.RefreshArmor(armorItem, false);   // 장비 스탯 해제
         armorItem = null;
     }
 }

@@ -67,7 +67,7 @@ public class MonsterStat : MonoBehaviour
     void OnDropItem()
     {
         List<int> itemList = Managers.Data.DropItem[_dropItemId];
-
+        
         // 아이탬 개수 0~2 + Luk (최대 5개까지)
         int maxCount = Mathf.Clamp(2 + Managers.Game.LUK, 0, 5);
         for(int i=0; i<Random.Range(0, maxCount); i++)
