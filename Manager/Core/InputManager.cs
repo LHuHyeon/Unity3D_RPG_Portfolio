@@ -46,11 +46,15 @@ public class InputManager
                 _rightPressedTime = 0f;
             }
 
-            if (Input.GetMouseButton(0)){
-                if (!_leftPressed){
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!_leftPressed)
                     MouseAction.Invoke(Define.MouseEvent.LeftDown);
-                    _leftPressedTime = Time.time;
-                }
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                _leftPressedTime = Time.time;
                 MouseAction.Invoke(Define.MouseEvent.LeftPress);
                 _leftPressed = true;
             }

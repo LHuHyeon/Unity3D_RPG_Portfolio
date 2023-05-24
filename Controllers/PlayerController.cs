@@ -38,7 +38,7 @@ public class PlayerController : BaseController
 
     void SetInfo()
     {
-        // 장착할 장비 객체 데이터 넣기
+        // 장착할 장비 객체 저장
         GameObject goChild = Util.FindChild(gameObject, "Modular_Characters");
         foreach(Transform obj in goChild.GetComponentsInChildren<Transform>())
         {
@@ -48,17 +48,20 @@ public class PlayerController : BaseController
                 int id = int.Parse(result);
                 Debug.Log(obj.name + " : " + id);
 
+                // 아이템 안에 장비 오브젝트 저장
                 ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
                 if (armor.charEquipment == null)
                     armor.charEquipment = new List<GameObject>();
                 
                 armor.charEquipment.Add(obj.gameObject);
                 
-                // TODO : 비활성화 시키고 장착 시 활성화시키기
-                // if (charEquipment.ContainsKey(id) == false)
-                //     charEquipment.Add(id, new List<GameObject>());
+                // 플레이어 안에서 저장
+                if (charEquipment.ContainsKey(id) == false)
+                    charEquipment.Add(id, new List<GameObject>());
 
-                // charEquipment[id].Add(obj.gameObject);
+                charEquipment[id].Add(obj.gameObject);
+
+                obj.gameObject.SetActive(false);
             }
         }
     }
@@ -223,9 +226,12 @@ public class PlayerController : BaseController
             // 왼쪽 누르는 중이면 다음 공격 진행
             case Define.MouseEvent.LeftPress:
                 {
-                    _destPos = hit.point;
-                    _destPos.y = 0;
-                    OnAttack();
+                    if (_stopAttack == false)
+                    {
+                        _destPos = hit.point;
+                        _destPos.y = 0;
+                        OnAttack();
+                    }
                 }
                 break;
         }

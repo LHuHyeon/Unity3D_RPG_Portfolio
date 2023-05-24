@@ -89,7 +89,7 @@ public class UI_ArmorItem : UI_SlotItem
             ArmorItemData currentArmor = Managers.Game.CurrentArmor[armorType];
 
             // 플레이어가 현재 입고 있는 장비 오브젝트 비활성화
-            EquipmentActive(currentArmor.id, false);
+            EquipmentActive(currentArmor, false);
         }
 
         // 장비 장착 진행
@@ -99,15 +99,31 @@ public class UI_ArmorItem : UI_SlotItem
             Managers.Game.CurrentArmor[armorType] = armorItem;
 
         // 장비 오브젝트 활성화
-        EquipmentActive(armorItem.id, true);
+        EquipmentActive(armorItem, true);
     }
 
     // 캐릭터의 보여지는 장비 오브젝트 활성화 여부
-    void EquipmentActive(int armorId, bool isActive)
-    {   
-        // TODO : KEy 확인 후 진행하기
-        // TODO : UI 누르는 과정에서 플레이어가 공격되는 현상 없애기
-        List<GameObject> objList = Managers.Game.GetPlayer().GetComponent<PlayerController>().charEquipment[armorId];
+    void EquipmentActive(ArmorItemData armor, bool isActive)
+    {
+        // 아이템이 현재 입고 있는 장비를 알고 있다면
+        if (armor.charEquipment != null)
+        {
+            foreach(GameObject obj in armor.charEquipment)
+                obj.SetActive(isActive);
+
+            return;
+        }
+
+        // 모른다면 id로 찾기
+        PlayerController player = Managers.Game.GetPlayer().GetComponent<PlayerController>();
+
+        List<GameObject> objList = new List<GameObject>();
+        if (player.charEquipment.TryGetValue(armor.id, out objList) == false)
+        {
+            Debug.Log($"{armor.id} : 활성화 실패");
+            return;
+        }
+
         foreach(GameObject obj in objList)
             obj.SetActive(isActive);
     }

@@ -37,27 +37,36 @@ public class UI_InvenItem : UI_SlotItem
         // 이 슬롯에 마우스 클릭이 끝나면 아이템 받기
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            UI_InvenItem dragSlot = UI_DragSlot.instance.dragSlotItem as UI_InvenItem;
+            UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
-            if (dragSlot != null)
+            // 장비창에서 온거면
+            if (dragSlot is UI_ArmorItem)
             {
+                Managers.Game._inventory.AcquireItem(dragSlot.item);
+            }
+
+            // 인벤토리에서 온거면
+            if (dragSlot is UI_InvenItem)
+            {
+                UI_InvenItem invenSlot = dragSlot as UI_InvenItem;
+                
                 // 자기 자신이라면
-                if (dragSlot == this)
+                if (invenSlot == this)
                     return;
 
                 // 두 슬롯의 아이템이 같은 아이템일 경우 개수 체크
-                if (item == dragSlot.item && (dragSlot.item is UseItemData))
+                if (item == invenSlot.item && (invenSlot.item is UseItemData))
                 {
-                    int addValue = itemCount + dragSlot.itemCount;
+                    int addValue = itemCount + invenSlot.itemCount;
                     if (addValue > item.itemMaxCount)
                     {
-                        dragSlot.SetCount(-(item.itemMaxCount-itemCount));
+                        invenSlot.SetCount(-(item.itemMaxCount-itemCount));
                         SetCount(item.itemMaxCount - itemCount);
                     }
                     else
                     {
-                        SetCount(dragSlot.itemCount);
-                        dragSlot.ClearSlot();  // 들고 있었던 슬롯은 초기화
+                        SetCount(invenSlot.itemCount);
+                        invenSlot.ClearSlot();  // 들고 있었던 슬롯은 초기화
                     }
                 }
                 else
