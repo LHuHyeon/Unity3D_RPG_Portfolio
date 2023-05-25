@@ -23,7 +23,7 @@ public class GameScene : BaseScene
     void DelayScene()
     {
         Managers.Game.Init();
-        Managers.UI.ShowSceneUI<UI_PlayScene>();
+        Managers.Game._playScene = Managers.UI.ShowSceneUI<UI_PlayScene>();
         for(int i=0; i<5; i++)
         {
             GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, "Monster/Skeleton1");

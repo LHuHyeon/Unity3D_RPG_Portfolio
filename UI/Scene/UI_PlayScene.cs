@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 public class UI_PlayScene : UI_Scene
 {
-    enum Gameobejcts
+    enum Gameobjects
     {
         SkillBar,
         ItemBar,
@@ -41,18 +41,23 @@ public class UI_PlayScene : UI_Scene
         ExpBar,
     }
 
+    public UI_InvenPopup _inventory;
+    public UI_EqStatPopup _equipment;
+    public UI_SlotTipPopup _slotTip;
+
     public override bool Init()
 	{
 		if (base.Init() == false)
 			return false;
 
-        BindObject(typeof(Gameobejcts));
+        BindObject(typeof(Gameobjects));
         BindImage(typeof(Images));
         BindText(typeof(Texts));
         Bind<Slider>(typeof(Sliders));
 
-        Managers.Game._inventory = Managers.UI.ShowPopupUI<UI_InvenPopup>();
-        Managers.Game._equipment = Managers.UI.ShowPopupUI<UI_EqStatPopup>();
+        _inventory = Managers.UI.ShowPopupUI<UI_InvenPopup>();
+        _equipment = Managers.UI.ShowPopupUI<UI_EqStatPopup>();
+        _slotTip = Managers.UI.ShowPopupUI<UI_SlotTipPopup>();
         Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
 
         SetInfo();

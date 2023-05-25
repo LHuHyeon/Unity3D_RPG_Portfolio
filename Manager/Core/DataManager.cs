@@ -185,6 +185,7 @@ public class DataManager
                 itemMaxCount = 99,
                 itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Use/"+row[7]),
                 itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Use/"+row[8]),
+                itemType = Define.ItemType.Use,
             };
 
             Item.Add(useItem.id, useItem);
@@ -216,6 +217,7 @@ public class DataManager
                 itemMaxCount = 1,
                 itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Weapon/"+row[9]),
                 itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Weapon/"+row[10]),
+                itemType = Define.ItemType.Weapon,
             };
 
             Item.Add(weaponItem.id, weaponItem);
@@ -250,6 +252,7 @@ public class DataManager
                 itemMaxCount = 1,
                 itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Armor/"+row[12]),
                 itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Armor/"+row[13]),
+                itemType = Define.ItemType.Armor,
             };
 
             Item.Add(armorItem.id, armorItem);

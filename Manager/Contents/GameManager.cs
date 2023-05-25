@@ -61,11 +61,10 @@ public class GameManager
 
     public Action<int> OnSpawnEvent;
 
-    public bool isInventory = false;
-    public UI_InvenPopup _inventory;
+    public UI_PlayScene _playScene;
 
+    public bool isInventory = false;
     public bool isEquipment = false;
-    public UI_EqStatPopup _equipment;
 
     public string Name
 	{

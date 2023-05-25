@@ -63,7 +63,7 @@ public class UI_EqStatPopup : UI_Popup
         {
             Managers.Game.isEquipment = !Managers.Game.isEquipment;
 
-            Managers.Game._equipment.gameObject.SetActive(Managers.Game.isEquipment);
+            Managers.Game._playScene._equipment.gameObject.SetActive(Managers.Game.isEquipment);
         }
     }
 
@@ -127,7 +127,7 @@ public class UI_EqStatPopup : UI_Popup
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
             Managers.Game.isEquipment = false;
-            Managers.Game._equipment.gameObject.SetActive(Managers.Game.isEquipment);
+            Managers.Game._playScene._equipment.gameObject.SetActive(Managers.Game.isEquipment);
         }, Define.UIEvent.Click);
     }
 

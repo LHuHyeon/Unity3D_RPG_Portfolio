@@ -65,6 +65,15 @@ public class Define : MonoBehaviour
         Legendary,  // 레전드
     }
 
+    public enum ItemType
+    {
+        Unknown,
+        Use,
+        Armor,
+        Weapon,
+        ETC,
+    }
+
     public enum SlotType
     {
         Unknown,

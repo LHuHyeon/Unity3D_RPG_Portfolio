@@ -34,6 +34,26 @@ public class UI_SlotItem : UI_Base
 
     protected virtual void SetEventHandler()
     {
+        if (slotType == Define.SlotType.Inven || slotType == Define.SlotType.Equipment)
+        {
+            gameObject.BindEvent((PointerEventData eventData)=>
+            {
+                if (item != null)
+                {
+                    Managers.Game._playScene._slotTip.OnSloTip(true);
+
+                    Managers.Game._playScene._slotTip.transform.position = eventData.position;
+                    Managers.Game._playScene._slotTip.RefreshUI(item);
+                }
+            }, Define.UIEvent.Enter);
+
+            gameObject.BindEvent((PointerEventData eventData)=>
+            {
+                if (item != null)
+                    Managers.Game._playScene._slotTip.OnSloTip(false);
+            }, Define.UIEvent.Exit);
+        }
+
         // 아이템이 존재할 시 마우스로 들기 가능.
         gameObject.BindEvent((PointerEventData eventData)=>
         {

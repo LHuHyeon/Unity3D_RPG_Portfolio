@@ -53,7 +53,7 @@ public class UI_InvenPopup : UI_Popup
         {
             Managers.Game.isInventory = !Managers.Game.isInventory;
 
-            Managers.Game._inventory.gameObject.SetActive(Managers.Game.isInventory);
+            Managers.Game._playScene._inventory.gameObject.SetActive(Managers.Game.isInventory);
         }
     }
 
@@ -124,7 +124,7 @@ public class UI_InvenPopup : UI_Popup
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
             Managers.Game.isInventory = false;
-            Managers.Game._inventory.gameObject.SetActive(Managers.Game.isInventory);
+            Managers.Game._playScene._inventory.gameObject.SetActive(Managers.Game.isInventory);
         }, Define.UIEvent.Click);
     }
 

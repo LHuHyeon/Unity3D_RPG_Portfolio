@@ -60,7 +60,7 @@ public class UI_InvenItem : UI_SlotItem
             // 장비창에서 온거면
             if (dragSlot is UI_ArmorItem || dragSlot is UI_WeaponItem)
             {
-                Managers.Game._inventory.AcquireItem(dragSlot.item);
+                Managers.Game._playScene._inventory.AcquireItem(dragSlot.item);
 
                 if (dragSlot is UI_ArmorItem)
                     (dragSlot as UI_ArmorItem).ClearSlot();
