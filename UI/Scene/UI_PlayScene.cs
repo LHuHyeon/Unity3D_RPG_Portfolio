@@ -43,6 +43,7 @@ public class UI_PlayScene : UI_Scene
 
     public UI_InvenPopup _inventory;
     public UI_EqStatPopup _equipment;
+    public UI_SkillPopup _skill;
     public UI_SlotTipPopup _slotTip;
 
     public override bool Init()
@@ -57,6 +58,7 @@ public class UI_PlayScene : UI_Scene
 
         _inventory = Managers.UI.ShowPopupUI<UI_InvenPopup>();
         _equipment = Managers.UI.ShowPopupUI<UI_EqStatPopup>();
+        _skill = Managers.UI.ShowPopupUI<UI_SkillPopup>();
         _slotTip = Managers.UI.ShowPopupUI<UI_SlotTipPopup>();
         Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
 
@@ -70,9 +72,16 @@ public class UI_PlayScene : UI_Scene
         RefreshStat();
     }
 
+    int skillBarCount = 6;
     public void SetInfo()
     {
         GetText((int)Texts.NameBarText).text = Managers.Game.Name;
+
+        // foreach(Transform child in GetObject((int)Gameobjects.SkillBar).transform)
+        //     Managers.Resource.Destroy(child.gameObject);
+
+        // for(int i=0; i<skillBarCount; i++)
+        //     Managers.UI.MakeSubItem<UI_InvenItem>(parent: GetObject((int)Gameobjects.SkillBar).transform);
 
         RefreshUI();
     }

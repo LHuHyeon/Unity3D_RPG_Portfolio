@@ -121,7 +121,7 @@ public class UI_InvenItem : UI_SlotItem
     {
         base.SetColor(_alpha);
 
-        itemCountText.color = itemImage.color;
+        itemCountText.color = icon.color;
     }
 
     // 아이템 등록

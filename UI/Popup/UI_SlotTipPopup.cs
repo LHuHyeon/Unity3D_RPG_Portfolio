@@ -23,6 +23,8 @@ public class UI_SlotTipPopup : UI_Popup
         ItemStatText,
     }
 
+    public RectTransform background;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -32,22 +34,25 @@ public class UI_SlotTipPopup : UI_Popup
         BindImage(typeof(Images));
         BindText(typeof(Texts));
 
-        OnSloTip(false);
+        background = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
+
+        OnSlotTip(false);
 
         return true;
     }
 
-    public void OnSloTip(bool isActive)
+    public void OnSlotTip(bool isActive)
     {
-        GetObject((int)Gameobjects.Background).SetActive(isActive);
+        background.gameObject.SetActive(isActive);
     }
 
+    // 아이템 정보 확인시 새로고침
     public void RefreshUI(ItemData item)
     {
         if (item == null)
         {
             Debug.Log("아이템 정보가 없습니다.");
-            OnSloTip(false);
+            OnSlotTip(false);
             return;
         }
         
@@ -82,5 +87,11 @@ public class UI_SlotTipPopup : UI_Popup
             GetText((int)Texts.ItemLevelText).text = "최소레벨 " + weapon.minLevel.ToString();
             GetText((int)Texts.ItemStatText).text = $"공격력 {weapon.attack.ToString()}";
         }
+    }
+
+    // 스킬 정보 확인시 새로고침
+    public void RefreshUI(SkillData skill)
+    {
+
     }
 }

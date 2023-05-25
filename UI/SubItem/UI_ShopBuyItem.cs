@@ -6,7 +6,7 @@ public class UI_ShopBuyItem : UI_Base
 {
     public enum Images
     {
-        BuyItemImage,
+        Buyicon,
     }
 
     public enum Texts

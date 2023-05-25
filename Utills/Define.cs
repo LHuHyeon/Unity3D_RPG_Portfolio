@@ -6,6 +6,7 @@ public class Define : MonoBehaviour
 {
     public enum KeySkill
     {
+        Unknown,
         Q,
         W,
         E,

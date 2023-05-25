@@ -15,7 +15,7 @@ public class UI_SlotItem : UI_Base
     public Define.SlotType slotType = Define.SlotType.Unknown;
 
     public ItemData item;
-    public Image itemImage;
+    public Image icon;
 
     public override bool Init()
     {
@@ -40,9 +40,9 @@ public class UI_SlotItem : UI_Base
             {
                 if (item != null)
                 {
-                    Managers.Game._playScene._slotTip.OnSloTip(true);
+                    Managers.Game._playScene._slotTip.OnSlotTip(true);
 
-                    Managers.Game._playScene._slotTip.transform.position = eventData.position;
+                    Managers.Game._playScene._slotTip.background.anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
                     Managers.Game._playScene._slotTip.RefreshUI(item);
                 }
             }, Define.UIEvent.Enter);
@@ -50,7 +50,7 @@ public class UI_SlotItem : UI_Base
             gameObject.BindEvent((PointerEventData eventData)=>
             {
                 if (item != null)
-                    Managers.Game._playScene._slotTip.OnSloTip(false);
+                    Managers.Game._playScene._slotTip.OnSlotTip(false);
             }, Define.UIEvent.Exit);
         }
 
@@ -61,32 +61,32 @@ public class UI_SlotItem : UI_Base
                 return;
 
             UI_DragSlot.instance.dragSlotItem = this;
-            UI_DragSlot.instance.DragSetImage(itemImage);
+            UI_DragSlot.instance.DragSetImage(icon);
 
-            UI_DragSlot.instance.itemImage.transform.position = eventData.position;
+            UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.BeginDrag);
 
         // 마우스 드래그 방향으로 아이템 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             if (item != null)
-                UI_DragSlot.instance.itemImage.transform.position = eventData.position;
+                UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
     }
 
     // 투명도 설정 (0 ~ 255)
     protected virtual void SetColor(float _alpha)
     {
-        Color color = itemImage.color;
+        Color color = icon.color;
         color.a = _alpha;
-        itemImage.color = color;
+        icon.color = color;
     }
 
     // 아이템 등록
     public virtual void AddItem(ItemData _item, int count = 1)
     {
         item = _item;
-        itemImage.sprite = item.itemIcon;
+        icon.sprite = item.itemIcon;
 
         // 색 활성화
         SetColor(255);
@@ -96,7 +96,7 @@ public class UI_SlotItem : UI_Base
     public virtual void ClearSlot()
     {
         item = null;
-        itemImage.sprite = null;
+        icon.sprite = null;
         
         SetColor(0);
     }

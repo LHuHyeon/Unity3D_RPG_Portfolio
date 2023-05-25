@@ -11,7 +11,7 @@ public class UI_DragSlot : MonoBehaviour
     public UI_SlotItem dragSlotItem;
 
     // 아이템 이미지
-    public Image itemImage;
+    public Image icon;
 
     void Start()
     {
@@ -19,16 +19,16 @@ public class UI_DragSlot : MonoBehaviour
     }
 
     // 드래그 할 경우 활성화
-    public void DragSetImage(Image _itemImage)
+    public void DragSetImage(Image _icon)
     {
-        itemImage.sprite = _itemImage.sprite;
+        icon.sprite = _icon.sprite;
         SetColor(1);
     }
 
     public void SetColor(float _alpha)
     {
-        Color color = itemImage.color;
+        Color color = icon.color;
         color.a = _alpha;
-        itemImage.color = color;
+        icon.color = color;
     }
 }

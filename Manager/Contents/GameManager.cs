@@ -65,6 +65,7 @@ public class GameManager
 
     public bool isInventory = false;
     public bool isEquipment = false;
+    public bool isSkillUI = false;
 
     public string Name
 	{
@@ -130,7 +131,6 @@ public class GameManager
     {
         get 
         {
-            // TODO : 장비 장착 시 증가
             return addDefense;
         }
 		private set {}
