@@ -9,7 +9,6 @@ public class UI_SkillBarItem : UI_SkillSlot
 
     public override void SetInfo()
     {
-        slotType = Define.SlotType.Skill;
         base.SetInfo();
     }
 

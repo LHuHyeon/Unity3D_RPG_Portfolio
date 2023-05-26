@@ -30,9 +30,6 @@ public class GameData
     // 스킬바에 등록된 리스트
     public Dictionary<Define.KeySkill, SkillData> SkillBarList = new Dictionary<Define.KeySkill, SkillData>();
 
-    // 현재 가지고 있는 스킬
-    public List<SkillData> Skills = new List<SkillData>();
-
     // 현재 장착한 장비
     public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
 
@@ -190,12 +187,6 @@ public class GameManager
         set { _gameData.SkillBarList = value; }
     }
 
-    public List<SkillData> Skills
-    {
-        get { return _gameData.Skills; }
-        set { _gameData.Skills = value; }
-    }
-
     public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor
     {
         get { return _gameData.CurrentArmor; }
@@ -306,27 +297,13 @@ public class GameManager
     }
 
     // 해당 키 스킬 반환 (스킬 ui 완성되면 사용)
-    // public SkillData GetSkill(Define.KeySkill keySkill)
-    // {
-    //     SkillData skill;
-    //     if (SkillBarList.TryGetValue(keySkill, out skill) == false)
-    //         return null;
-
-    //     if (Skills.Contains(skill) == false)
-    //         return null;
-
-    //     return skill;
-    // }
-
-    // TODO : 스킬 ui 완성되면 삭제
-    // 스킬 Id로 데이터 불러오기
-    public SkillData currentSkill;
-    public SkillData GetSkill(int skillId)
+    public SkillData GetSkill(Define.KeySkill keySkill)
     {
-        if (Managers.Data.Skill.TryGetValue(skillId, out currentSkill) == false)
+        SkillData skill;
+        if (SkillBarList.TryGetValue(keySkill, out skill) == false)
             return null;
 
-        return currentSkill;
+        return skill;
     }
 
     // 공격 받을때

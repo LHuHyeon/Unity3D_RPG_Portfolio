@@ -34,6 +34,9 @@ public class UI_SlotItem : UI_Base
 
     protected virtual void SetEventHandler()
     {
+        if (slotType == Define.SlotType.Skill)
+            return;
+            
         if (slotType == Define.SlotType.Inven || slotType == Define.SlotType.Equipment)
         {
             gameObject.BindEvent((PointerEventData eventData)=>

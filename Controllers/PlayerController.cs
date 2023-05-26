@@ -386,54 +386,39 @@ public class PlayerController : BaseController
         if (State == Define.State.Skill)
             return;
 
-        // TEST CODE
+        // 스킬 진행
         if (Input.GetKeyDown(KeyCode.Q))
-            OnSkill(Managers.Game.GetSkill(101));
+            OnSkill(Managers.Game.GetSkill(Define.KeySkill.Q));
         else if (Input.GetKeyDown(KeyCode.W))
-            OnSkill(Managers.Game.GetSkill(102));
+            OnSkill(Managers.Game.GetSkill(Define.KeySkill.W));
         else if (Input.GetKeyDown(KeyCode.E))
-            OnSkill(Managers.Game.GetSkill(103));
+            OnSkill(Managers.Game.GetSkill(Define.KeySkill.E));
         else if (Input.GetKeyDown(KeyCode.A))
-            OnSkill(Managers.Game.GetSkill(104));
+            OnSkill(Managers.Game.GetSkill(Define.KeySkill.A));
         else if (Input.GetKeyDown(KeyCode.S))
-            OnSkill(Managers.Game.GetSkill(105));
+            OnSkill(Managers.Game.GetSkill(Define.KeySkill.S));
         else if (Input.GetKeyDown(KeyCode.D))
-            OnSkill(Managers.Game.GetSkill(106));
+            OnSkill(Managers.Game.GetSkill(Define.KeySkill.D));
         else if (Input.GetKeyDown(KeyCode.R))
-            OnSkill(Managers.Game.GetSkill(107));
-
-        // 스킬 진행 (스킬 ui 완성되면 사용)
-        // if (Input.GetKeyDown(KeyCode.Q))
-        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.Q));
-        // else if (Input.GetKeyDown(KeyCode.W))
-        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.W));
-        // else if (Input.GetKeyDown(KeyCode.E))
-        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.E));
-        // else if (Input.GetKeyDown(KeyCode.A))
-        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.A));
-        // else if (Input.GetKeyDown(KeyCode.S))
-        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.S));
-        // else if (Input.GetKeyDown(KeyCode.D))
-        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.D));
-        // else if (Input.GetKeyDown(KeyCode.R))
-        //     OnSkill(Managers.Game.GetSkill(Define.KeySkill.R));
+            OnSkill(Managers.Game.GetSkill(Define.KeySkill.R));
     }
 
     // 스킬 진행
     void OnSkill(SkillData skill)
     {
+        if (skill == null)
+        {
+            Debug.Log("등록된 스킬이 없습니다!");
+            return;
+        }
+
         // 마우스 방향으로 회전
         _destPos = GetMousePoint();
         dir = _destPos - transform.position;
         transform.rotation = Quaternion.LookRotation(dir);
 
         currentSkill = skill;
-        if (currentSkill == null)
-        {
-            Debug.Log("등록된 스킬이 없습니다!");
-            return;
-        }
-
+        
         foreach(EffectData value in effects)
         {
             if (currentSkill.skillId == value.id)

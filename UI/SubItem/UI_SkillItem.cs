@@ -6,6 +6,11 @@ using UnityEngine.EventSystems;
 
 public class UI_SkillItem : UI_SkillSlot
 {
+    enum Gameobjects
+    {
+        LevelBlock,
+    }
+
     enum Texts
     {
         SkillLevelText,
@@ -16,7 +21,7 @@ public class UI_SkillItem : UI_SkillSlot
 
     public override void SetInfo()
     {
-        slotType = Define.SlotType.Skill;
+        BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
         if (Managers.Data.Skill.TryGetValue(skillId, out skillData) == false)
@@ -51,11 +56,28 @@ public class UI_SkillItem : UI_SkillSlot
         //     }, Define.UIEvent.Exit);
         // }
 
+        gameObject.BindEvent((PointerEventData eventData)=>
+        {
+            if (Input.GetMouseButtonUp(1) && skillLock == true)
+            {
+                if (LevelCheck() == true)
+                {
+                    Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
+                    {
+                        skillLock = false;
+                        Managers.Resource.Destroy(GetObject((int)Gameobjects.LevelBlock));
+                    }, Define.SkillOpenMessage);
+                }
+            }
+        }, Define.UIEvent.Click);
+
         // 스킬이 흭득 상태라면 마우스로 들기 가능.
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             if (skillLock == true || skillData == null)
                 return;
+
+            Debug.Log("skillItem BeginDrag");
 
             UI_DragSlot.instance.dragSlotItem = this;
             UI_DragSlot.instance.DragSetImage(icon);
@@ -66,7 +88,7 @@ public class UI_SkillItem : UI_SkillSlot
         // 마우스 드래그 방향으로 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillData != null)
+            if (skillLock == false && skillData != null)
                 UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
 
@@ -80,5 +102,16 @@ public class UI_SkillItem : UI_SkillSlot
             UI_DragSlot.instance.dragSlotItem = null;
 
         }, Define.UIEvent.EndDrag);
+    }
+
+    // 스킬 레벨 체크
+    bool LevelCheck()
+    {
+        if (Managers.Game.Level >= skillData.minLevel)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
