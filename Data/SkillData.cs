@@ -9,6 +9,7 @@ public class SkillData
     public int minLevel;
     public int skillCoolDown;
     public int skillConsumMp;
+    public bool isCoolDown = false;
     public string discription;
     public Sprite skillSprite;
     public List<int> powerList;

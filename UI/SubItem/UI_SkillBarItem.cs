@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class UI_SkillBarItem : UI_SkillSlot
 {
     public Define.KeySkill keySkill;
+    public Image coolDownImage;
 
     public override void SetInfo()
     {
@@ -83,6 +85,27 @@ public class UI_SkillBarItem : UI_SkillSlot
 
         icon.sprite = skillData.skillSprite;
         SetColor(255);
+    }
+
+    void Update()
+    {
+        if (skillData == null)
+            return;
+        
+        if (skillData.isCoolDown == true)
+        {
+            if (coolDownImage.gameObject.activeSelf == false)
+                coolDownImage.gameObject.SetActive(true);
+
+            coolDownImage.fillAmount -= 1 * Time.smoothDeltaTime / skillData.skillCoolDown;
+            
+            if (coolDownImage.fillAmount <= 0)
+            {
+                skillData.isCoolDown = false;
+                coolDownImage.fillAmount = 1;
+                coolDownImage.gameObject.SetActive(false);
+            }
+        }
     }
 
     public override void ClearSlot()

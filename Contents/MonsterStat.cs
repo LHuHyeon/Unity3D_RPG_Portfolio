@@ -58,6 +58,7 @@ public class MonsterStat : MonoBehaviour
     {
         _monster.State = Define.State.Die;
         Managers.Game.Exp += _dropExp;
+        Managers.Game.Gold += _dropGold;
 
         OnDropItem();
         _monster.BattleClose();

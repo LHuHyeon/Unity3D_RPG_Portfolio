@@ -241,10 +241,14 @@ public class PlayerController : BaseController
             // 왼쪽 클릭 시 공격
             case Define.MouseEvent.LeftDown:
                 {
-                    _stopAttack = false;
-                    _destPos = hit.point;
-                    _destPos.y = 0;
-                    OnAttack();
+                    // 무기가 있다면 공격 가능
+                    if (Managers.Game.CurrentWeapon != null)
+                    {
+                        _stopAttack = false;
+                        _destPos = hit.point;
+                        _destPos.y = 0;
+                        OnAttack();
+                    }
                 }
                 break;
             // 왼쪽 누르는 중이면 다음 공격 진행
@@ -412,6 +416,12 @@ public class PlayerController : BaseController
             return;
         }
 
+        if (skill.isCoolDown == true)
+        {
+            Debug.Log("쿨타임 중입니다.");
+            return;
+        }
+
         // 마우스 방향으로 회전
         _destPos = GetMousePoint();
         dir = _destPos - transform.position;
@@ -419,6 +429,7 @@ public class PlayerController : BaseController
 
         currentSkill = skill;
         
+        // 스킬 이펙트 찾기
         foreach(EffectData value in effects)
         {
             if (currentSkill.skillId == value.id)
@@ -428,8 +439,10 @@ public class PlayerController : BaseController
             }
         }
 
+        // 스킬 진행
         State = Define.State.Skill;
         anim.CrossFade("SKILL"+currentSkill.skillId, 0.1f, -1, 0);
+        currentSkill.isCoolDown = true;
         currentEffect.SetActive(true);
     }
 

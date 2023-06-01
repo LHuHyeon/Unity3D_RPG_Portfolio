@@ -41,6 +41,12 @@ public class UI_PlayScene : UI_Scene
         ExpBar,
     }
 
+    enum Buttons
+    {
+        SpawnButton,
+        LevelUpButton,
+    }
+
     public UI_InvenPopup _inventory;
     public UI_EqStatPopup _equipment;
     public UI_SkillPopup _skill;
@@ -53,6 +59,7 @@ public class UI_PlayScene : UI_Scene
 
         BindObject(typeof(Gameobjects));
         BindImage(typeof(Images));
+        BindButton(typeof(Buttons));
         BindText(typeof(Texts));
         Bind<Slider>(typeof(Sliders));
 
@@ -77,11 +84,26 @@ public class UI_PlayScene : UI_Scene
     {
         GetText((int)Texts.NameBarText).text = Managers.Game.Name;
 
-        // foreach(Transform child in GetObject((int)Gameobjects.SkillBar).transform)
-        //     Managers.Resource.Destroy(child.gameObject);
+        // -- TODO : Test 용 코드 나중에 삭제하기
+        GetButton((int)Buttons.SpawnButton).onClick.AddListener(()=>
+        {
+            GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, "Monster/Skeleton1");
+            obj.transform.position += new Vector3(0, 0, 5f);
+        });
 
-        // for(int i=0; i<skillBarCount; i++)
-        //     Managers.UI.MakeSubItem<UI_InvenItem>(parent: GetObject((int)Gameobjects.SkillBar).transform);
+        GetButton((int)Buttons.LevelUpButton).onClick.AddListener(()=>
+        {
+            // 다음 레벨 확인
+            if (Managers.Data.Level.ContainsKey(Managers.Game.Level + 1) == false)
+            {
+                Debug.Log("만렙 입니다!");
+                return;
+            }
+
+            Managers.Game.RefreshStat(++Managers.Game.Level);
+        });
+
+        // --
 
         RefreshUI();
     }

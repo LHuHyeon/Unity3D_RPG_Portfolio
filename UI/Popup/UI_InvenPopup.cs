@@ -35,6 +35,8 @@ public class UI_InvenPopup : UI_Popup
 
         SetInfo();
 
+        AcquireItem(Managers.Data.Item[2001]);
+
         gameObject.SetActive(false);
 
         return true;

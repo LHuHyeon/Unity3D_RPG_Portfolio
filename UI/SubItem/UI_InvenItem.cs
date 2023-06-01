@@ -160,6 +160,7 @@ public class UI_InvenItem : UI_SlotItem
 
         itemCount = 0;
         itemCountText.text = "0";
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
         
         SetColor(0);
     }

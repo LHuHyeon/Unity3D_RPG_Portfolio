@@ -240,8 +240,8 @@ public class GameManager
 
         Exp = 0;
         TotalExp = stat.totalExp;
-        StatPoint = stat.statPoint;
-        MaxStatPoint += StatPoint;
+        StatPoint += stat.statPoint;
+        MaxStatPoint += stat.statPoint;
         MaxHp = stat.maxHp;
         Hp = MaxHp;
         MaxMp = stat.maxMp;
@@ -296,7 +296,7 @@ public class GameManager
         }
     }
 
-    // 해당 키 스킬 반환 (스킬 ui 완성되면 사용)
+    // 해당 키 스킬 반환 
     public SkillData GetSkill(Define.KeySkill keySkill)
     {
         SkillData skill;
