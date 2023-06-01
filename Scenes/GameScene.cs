@@ -42,6 +42,7 @@ public class GameScene : BaseScene
         StartCoroutine(Managers.Data.DataRequest(Define.ArmorItemNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.DropItemNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.MonsterNumber));
+        StartCoroutine(Managers.Data.DataRequest(Define.ShopNumber));
     }
 
     public override void Clear()

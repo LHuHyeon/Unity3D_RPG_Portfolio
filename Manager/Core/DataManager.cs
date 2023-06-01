@@ -16,10 +16,8 @@ public class DataManager
     public Dictionary<int, ItemData> Item { get; private set; }
     public Dictionary<int, List<int>> DropItem { get; private set; }
     public Dictionary<int, GameObject> Monster { get; private set; }
+    public Dictionary<int, List<int>> Shop { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
-
-    // TODO : 보기 좋게 바꾸기 ( 아니면 안쓰기 )
-    public bool[] isDataRequest = new bool[] {false, false, false, false, false, false, false, false};
 
     public void Init()
     {
@@ -39,35 +37,30 @@ public class DataManager
         {
             case Define.StartNumber:
                 StartRequest(data);
-                isDataRequest[0] = true;
                 break;
             case Define.LevelNumber:
                 LevelRequest(data);
-                isDataRequest[1] = true;
                 break;
             case Define.SkillNumber:
                 SkillRequest(data);
-                isDataRequest[2] = true;
                 break;
             case Define.UseItemNumber:
                 UseItemRequest(data);
-                isDataRequest[3] = true;
                 break;
             case Define.WeaponItemNumber:
                 WeaponItemRequest(data);
-                isDataRequest[4] = true;
                 break;
             case Define.ArmorItemNumber:
                 ArmorItemRequest(data);
-                isDataRequest[5] = true;
                 break;
             case Define.DropItemNumber:
                 DropItemRequest(data);
-                isDataRequest[6] = true;
                 break;
             case Define.MonsterNumber:
                 MonsterRequest(data);
-                isDataRequest[7] = true;
+                break;
+            case Define.ShopNumber:
+                ShopRequest(data);
                 break;
         }
     }
@@ -308,6 +301,27 @@ public class DataManager
             monsterStat.DropItemId = int.Parse(row[7]);
 
             Monster.Add(monsterStat.Id, monsterObject);
+        }
+    }
+
+    void ShopRequest(string data)
+    {
+        Shop = new Dictionary<int, List<int>>();
+
+        string[] lines = data.Split("\n");
+        for(int y = 1; y < lines.Length; y++)
+        {
+            string[] row = lines[y].Replace("\r", "").Split(',');
+            if (row.Length == 0)
+				continue;
+			if (string.IsNullOrEmpty(row[0]))
+				continue;
+
+            List<int> shopDatas = new List<int>();
+            foreach(string itemdata in row[1].Split("|"))
+                shopDatas.Add(int.Parse(itemdata));
+
+            Shop.Add(int.Parse(row[0]), shopDatas);
         }
     }
 

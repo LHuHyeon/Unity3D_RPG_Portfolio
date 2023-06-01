@@ -63,6 +63,20 @@ public class GameManager
     public bool isInventory = false;
     public bool isEquipment = false;
     public bool isSkillUI = false;
+    public bool isInteract
+    {
+        get { return isInteract; }
+        set {
+            // 상호작용 중이면 Popup UI 끄기
+            if (isInteract == true)
+            {
+                Managers.UI.CloseAllPopupUI();
+                isInventory = false;
+                isEquipment = false;
+                isSkillUI = false;
+            }
+        }
+    }
 
     public string Name
 	{
@@ -246,6 +260,8 @@ public class GameManager
         Hp = MaxHp;
         MaxMp = stat.maxMp;
         Mp = MaxMp;
+
+        _playScene.RefreshUI();
     }
 
     public int addDefense = 0;

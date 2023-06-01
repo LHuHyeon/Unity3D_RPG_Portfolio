@@ -38,7 +38,10 @@ public class UI_SkillPopup : UI_Popup
         {
             Managers.Game.isSkillUI = !Managers.Game.isSkillUI;
 
-            Managers.Game._playScene._skill.gameObject.SetActive(Managers.Game.isSkillUI);
+            if (Managers.Game.isSkillUI)
+                Managers.UI.OnPopupUI(this);
+            else
+                Managers.Resource.Destroy(gameObject);
         }
     }
 

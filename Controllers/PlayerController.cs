@@ -94,12 +94,14 @@ public class PlayerController : BaseController
     }
 
     Vector3 dir;
+    float _scanRange = 1.5f;
     protected override void UpdateMoving()
     {
         if (_lockTarget != null){
             float distance = (_lockTarget.transform.position - transform.position).magnitude;
-            if (distance <= 1f){
+            if (distance <= _scanRange){
                 // TODO : npc 상호작용
+                Interact();
                 State = Define.State.Idle;
                 return;
             }
@@ -296,7 +298,6 @@ public class PlayerController : BaseController
     // [ Anim Event ]
     public void ExitAttack()
     {
-        // boxColider.SetActive(false);
         if (_onComboAttack == true)
         {
             if (attackClipNumber == 1)
@@ -331,7 +332,31 @@ public class PlayerController : BaseController
             GetSkill();
         }
 
+        GetInteract();
         GetPickUp();
+    }
+
+    // 상호작용 키
+    void GetInteract()
+    {
+        // 상호작용 대상이 없으면
+        if (_lockTarget == null)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Interact();
+        }
+    }
+
+    // 상호작용
+    void Interact()
+    {
+        State = Define.State.Idle;
+        
+        NpcController npc = _lockTarget.GetComponent<NpcController>();
+        if (npc != null)
+            npc.Interact();
     }
 
     // 아이템 줍기
@@ -374,6 +399,8 @@ public class PlayerController : BaseController
         {
             _isDiveRoll = true;
             State = Define.State.DiveRoll;
+
+            Managers.Game.Mp -= 10;
 
             _destPos = GetMousePoint();
             dir = _destPos - transform.position;
@@ -442,7 +469,10 @@ public class PlayerController : BaseController
         // 스킬 진행
         State = Define.State.Skill;
         anim.CrossFade("SKILL"+currentSkill.skillId, 0.1f, -1, 0);
+
         currentSkill.isCoolDown = true;
+        Managers.Game.Mp -= currentSkill.skillConsumMp;
+
         currentEffect.SetActive(true);
     }
 

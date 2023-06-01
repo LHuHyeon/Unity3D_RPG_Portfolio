@@ -37,7 +37,7 @@ public class UI_InvenPopup : UI_Popup
 
         AcquireItem(Managers.Data.Item[2001]);
 
-        gameObject.SetActive(false);
+        Managers.Resource.Destroy(gameObject);
 
         return true;
     }
@@ -55,7 +55,10 @@ public class UI_InvenPopup : UI_Popup
         {
             Managers.Game.isInventory = !Managers.Game.isInventory;
 
-            Managers.Game._playScene._inventory.gameObject.SetActive(Managers.Game.isInventory);
+            if (Managers.Game.isInventory)
+                Managers.UI.OnPopupUI(this);
+            else
+                Managers.Resource.Destroy(gameObject);
         }
     }
 

@@ -33,7 +33,6 @@ public class UIManager
             SetOrder(canvas);
         else
             canvas.sortingOrder = 0;
-        
     }
 
     public void SetOrder(Canvas canvas)
@@ -106,6 +105,14 @@ public class UIManager
         go.transform.SetParent(Root.transform);
 
         return popup;
+    }
+
+    public void OnPopupUI(UI_Popup popup)
+    {
+        _popupStack.Push(popup);
+        Managers.Pool.Pop(popup.gameObject);
+
+        popup.transform.SetParent(Root.transform);
     }
 
     // 스택의 마지막 위치에 popup이 있나 확인 후 삭제

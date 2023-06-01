@@ -33,11 +33,22 @@ public class UI_ShopPopup : UI_Popup
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
-        if (shopType == Define.ShopType.Used)
-            GetText((int)Texts.TitleText).text = "Used Shop";
-        else if (shopType == Define.ShopType.Equipment)
-            GetText((int)Texts.TitleText).text = "Equipment Shop";
+        gameObject.SetActive(false);
 
         return true;
+    }
+
+    public void SetInfo(ShopNpcController npc)
+    {
+        shopType = npc.shopType;
+
+        if (shopType == Define.ShopType.Used)
+            GetText((int)Texts.TitleText).text = "Used Shop";
+        else if (shopType == Define.ShopType.Armor)
+            GetText((int)Texts.TitleText).text = "Armor Shop";
+        else if (shopType == Define.ShopType.Weapon)
+            GetText((int)Texts.TitleText).text = "Weapon Shop";
+        else if (shopType == Define.ShopType.Accessory)
+            GetText((int)Texts.TitleText).text = "Accessory Shop";
     }
 }

@@ -70,6 +70,7 @@ public abstract class BaseController : MonoBehaviour
         Init();
     }
 
+    // Player 전용
     void Update()
     {
         if (WorldObjectType != Define.WorldObject.Player)
@@ -101,9 +102,10 @@ public abstract class BaseController : MonoBehaviour
         }
     }
 
+    // NPC/Monster 전용
     void FixedUpdate()
     {
-        if (WorldObjectType != Define.WorldObject.Monster)
+        if (WorldObjectType == Define.WorldObject.Player)
             return;
 
         switch (State)

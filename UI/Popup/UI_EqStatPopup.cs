@@ -63,7 +63,10 @@ public class UI_EqStatPopup : UI_Popup
         {
             Managers.Game.isEquipment = !Managers.Game.isEquipment;
 
-            Managers.Game._playScene._equipment.gameObject.SetActive(Managers.Game.isEquipment);
+            if (Managers.Game.isEquipment)
+                Managers.UI.OnPopupUI(this);
+            else
+                Managers.Resource.Destroy(gameObject);
         }
     }
 

@@ -18,6 +18,7 @@ public class UI_PlayScene : UI_Scene
     {
         SkillBar,
         ItemBar,
+        ultSkillSlot,
     }
 
     enum Images
@@ -47,10 +48,11 @@ public class UI_PlayScene : UI_Scene
         LevelUpButton,
     }
 
-    public UI_InvenPopup _inventory;
-    public UI_EqStatPopup _equipment;
-    public UI_SkillPopup _skill;
-    public UI_SlotTipPopup _slotTip;
+    public UI_InvenPopup _inventory;        // 인벤토리 Popup UI
+    public UI_EqStatPopup _equipment;       // 장비/스탯 Popup UI
+    public UI_SkillPopup _skill;            // 스킬 Popup UI
+    public UI_SlotTipPopup _slotTip;        // 슬롯팁 Popup UI
+    public UI_ShopPopup _shop;              // 상점 Popup UI
 
     public override bool Init()
 	{
@@ -67,6 +69,7 @@ public class UI_PlayScene : UI_Scene
         _equipment = Managers.UI.ShowPopupUI<UI_EqStatPopup>();
         _skill = Managers.UI.ShowPopupUI<UI_SkillPopup>();
         _slotTip = Managers.UI.ShowPopupUI<UI_SlotTipPopup>();
+        _shop = Managers.UI.ShowPopupUI<UI_ShopPopup>();
         Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
 
         SetInfo();
@@ -105,11 +108,17 @@ public class UI_PlayScene : UI_Scene
 
         // --
 
+        GetObject((int)Gameobjects.ultSkillSlot).SetActive(false);
+
         RefreshUI();
     }
 
     public void RefreshUI()
     {
+        // 레벨 10 이상이면 궁극기 슬롯 오픈
+        if (Managers.Game.Level >= 10)
+            GetObject((int)Gameobjects.ultSkillSlot).SetActive(true);
+
         RefreshStat();
     }
 

@@ -72,6 +72,13 @@ public class UI_SkillBarItem : UI_SkillSlot
 
     void SetSkill(UI_SkillSlot skillSlot)
     {
+        // 궁극기 경우 10렙 이상 스킬만 가능
+        if (keySkill == Define.KeySkill.R)
+        {
+            if (skillSlot.skillData.minLevel < 10)
+                return;
+        }
+
         skillData = skillSlot.skillData;
 
         // 스킬바에서 온거면 기존 슬롯 삭제
@@ -89,6 +96,7 @@ public class UI_SkillBarItem : UI_SkillSlot
 
     void Update()
     {
+        // 쿨타임
         if (skillData == null)
             return;
         

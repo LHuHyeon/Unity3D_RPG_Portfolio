@@ -20,7 +20,9 @@ public class Define : MonoBehaviour
     {
         Unknown,
         Used,
-        Equipment,
+        Armor,
+        Weapon,
+        Accessory,
     }
 
     public enum StatType
@@ -163,6 +165,7 @@ public class Define : MonoBehaviour
     public const string ArmorItemNumber = "1624069194";
     public const string DropItemNumber = "563258933";
     public const string MonsterNumber = "1085946242";
+    public const string ShopNumber = "1630670634";
 
     // TODO : TextData 사용하면 ID로 바꾸기
     public const string SkillOpenMessage = "스킬을 해방하겠습니까?";
