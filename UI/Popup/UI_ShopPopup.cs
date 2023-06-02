@@ -25,6 +25,11 @@ public class UI_ShopPopup : UI_Popup
 
     public Define.ShopType shopType = Define.ShopType.Unknown;
 
+    [SerializeField]
+    int buyCount = 10;
+
+    List<UI_ShopBuyItem> buyList;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -33,12 +38,26 @@ public class UI_ShopPopup : UI_Popup
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
-        gameObject.SetActive(false);
+        Managers.UI.ClosePopupUI(this);
 
         return true;
     }
 
-    public void SetInfo(ShopNpcController npc)
+    public void SetInfo()
+    {
+        buyList = new List<UI_ShopBuyItem>();
+
+        foreach(Transform child in GetObject((int)Gameobjects.BuyList).transform)
+            Managers.Resource.Destroy(child.gameObject);
+
+        for(int i=0; i<buyCount; i++)
+        {
+            UI_ShopBuyItem buyShop = Managers.UI.MakeSubItem<UI_ShopBuyItem>(parent: GetObject((int)Gameobjects.BuyList).transform);
+            buyList.Add(buyShop);
+        }
+    }
+
+    public void RefreshUI(ShopNpcController npc)
     {
         shopType = npc.shopType;
 

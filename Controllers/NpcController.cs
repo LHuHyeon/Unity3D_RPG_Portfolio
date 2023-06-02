@@ -21,6 +21,8 @@ public abstract class NpcController : BaseController
 
         if (dir.magnitude <= scanRange)
         {
+            OnInteract();
+
             _lockTarget = Managers.Game.GetPlayer();
             nameBarUI.gameObject.SetActive(true);
             transform.rotation = Quaternion.LookRotation(dir);
@@ -29,6 +31,16 @@ public abstract class NpcController : BaseController
         {
             _lockTarget = null;
             nameBarUI.gameObject.SetActive(false);
+        }
+    }
+
+    void OnInteract()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Managers.Game.IsInteract = !Managers.Game.IsInteract;
+
+            Interact();
         }
     }
 

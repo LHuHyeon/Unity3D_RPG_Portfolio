@@ -18,6 +18,10 @@ public class InputManager
 
     public void OnUpdate()
     {
+        // 상호작용 확인
+        if (Managers.Game.IsInteract == true)
+            return;
+
         // 키입력 메소드가 KeyAction안에 존재하는가?
         if (Input.anyKey && KeyAction != null)
             KeyAction.Invoke();

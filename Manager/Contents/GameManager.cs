@@ -63,19 +63,28 @@ public class GameManager
     public bool isInventory = false;
     public bool isEquipment = false;
     public bool isSkillUI = false;
-    public bool isInteract
+    private bool isInteract = false;
+    public bool IsInteract
     {
         get { return isInteract; }
         set {
             // 상호작용 중이면 Popup UI 끄기
+            isInteract = value;
+            
             if (isInteract == true)
             {
-                Managers.UI.CloseAllPopupUI();
                 isInventory = false;
                 isEquipment = false;
                 isSkillUI = false;
+                Managers.UI.CloseAllPopupUI();
             }
         }
+    }
+
+    public void StopPlayer()
+    {
+        PlayerController player = _player.GetComponent<PlayerController>();
+        player.State = Define.State.Idle;
     }
 
     public string Name

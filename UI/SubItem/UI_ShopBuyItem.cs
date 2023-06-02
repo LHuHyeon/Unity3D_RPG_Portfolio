@@ -20,6 +20,8 @@ public class UI_ShopBuyItem : UI_Base
         if (base.Init() == false)
             return false;
 
+        gameObject.SetActive(false);
+
         return true;
     }
 }

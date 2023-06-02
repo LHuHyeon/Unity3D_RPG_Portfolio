@@ -97,11 +97,11 @@ public class PlayerController : BaseController
     float _scanRange = 1.5f;
     protected override void UpdateMoving()
     {
-        if (_lockTarget != null){
+        if (_lockTarget != null)
+        {
             float distance = (_lockTarget.transform.position - transform.position).magnitude;
-            if (distance <= _scanRange){
-                // TODO : npc 상호작용
-                Interact();
+            if (distance <= _scanRange)
+            {
                 State = Define.State.Idle;
                 return;
             }
@@ -332,21 +332,7 @@ public class PlayerController : BaseController
             GetSkill();
         }
 
-        GetInteract();
         GetPickUp();
-    }
-
-    // 상호작용 키
-    void GetInteract()
-    {
-        // 상호작용 대상이 없으면
-        if (_lockTarget == null)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Interact();
-        }
     }
 
     // 상호작용

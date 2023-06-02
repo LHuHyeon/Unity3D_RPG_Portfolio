@@ -6,7 +6,7 @@ public class UIManager
 {
     int _order = 10;
 
-    Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
+    List<UI_Popup> _popupList = new List<UI_Popup>();
     UI_Scene _sceneUI = null;
 
     // 프리팹 오브젝트 부모 (하이라이커 깔끔하게 정리하려고 사용)
@@ -100,54 +100,45 @@ public class UIManager
 
         GameObject go = Managers.Resource.Instantiate($"UI/Popup/{name}");
         T popup = Util.GetOrAddComponent<T>(go);
-        _popupStack.Push(popup);
+        _popupList.Add(popup);
 
         go.transform.SetParent(Root.transform);
 
         return popup;
     }
 
+    // 팝업창 켜기
     public void OnPopupUI(UI_Popup popup)
     {
-        _popupStack.Push(popup);
+        _popupList.Add(popup);
         Managers.Pool.Pop(popup.gameObject);
 
         popup.transform.SetParent(Root.transform);
     }
 
-    // 스택의 마지막 위치에 popup이 있나 확인 후 삭제
-    public void ClosePopupUI(UI_Popup popup)
+    // 리스트에 popup이 있나 확인 후 삭제
+    public void ClosePopupUI(UI_Popup _popup)
     {
-        if (_popupStack.Count == 0)
+        if (_popupList.Count == 0)
             return;
         
-        if (_popupStack.Peek() != popup){
+        if (_popupList.Contains(_popup) == false)
+        {
             Debug.Log("Close Popup Failed!");
             return;
         }
 
-        ClosePopupUI();
-    }
-
-    // Stack pop 진행
-    public void ClosePopupUI()
-    {
-        if (_popupStack.Count == 0)
-            return;
-        
-        UI_Popup popup = _popupStack.Pop();
-        Managers.Resource.Destroy(popup.gameObject);
-        popup = null;
+        Managers.Resource.Destroy(_popup.gameObject);
+        _popupList.Remove(_popup);
 
         _order--;
     }
 
-    // Stack 안에 있는 전체 pop
+    // List 전체 Close
     public void CloseAllPopupUI()
     {
-        while (_popupStack.Count > 0){
-            ClosePopupUI();
-        }
+        for(int i=0; i<_popupList.Count; i++)
+            ClosePopupUI(_popupList[i]);
     }
 
     public void Clear()

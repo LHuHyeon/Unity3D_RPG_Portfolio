@@ -45,7 +45,7 @@ public class UI_EqStatPopup : UI_Popup
 
         SetInfo();
 
-        gameObject.SetActive(false);
+        Managers.UI.ClosePopupUI(this);
 
         return true;
     }
@@ -66,7 +66,7 @@ public class UI_EqStatPopup : UI_Popup
             if (Managers.Game.isEquipment)
                 Managers.UI.OnPopupUI(this);
             else
-                Managers.Resource.Destroy(gameObject);
+                Managers.UI.ClosePopupUI(this);
         }
     }
 

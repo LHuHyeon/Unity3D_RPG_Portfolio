@@ -26,7 +26,7 @@ public class UI_InvenPopup : UI_Popup
     {
         if (base.Init() == false)
             return false;
-    
+
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
@@ -37,7 +37,7 @@ public class UI_InvenPopup : UI_Popup
 
         AcquireItem(Managers.Data.Item[2001]);
 
-        Managers.Resource.Destroy(gameObject);
+        Managers.UI.ClosePopupUI(this);
 
         return true;
     }
@@ -58,7 +58,7 @@ public class UI_InvenPopup : UI_Popup
             if (Managers.Game.isInventory)
                 Managers.UI.OnPopupUI(this);
             else
-                Managers.Resource.Destroy(gameObject);
+                Managers.UI.ClosePopupUI(this);
         }
     }
 
