@@ -1,17 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UI_SkillPopup : UI_Popup
 {
     enum Gameobjects
     {
-
-    }
-
-    enum Texts
-    {
-
+        Title,
+        Background,
+        ExitButton,
     }
 
     public override bool Init()
@@ -20,7 +18,6 @@ public class UI_SkillPopup : UI_Popup
             return false;
     
         BindObject(typeof(Gameobjects));
-        BindText(typeof(Texts));
 
         Managers.Input.KeyAction -= OnSkillPopup;
         Managers.Input.KeyAction += OnSkillPopup;
@@ -47,6 +44,28 @@ public class UI_SkillPopup : UI_Popup
 
     public void SetInfo()
     {
-        
+        // Title 잡고 인벤토리 이동
+        RectTransform invenPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
+        GetObject((int)Gameobjects.Title).BindEvent((PointerEventData eventData)=>
+        {
+            invenPos.anchoredPosition = new Vector2
+            (
+                Mathf.Clamp(invenPos.anchoredPosition.x + eventData.delta.x, -655, 655),
+                Mathf.Clamp(invenPos.anchoredPosition.y + eventData.delta.y, -253, 217)
+            );
+        }, Define.UIEvent.Drag);
+
+        // Order 설정
+        GetObject((int)Gameobjects.Background).BindEvent((PointerEventData eventData)=>
+        {
+            Managers.UI.SetOrder(GetComponent<Canvas>());
+        }, Define.UIEvent.Click);
+
+        // Exit 버튼
+        GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
+        {
+            Managers.Game.isInventory = false;
+            Managers.Game._playScene._inventory.gameObject.SetActive(Managers.Game.isInventory);
+        }, Define.UIEvent.Click);
     }
 }

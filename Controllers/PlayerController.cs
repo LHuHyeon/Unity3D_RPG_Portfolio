@@ -335,16 +335,6 @@ public class PlayerController : BaseController
         GetPickUp();
     }
 
-    // 상호작용
-    void Interact()
-    {
-        State = Define.State.Idle;
-        
-        NpcController npc = _lockTarget.GetComponent<NpcController>();
-        if (npc != null)
-            npc.Interact();
-    }
-
     // 아이템 줍기
     [SerializeField]
     float itemMaxRadius = 5f;

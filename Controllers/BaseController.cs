@@ -70,7 +70,7 @@ public abstract class BaseController : MonoBehaviour
         Init();
     }
 
-    // Playe, NPC 전용
+    // Playe, NPC 전용 ( 키 입력이 필요한 경우 )
     void Update()
     {
         if (WorldObjectType == Define.WorldObject.Monster)

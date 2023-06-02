@@ -19,10 +19,26 @@ public class ShopNpcController : NpcController
         if (Managers.Game.IsInteract)
         {
             Managers.Game.StopPlayer();
-            Managers.UI.OnPopupUI(Managers.Game._playScene._shop);
-            Managers.Game._playScene._shop.RefreshUI(this);
+            OnShop();
         }
         else
-            Managers.UI.ClosePopupUI(Managers.Game._playScene._shop);
+            ExitShop();
+    }
+
+    void OnShop()
+    {
+        Managers.UI.OnPopupUI(Managers.Game._playScene._shop);
+        Managers.Game._playScene._shop.RefreshUI(this);
+
+        Managers.Game.isInventory = true;
+        Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
+    }
+
+    void ExitShop()
+    {
+        Managers.UI.ClosePopupUI(Managers.Game._playScene._shop);
+
+        Managers.Game.isInventory = false;
+        Managers.UI.ClosePopupUI(Managers.Game._playScene._inventory);
     }
 }

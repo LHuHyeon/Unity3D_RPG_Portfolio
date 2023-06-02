@@ -34,6 +34,7 @@ public abstract class NpcController : BaseController
         }
     }
 
+    // 플레이어가 가까이 있다면 상호작용 가능
     void OnInteract()
     {
         if (Input.GetKeyDown(KeyCode.G))

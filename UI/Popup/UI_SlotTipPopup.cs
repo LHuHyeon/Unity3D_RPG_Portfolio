@@ -66,6 +66,7 @@ public class UI_SlotTipPopup : UI_Popup
         GetText((int)Texts.ItemNameText).text = item.itemName;
         GetText((int)Texts.ItemTypeText).text = item.itemType.ToString();
         GetText((int)Texts.ItemGradeText).text = item.itemGrade.ToString();
+        
         if (item.itemType == Define.ItemType.Use)
         {
             GetText((int)Texts.ItemLevelText).text = "";
