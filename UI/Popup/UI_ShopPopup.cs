@@ -11,7 +11,7 @@ public class UI_ShopPopup : UI_Popup
     3. 
     */
 
-    public enum Gameobjects
+    enum Gameobjects
     {
         Title,
         Background,
@@ -20,9 +20,10 @@ public class UI_ShopPopup : UI_Popup
         SaleButton,
         BuyList,
         SaleList,
+        GoSaleButton,
     }
 
-    public enum Texts
+    enum Texts
     {
         TitleText,
     }
@@ -44,6 +45,9 @@ public class UI_ShopPopup : UI_Popup
         BindText(typeof(Texts));
 
         SetInfo();
+
+        GetObject((int)Gameobjects.SaleList).SetActive(false);
+        GetObject((int)Gameobjects.GoSaleButton).SetActive(false);
 
         Managers.UI.ClosePopupUI(this);
 
@@ -69,6 +73,8 @@ public class UI_ShopPopup : UI_Popup
             UI_ShopBuyItem buyShop = Managers.UI.MakeSubItem<UI_ShopBuyItem>(parent: GetObject((int)Gameobjects.BuyList).transform);
             buyList.Add(buyShop);
         }
+
+        // TODO : 구매 목록 만들기
 
         SetEventHandler();
     }
@@ -128,19 +134,42 @@ public class UI_ShopPopup : UI_Popup
             UI_InvenItem invenItem = dragSlot as UI_InvenItem;
 
             // 판매 개수 선택
-            int itemCount = invenItem.itemCount;
             UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
             numberCheckPopup.RefreshUI(invenItem, ()=>
             {
-                // 이 함수가 호출되면 차감된 슬롯 아이템 개수를 itemCount에 적용
-                itemCount -= invenItem.itemCount;
-
                 // 판매 슬롯 생성
                 UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
-                saleItem.SetInfo(dragSlot as UI_InvenItem, itemCount);
+                saleItem.SetInfo(dragSlot as UI_InvenItem);
                 saleList.Add(saleItem);
             });
 
         }, Define.UIEvent.Drop);
+
+        GetObject((int)Gameobjects.BuyButton).BindEvent(OnClickBuyListButton);
+        GetObject((int)Gameobjects.SaleButton).BindEvent(OnClickSaleListButton);
+        GetObject((int)Gameobjects.GoSaleButton).BindEvent(OnClickGoSaleButton);
+    }
+
+    void OnClickBuyListButton(PointerEventData eventData)
+    {
+        GetObject((int)Gameobjects.BuyList).SetActive(true);
+        GetObject((int)Gameobjects.SaleList).SetActive(false);
+        GetObject((int)Gameobjects.GoSaleButton).SetActive(false);
+    }
+
+    void OnClickSaleListButton(PointerEventData eventData)
+    {
+        GetObject((int)Gameobjects.BuyList).SetActive(false);
+        GetObject((int)Gameobjects.SaleList).SetActive(true);
+        GetObject((int)Gameobjects.GoSaleButton).SetActive(true);
+    }
+
+    void OnClickGoSaleButton(PointerEventData eventData)
+    {
+        if (saleList.Count == 0)
+            return;
+
+        foreach(UI_ShopSaleItem saleItem in saleList)
+            saleItem.GetSale();
     }
 }

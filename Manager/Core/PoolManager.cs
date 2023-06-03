@@ -81,6 +81,10 @@ public class PoolManager
     // 새로운 pool 생성 후 저장
     public void CreatePool(GameObject original, int count = 5)
     {
+        // 이미 풀에 존재하면 생성 취소
+        if (_pool.ContainsKey(original.name) == true)
+            return;
+
         Pool pool = new Pool();
         pool.Init(original, count);     // Pool 생성
         pool.Root.SetParent(_root);       // _root(@Pool_Root)를 부모 객체로 설정

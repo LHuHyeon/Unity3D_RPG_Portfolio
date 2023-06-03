@@ -10,6 +10,20 @@ public class UI_InvenItem : UI_SlotItem
     public TextMeshProUGUI itemCountText;
     public int itemCount;
 
+    // 아이템을 팔때 사용 변수
+    public int subItemCount;    // 차감 예정 개수
+    public GameObject _lock;    // 판매 등록될 시 인벤 Lock
+
+    private bool isLock = false;
+    public bool IsLock
+    {
+        get { return isLock; }
+        set {
+            isLock = value;
+            _lock.SetActive(isLock);
+        }
+    }
+
     public override void SetInfo()
     {
         slotType = Define.SlotType.Inven;
@@ -22,6 +36,9 @@ public class UI_InvenItem : UI_SlotItem
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
+            if (item == null || UI_DragSlot.instance.dragSlotItem == null)
+                return;
+
             // 아이템 사용
             if (Input.GetMouseButtonUp(1))
             {
@@ -41,6 +58,9 @@ public class UI_InvenItem : UI_SlotItem
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
+            if (UI_DragSlot.instance.dragSlotItem == null)
+                return;
+
             // 아이템을 버린 위치가 UI가 아니라면
             if (item != null && !EventSystem.current.IsPointerOverGameObject())
             {
@@ -55,6 +75,9 @@ public class UI_InvenItem : UI_SlotItem
         // 이 슬롯에 마우스 클릭이 끝나면 아이템 받기
         gameObject.BindEvent((PointerEventData eventData)=>
         {
+            if (UI_DragSlot.instance.dragSlotItem == null)
+                return;
+                
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
             // 장비창에서 온거면
@@ -158,8 +181,10 @@ public class UI_InvenItem : UI_SlotItem
     {
         base.ClearSlot();
 
+        IsLock = false;
         itemCount = 0;
         itemCountText.text = "0";
+        subItemCount = 0;
         Managers.Game._playScene._slotTip.OnSlotTip(false);
         
         SetColor(0);

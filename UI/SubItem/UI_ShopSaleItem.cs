@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_ShopSaleItem : UI_Base
 {
@@ -11,7 +12,7 @@ public class UI_ShopSaleItem : UI_Base
 
     enum Images
     {
-        Saleicon,
+        SaleItemIcon,
     }
 
     enum Texts
@@ -21,6 +22,9 @@ public class UI_ShopSaleItem : UI_Base
 
     UI_InvenItem _invenItem;
     int _saleItemCount = 0;
+
+    Image _icon;
+    string _itemCountText;
 
     public override bool Init()
     {
@@ -33,21 +37,35 @@ public class UI_ShopSaleItem : UI_Base
 
         GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickCloseButton);
 
+        GetImage((int)Images.SaleItemIcon).sprite = _icon.sprite;
+        GetText((int)Texts.SaleItemCountText).text = _itemCountText;
+
         return true;
     }
 
-    public void SetInfo(UI_InvenItem invenItem, int saleItemCount)
+    public void SetInfo(UI_InvenItem invenItem)
     {
         _invenItem = invenItem;
-        _saleItemCount = saleItemCount;
+        _saleItemCount = _invenItem.subItemCount;
 
-        GetImage((int)Images.Saleicon).sprite = _invenItem.icon.sprite;
-        GetText((int)Texts.SaleItemCountText).text = _saleItemCount.ToString();
+        _invenItem.IsLock = true;
+
+        _icon = _invenItem.icon;
+        _itemCountText = _saleItemCount.ToString();
+    }
+
+    // 판매 진행
+    public void GetSale()
+    {
+        Managers.Game.Gold += _invenItem.item.itemPrice;
+        _invenItem.SetCount(-_saleItemCount);
+        Managers.Resource.Destroy(gameObject);
     }
 
     void OnClickCloseButton()
     {
-        _invenItem.SetCount(_saleItemCount);
+        _invenItem.subItemCount = 0;
+        _invenItem.IsLock = false;
         Managers.Resource.Destroy(gameObject);
     }
 }

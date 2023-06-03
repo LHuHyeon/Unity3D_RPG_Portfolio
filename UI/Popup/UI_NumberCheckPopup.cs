@@ -26,6 +26,8 @@ public class UI_NumberCheckPopup : UI_Popup
     int itemCount = 0;
     int itemMaxCount = 0;
 
+    string _itemCounttext;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -33,6 +35,8 @@ public class UI_NumberCheckPopup : UI_Popup
 
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
+
+        GetText((int)Texts.NumberCountText).text = _itemCounttext;
 
         SetInfo();
 
@@ -56,36 +60,31 @@ public class UI_NumberCheckPopup : UI_Popup
 
         itemCount = 1;
         itemMaxCount = invenItem.itemCount;
-
-        if (numberSlider == null)
-            Debug.Log("Slider Null");
         
         numberSlider.maxValue = itemMaxCount;
         numberSlider.value = itemCount;
 
-        if (GetText((int)Texts.NumberCountText) == null)
-            Debug.Log("Text null");
-
-        GetText((int)Texts.NumberCountText).text = itemCount.ToString();
+        _itemCounttext = itemCount.ToString();
     }
 
     void OnClickMinusButton()
     {
-        itemCount--;
-        GetText((int)Texts.NumberCountText).text = itemCount.ToString();
+        Mathf.Clamp(--itemCount, 1, itemMaxCount);
+        _itemCounttext = itemCount.ToString();
     }
 
     void OnClickPlusButton()
     {
-        itemCount++;
-        GetText((int)Texts.NumberCountText).text = itemCount.ToString();
+        Mathf.Clamp(++itemCount, 1, itemMaxCount);
+        _itemCounttext = itemCount.ToString();
     }
 
     void OnClickYesButton()
     {
         Managers.UI.ClosePopupUI(this);
 
-        _invenItem.SetCount(-itemCount);
+        // 인벤에 차감개수 알려주기
+        _invenItem.subItemCount = itemCount;
 
         if (_onClickYesButton != null)
             _onClickYesButton.Invoke();

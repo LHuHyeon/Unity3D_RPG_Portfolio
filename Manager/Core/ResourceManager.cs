@@ -58,8 +58,9 @@ public class ResourceManager
         // 풀링이 적용된 객체인지 확인
         if (original.GetComponent<Poolable>() != null)
         {
+            // UI 팝업이면 하나만 생성
             if (original.GetComponent<UI_Popup>() != null)
-                Managers.Pool.CreatePool(original, 1);
+                Managers.Pool.CreatePool(original, 1); 
 
             return Managers.Pool.Pop(original, parent).gameObject;
         }

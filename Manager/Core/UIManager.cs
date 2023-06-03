@@ -112,6 +112,7 @@ public class UIManager
     {
         _popupList.Add(popup);
         Managers.Pool.Pop(popup.gameObject);
+        SetOrder(popup.GetComponent<Canvas>());
 
         popup.transform.SetParent(Root.transform);
     }

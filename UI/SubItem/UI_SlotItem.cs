@@ -56,12 +56,19 @@ public class UI_SlotItem : UI_Base
                     Managers.Game._playScene._slotTip.OnSlotTip(false);
             }, Define.UIEvent.Exit);
         }
-
+        
         // 아이템이 존재할 시 마우스로 들기 가능.
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             if (item == null)
                 return;
+
+            // 인벤 이라면 Lock 확인
+            if (this is UI_InvenItem)
+            {
+                if ((this as UI_InvenItem).IsLock == true)
+                    return;
+            }
 
             UI_DragSlot.instance.dragSlotItem = this;
             UI_DragSlot.instance.DragSetImage(icon);
@@ -72,7 +79,7 @@ public class UI_SlotItem : UI_Base
         // 마우스 드래그 방향으로 아이템 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item != null)
+            if (item != null && UI_DragSlot.instance.dragSlotItem != null)
                 UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
     }
