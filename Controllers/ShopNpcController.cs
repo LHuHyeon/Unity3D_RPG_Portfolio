@@ -28,7 +28,7 @@ public class ShopNpcController : NpcController
     void OnShop()
     {
         Managers.UI.OnPopupUI(Managers.Game._playScene._shop);
-        Managers.Game._playScene._shop.RefreshUI(this);
+        Managers.Game._playScene._shop.RefreshUI(this, shopBuyId);
 
         Managers.Game.isInventory = true;
         Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
@@ -36,6 +36,7 @@ public class ShopNpcController : NpcController
 
     void ExitShop()
     {
+        Managers.Game._playScene._shop.ExitShop();
         Managers.UI.ClosePopupUI(Managers.Game._playScene._shop);
 
         Managers.Game.isInventory = false;

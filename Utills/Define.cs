@@ -169,4 +169,5 @@ public class Define : MonoBehaviour
 
     // TODO : TextData 사용하면 ID로 바꾸기
     public const string SkillOpenMessage = "스킬을 해방하겠습니까?";
+    public const string ShopSaleMessage = "구매 하겠습니까?";
 }

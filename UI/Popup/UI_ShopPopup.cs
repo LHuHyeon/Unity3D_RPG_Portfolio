@@ -30,11 +30,10 @@ public class UI_ShopPopup : UI_Popup
 
     public Define.ShopType shopType = Define.ShopType.Unknown;
 
-    [SerializeField]
-    int buyCount = 10;
-
     List<UI_ShopBuyItem> buyList;       // 구매 슬롯
-    List<UI_ShopSaleItem> saleList;     // 판매 슬롯
+    public List<UI_ShopSaleItem> saleList;     // 판매 슬롯
+
+    int currentItemId = 0;
 
     public override bool Init()
     {
@@ -67,19 +66,10 @@ public class UI_ShopPopup : UI_Popup
         foreach(Transform child in GetObject((int)Gameobjects.BuyList).transform)
             Managers.Resource.Destroy(child.gameObject);
 
-        // 구매 슬롯 공간 채우기
-        for(int i=0; i<buyCount; i++)
-        {
-            UI_ShopBuyItem buyShop = Managers.UI.MakeSubItem<UI_ShopBuyItem>(parent: GetObject((int)Gameobjects.BuyList).transform);
-            buyList.Add(buyShop);
-        }
-
-        // TODO : 구매 목록 만들기
-
         SetEventHandler();
     }
 
-    public void RefreshUI(ShopNpcController npc)
+    public void RefreshUI(ShopNpcController npc, int shopBuyId)
     {
         shopType = npc.shopType;
 
@@ -91,6 +81,37 @@ public class UI_ShopPopup : UI_Popup
             GetText((int)Texts.TitleText).text = "Weapon Shop";
         else if (shopType == Define.ShopType.Accessory)
             GetText((int)Texts.TitleText).text = "Accessory Shop";
+
+        SettingBuySlot(shopBuyId);
+    }
+
+    void SettingBuySlot(int shopBuyId)
+    {
+        // 똑같은 상점에 들린다면
+        if (currentItemId == shopBuyId)
+            return;
+
+        currentItemId = shopBuyId;
+
+        // 구매 슬롯 초기화
+        foreach(Transform child in GetObject((int)Gameobjects.BuyList).transform)
+            Managers.Resource.Destroy(child.gameObject);
+
+        // 구매 Id 가져오기
+        List<int> itemIdList = new List<int>();
+        if (Managers.Data.Shop.TryGetValue(shopBuyId, out itemIdList) == false)
+        {
+            Debug.Log("Shop ItemIdList Failed!");
+            return;
+        }
+
+        // 구매 슬롯 채우기
+        for(int i=0; i<itemIdList.Count; i++)
+        {
+            UI_ShopBuyItem buyShop = Managers.UI.MakeSubItem<UI_ShopBuyItem>(parent: GetObject((int)Gameobjects.BuyList).transform);
+            buyShop.SetInfo(Managers.Data.Item[itemIdList[i]]);
+            buyList.Add(buyShop);
+        }
     }
 
     void SetEventHandler()
@@ -115,6 +136,7 @@ public class UI_ShopPopup : UI_Popup
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
+            ExitShop();
             Managers.Game.IsInteract = false;
             Managers.UI.ClosePopupUI(this);
 
@@ -169,7 +191,16 @@ public class UI_ShopPopup : UI_Popup
         if (saleList.Count == 0)
             return;
 
-        foreach(UI_ShopSaleItem saleItem in saleList)
-            saleItem.GetSale();
+        for(int i=0; i<saleList.Count; i++)
+            saleList[i].GetSale();
+
+        saleList.Clear();
+    }
+
+    public void ExitShop()
+    {
+        GetObject((int)Gameobjects.BuyList).SetActive(true);
+        GetObject((int)Gameobjects.SaleList).SetActive(false);
+        GetObject((int)Gameobjects.GoSaleButton).SetActive(false);
     }
 }

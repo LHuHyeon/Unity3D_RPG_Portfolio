@@ -2,9 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UI_ConfirmPopup : UI_Popup
 {
+    enum Gameobjects
+    {
+        Background,
+    }
+
     enum Buttons
     {
         YesButton,
@@ -23,8 +29,15 @@ public class UI_ConfirmPopup : UI_Popup
         if (base.Init() == false)
             return false;
 
+        BindObject(typeof(Gameobjects));
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
+
+        // Order 설정
+        GetObject((int)Gameobjects.Background).BindEvent((PointerEventData eventData)=>
+        {
+            Managers.UI.SetOrder(GetComponent<Canvas>());
+        }, Define.UIEvent.Click);
 
         GetButton((int)Buttons.YesButton).onClick.AddListener(OnClickYesButton);
         GetButton((int)Buttons.NoButton).onClick.AddListener(OnClickNoButton);
@@ -37,6 +50,8 @@ public class UI_ConfirmPopup : UI_Popup
     Action _onClickYesButton;
     public void SetInfo(Action onClickYesButton, string text)
     {
+        Managers.UI.SetOrder(GetComponent<Canvas>());
+        
         _onClickYesButton = onClickYesButton;
         _text = text;
     }

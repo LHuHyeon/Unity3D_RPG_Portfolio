@@ -3,10 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using TMPro;
 using UnityEngine.UI;
 
 public class UI_NumberCheckPopup : UI_Popup
-{
+{   
+    enum Gameobjects
+    {
+        Background,
+    }
+
     enum Buttons
     {
         MinusButton,
@@ -15,28 +21,22 @@ public class UI_NumberCheckPopup : UI_Popup
         YesButton,
     }
 
-    enum Texts
-    {
-        NumberCountText,
-    }
-
     [SerializeField]
     Slider numberSlider;
 
+    [SerializeField]
+    TextMeshProUGUI _itemCountText;
+
     int itemCount = 0;
     int itemMaxCount = 0;
-
-    string _itemCounttext;
 
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
+        BindObject(typeof(Gameobjects));
         BindButton(typeof(Buttons));
-        BindText(typeof(Texts));
-
-        GetText((int)Texts.NumberCountText).text = _itemCounttext;
 
         SetInfo();
 
@@ -45,10 +45,21 @@ public class UI_NumberCheckPopup : UI_Popup
 
     void SetInfo()
     {
+        // Order 설정
+        GetObject((int)Gameobjects.Background).BindEvent((PointerEventData eventData)=>
+        {
+            Managers.UI.SetOrder(GetComponent<Canvas>());
+        }, Define.UIEvent.Click);
+
         GetButton((int)Buttons.MinusButton).onClick.AddListener(OnClickMinusButton);
         GetButton((int)Buttons.PlusButton).onClick.AddListener(OnClickPlusButton);
         GetButton((int)Buttons.NoButton).onClick.AddListener(OnClickNoButton);
         GetButton((int)Buttons.YesButton).onClick.AddListener(OnClickYesButton);
+        numberSlider.onValueChanged.AddListener((float value)=>
+        {
+            itemCount = (int)value;
+            _itemCountText.text = itemCount.ToString();
+        });
     }
 
     Action _onClickYesButton;
@@ -61,22 +72,25 @@ public class UI_NumberCheckPopup : UI_Popup
         itemCount = 1;
         itemMaxCount = invenItem.itemCount;
         
+        numberSlider.minValue = itemCount;
         numberSlider.maxValue = itemMaxCount;
         numberSlider.value = itemCount;
 
-        _itemCounttext = itemCount.ToString();
+        _itemCountText.text = itemCount.ToString();
     }
 
     void OnClickMinusButton()
     {
-        Mathf.Clamp(--itemCount, 1, itemMaxCount);
-        _itemCounttext = itemCount.ToString();
+        itemCount = Mathf.Clamp(--itemCount, 1, itemMaxCount);
+        numberSlider.value = itemCount;
+        _itemCountText.text = itemCount.ToString();
     }
 
     void OnClickPlusButton()
     {
-        Mathf.Clamp(++itemCount, 1, itemMaxCount);
-        _itemCounttext = itemCount.ToString();
+        itemCount = Mathf.Clamp(++itemCount, 1, itemMaxCount);
+        numberSlider.value = itemCount;
+        _itemCountText.text = itemCount.ToString();
     }
 
     void OnClickYesButton()

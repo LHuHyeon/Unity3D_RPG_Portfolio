@@ -51,21 +51,26 @@ public class UI_ShopSaleItem : UI_Base
         _invenItem.IsLock = true;
 
         _icon = _invenItem.icon;
-        _itemCountText = _saleItemCount.ToString();
+        if (invenItem.item is UseItemData)
+            _itemCountText = _saleItemCount.ToString();
+        else
+            _itemCountText = "";
     }
 
     // 판매 진행
     public void GetSale()
     {
-        Managers.Game.Gold += _invenItem.item.itemPrice;
+        Managers.Game.Gold += _invenItem.item.itemPrice * _saleItemCount;
         _invenItem.SetCount(-_saleItemCount);
-        Managers.Resource.Destroy(gameObject);
+        OnClickCloseButton();
     }
 
     void OnClickCloseButton()
     {
         _invenItem.subItemCount = 0;
         _invenItem.IsLock = false;
+        Managers.Game._playScene._shop.saleList.Remove(this);
+
         Managers.Resource.Destroy(gameObject);
     }
 }
