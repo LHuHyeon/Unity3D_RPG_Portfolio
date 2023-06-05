@@ -17,6 +17,8 @@ public class DataManager
     public Dictionary<int, List<int>> DropItem { get; private set; }
     public Dictionary<int, GameObject> Monster { get; private set; }
     public Dictionary<int, List<int>> Shop { get; private set; }
+    public Dictionary<int, QuestData> Quest { get; private set; }
+    public Dictionary<int, TalkData> Talk { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
 
     public void Init()
@@ -61,6 +63,12 @@ public class DataManager
                 break;
             case Define.ShopNumber:
                 ShopRequest(data);
+                break;
+            case Define.TalkNumber:
+                TalkRequest(data);
+                break;
+            case Define.QuestNumber:
+                QuestRequest(data);
                 break;
         }
     }
@@ -322,6 +330,80 @@ public class DataManager
                 shopDatas.Add(int.Parse(itemdata));
 
             Shop.Add(int.Parse(row[0]), shopDatas);
+        }
+    }
+
+    void QuestRequest(string data)
+    {
+        Quest = new Dictionary<int, QuestData>();
+
+        string[] lines = data.Split("\n");
+        for(int y = 1; y < lines.Length; y++)
+        {
+            string[] row = lines[y].Replace("\r", "").Split(',');
+            if (row.Length == 0)
+				continue;
+			if (string.IsNullOrEmpty(row[0]))
+				continue;
+
+            QuestData questData = new QuestData()
+            {
+                id = int.Parse(row[0]),
+                titleName = row[1],
+                questType = (Define.QuestType)int.Parse(row[2]),
+                minLevel = int.Parse(row[3]),
+                targetId = int.Parse(row[4]),
+                targetCount = int.Parse(row[5]),
+                rewardGold = int.Parse(row[6]),
+                rewardExp = int.Parse(row[7]),
+                description = row[10],
+                targetDescription = row[11]
+            };
+
+            // 아이템 보상
+            questData.rewardItems = new List<RewardItem>();
+            foreach(string itemId in row[8].Split("|"))
+                questData.rewardItems.Add(new RewardItem(){ ItemId = int.Parse(itemId) });
+
+            int i=0;
+            foreach(string itemCount in row[9].Split("|"))
+            {
+                questData.rewardItems[i].itemCount = int.Parse(itemCount);
+                i++;
+            }
+
+            Quest.Add(questData.id, questData);
+        }
+    }
+
+    void TalkRequest(string data)
+    {
+        Talk = new Dictionary<int, TalkData>();
+
+        string[] lines = data.Split("\n");
+        for(int y = 1; y < lines.Length; y++)
+        {
+            string[] row = lines[y].Replace("\r", "").Split(',');
+            if (row.Length == 0)
+				continue;
+			if (string.IsNullOrEmpty(row[0]))
+				continue;
+
+            TalkData talkData = new TalkData()
+            {
+                id = int.Parse(row[0]),
+                basicsTalk = row[1],
+                acceptTalk = row[3],
+                refusalTalk = row[4],
+                procTalk = row[5],
+                clearTalk = row[6]
+            };
+
+            talkData.questStartTalk = new List<string>();
+            foreach(string startTalk in row[2].Split("|"))
+                talkData.questStartTalk.Add(startTalk);
+
+            Talk.Add(talkData.id, talkData);
         }
     }
 

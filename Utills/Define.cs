@@ -16,6 +16,14 @@ public class Define : MonoBehaviour
         D,
     }
 
+    public enum QuestType
+    {
+        Unknown,
+        Talk,
+        Monster,
+        Item,
+    }
+
     public enum ShopType
     {
         Unknown,
@@ -166,6 +174,8 @@ public class Define : MonoBehaviour
     public const string DropItemNumber = "563258933";
     public const string MonsterNumber = "1085946242";
     public const string ShopNumber = "1630670634";
+    public const string TalkNumber = "575190900";
+    public const string QuestNumber = "1248160009";
 
     // TODO : TextData 사용하면 ID로 바꾸기
     public const string SkillOpenMessage = "스킬을 해방하겠습니까?";
