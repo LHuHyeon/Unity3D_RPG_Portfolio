@@ -15,7 +15,6 @@ public class ShopNpcController : NpcController
 
     public override void Interact()
     {
-        Debug.Log(npcName + " : OnInteract");
         if (Managers.Game.IsInteract)
         {
             Managers.Game.StopPlayer();
@@ -32,14 +31,11 @@ public class ShopNpcController : NpcController
 
         Managers.Game.isInventory = true;
         Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
+        Managers.Game._playScene._inventory.ResetPos();
     }
 
     void ExitShop()
     {
         Managers.Game._playScene._shop.ExitShop();
-        Managers.UI.ClosePopupUI(Managers.Game._playScene._shop);
-
-        Managers.Game.isInventory = false;
-        Managers.UI.ClosePopupUI(Managers.Game._playScene._inventory);
     }
 }

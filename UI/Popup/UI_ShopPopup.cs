@@ -117,13 +117,13 @@ public class UI_ShopPopup : UI_Popup
     void SetEventHandler()
     {
         // Title 잡고 인벤토리 이동
-        RectTransform invenPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
+        RectTransform shopPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
         GetObject((int)Gameobjects.Title).BindEvent((PointerEventData eventData)=>
         {
-            invenPos.anchoredPosition = new Vector2
+            shopPos.anchoredPosition = new Vector2
             (
-                Mathf.Clamp(invenPos.anchoredPosition.x + eventData.delta.x, -655, 655),
-                Mathf.Clamp(invenPos.anchoredPosition.y + eventData.delta.y, -253, 217)
+                Mathf.Clamp(shopPos.anchoredPosition.x + eventData.delta.x, -655, 655),
+                Mathf.Clamp(shopPos.anchoredPosition.y + eventData.delta.y, -253, 217)
             );
         }, Define.UIEvent.Drag);
 
@@ -137,11 +137,6 @@ public class UI_ShopPopup : UI_Popup
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
             ExitShop();
-            Managers.Game.IsInteract = false;
-            Managers.UI.ClosePopupUI(this);
-
-            Managers.Game.isInventory = false;
-            Managers.UI.ClosePopupUI(Managers.Game._playScene._inventory);
         }, Define.UIEvent.Click);
 
         // 판매할 아이템 받기
@@ -186,6 +181,7 @@ public class UI_ShopPopup : UI_Popup
         GetObject((int)Gameobjects.GoSaleButton).SetActive(true);
     }
 
+    // 판매 진행 버튼
     void OnClickGoSaleButton(PointerEventData eventData)
     {
         if (saleList.Count == 0)
@@ -202,5 +198,11 @@ public class UI_ShopPopup : UI_Popup
         GetObject((int)Gameobjects.BuyList).SetActive(true);
         GetObject((int)Gameobjects.SaleList).SetActive(false);
         GetObject((int)Gameobjects.GoSaleButton).SetActive(false);
+
+        Managers.Game.IsInteract = false;
+        Managers.UI.ClosePopupUI(this);
+
+        Managers.Game.isInventory = false;
+        Managers.UI.ClosePopupUI(Managers.Game._playScene._inventory);
     }
 }

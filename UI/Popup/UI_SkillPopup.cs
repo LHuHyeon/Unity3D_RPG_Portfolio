@@ -45,13 +45,13 @@ public class UI_SkillPopup : UI_Popup
     public void SetInfo()
     {
         // Title 잡고 인벤토리 이동
-        RectTransform invenPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
+        RectTransform skillPopupPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
         GetObject((int)Gameobjects.Title).BindEvent((PointerEventData eventData)=>
         {
-            invenPos.anchoredPosition = new Vector2
+            skillPopupPos.anchoredPosition = new Vector2
             (
-                Mathf.Clamp(invenPos.anchoredPosition.x + eventData.delta.x, -655, 655),
-                Mathf.Clamp(invenPos.anchoredPosition.y + eventData.delta.y, -253, 217)
+                Mathf.Clamp(skillPopupPos.anchoredPosition.x + eventData.delta.x, -655, 655),
+                Mathf.Clamp(skillPopupPos.anchoredPosition.y + eventData.delta.y, -253, 217)
             );
         }, Define.UIEvent.Drag);
 
@@ -64,8 +64,8 @@ public class UI_SkillPopup : UI_Popup
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
-            Managers.Game.isInventory = false;
-            Managers.Game._playScene._inventory.gameObject.SetActive(Managers.Game.isInventory);
+            Managers.Game.isSkillUI = false;
+            Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);
     }
 }

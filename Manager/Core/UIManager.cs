@@ -110,6 +110,10 @@ public class UIManager
     // 팝업창 켜기
     public void OnPopupUI(UI_Popup popup)
     {
+        // 이미 켜져있으면 진행 X
+        if (popup.gameObject.activeSelf == true)
+            return;
+
         _popupList.Add(popup);
         Managers.Pool.Pop(popup.gameObject);
         SetOrder(popup.GetComponent<Canvas>());
@@ -129,8 +133,9 @@ public class UIManager
             return;
         }
 
-        Managers.Resource.Destroy(_popup.gameObject);
         _popupList.Remove(_popup);
+
+        Managers.Resource.Destroy(_popup.gameObject);
 
         _order--;
     }
@@ -138,8 +143,13 @@ public class UIManager
     // List 전체 Close
     public void CloseAllPopupUI()
     {
-        for(int i=0; i<_popupList.Count; i++)
-            ClosePopupUI(_popupList[i]);
+        if (_popupList.Count == 0)
+            return;
+
+        foreach(UI_Popup popup in _popupList)
+            Managers.Resource.Destroy(popup.gameObject);
+
+        _popupList.Clear();
     }
 
     public void Clear()

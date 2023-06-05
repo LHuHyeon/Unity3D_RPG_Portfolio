@@ -87,6 +87,12 @@ public class UI_InvenPopup : UI_Popup
         }
     }
 
+    public void ResetPos()
+    {
+        RectTransform invenPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
+        invenPos.anchoredPosition = new Vector2(330, 0);
+    }
+
     public void SetInfo()
     {
         ResetSlot();
@@ -112,6 +118,10 @@ public class UI_InvenPopup : UI_Popup
         RectTransform invenPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
         GetObject((int)Gameobjects.Title).BindEvent((PointerEventData eventData)=>
         {
+            // 상호작용 중이면 이동X
+            if (Managers.Game.IsInteract == true)
+                return;
+
             invenPos.anchoredPosition = new Vector2
             (
                 Mathf.Clamp(invenPos.anchoredPosition.x + eventData.delta.x, -655, 655),
@@ -128,8 +138,11 @@ public class UI_InvenPopup : UI_Popup
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
+            if (Managers.Game.IsInteract == true)
+                return;
+                
             Managers.Game.isInventory = false;
-            Managers.Game._playScene._inventory.gameObject.SetActive(Managers.Game.isInventory);
+            Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);
     }
 
