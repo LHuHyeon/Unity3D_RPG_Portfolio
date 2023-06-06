@@ -21,4 +21,16 @@ public class QuestData
     public List<RewardItem> rewardItems;
     public string description;
     public string targetDescription;
+
+    public bool isAccept = false;   // 수락 상태
+    public bool isClear = false;    // 클리어 상태
+
+    // 퀘스트 초기화 
+    public void Clear()
+    {
+        isAccept = false;
+        isClear = false;
+        
+        targetCount = 0;
+    }
 }

@@ -48,11 +48,12 @@ public class UI_PlayScene : UI_Scene
         LevelUpButton,
     }
 
-    public UI_InvenPopup _inventory;        // 인벤토리 Popup UI
-    public UI_EqStatPopup _equipment;       // 장비/스탯 Popup UI
-    public UI_SkillPopup _skill;            // 스킬 Popup UI
-    public UI_SlotTipPopup _slotTip;        // 슬롯팁 Popup UI
-    public UI_ShopPopup _shop;              // 상점 Popup UI
+    public UI_InvenPopup _inventory;        // 인벤토리 
+    public UI_EqStatPopup _equipment;       // 장비/스탯 
+    public UI_SkillPopup _skill;            // 스킬 
+    public UI_SlotTipPopup _slotTip;        // 슬롯팁
+    public UI_ShopPopup _shop;              // 상점
+    public UI_TalkPopup _talk;              // 대화
 
     public override bool Init()
 	{
@@ -70,6 +71,7 @@ public class UI_PlayScene : UI_Scene
         _skill = Managers.UI.ShowPopupUI<UI_SkillPopup>();
         _slotTip = Managers.UI.ShowPopupUI<UI_SlotTipPopup>();
         _shop = Managers.UI.ShowPopupUI<UI_ShopPopup>();
+        _talk = Managers.UI.ShowPopupUI<UI_TalkPopup>();
         Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
 
         SetInfo();

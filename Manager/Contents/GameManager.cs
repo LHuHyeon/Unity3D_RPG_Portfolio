@@ -63,6 +63,7 @@ public class GameManager
     public bool isInventory = false;
     public bool isEquipment = false;
     public bool isSkillUI = false;
+    public bool isTalk = false;
     private bool isInteract = false;
     public bool IsInteract
     {

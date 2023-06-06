@@ -6,28 +6,76 @@ public class QuestNpcController : NpcController
 {
     public Define.QuestType questType = Define.QuestType.Unknown;
 
-    List<int> questIdList;
-    List<int> talkIdList;
+    public int questId;
+    public int talkId;
 
-    public int currentQuestId;
-    public int currentTalkId;
+    TalkData talkData;
+    QuestData questData;
 
     public override void Init()
     {
         base.Init();
+
+        talkData = Managers.Data.Talk[talkId];
+        questData = Managers.Data.Quest[questId];
     }
 
     public override void Interact()
     {
+        if (Managers.Game.isTalk == true)
+            return;
+
         if (Managers.Game.IsInteract)
         {
             Managers.Game.StopPlayer();
+            TalkCheck();
         }
     }
 
-    // 대화 시작
-    void Talk()
+    void TalkCheck()
     {
+        if (talkData == null)
+            return;
 
+        Managers.Game.isTalk = true;
+
+        // 이미 퀘스트를 클리어 했는가?
+        if (questData.isClear == true)
+        {
+            Talk(talkData.basicsTalk);
+            return;
+        }
+
+        // 퀘스트가 수락 중이라면
+        if (questData.isAccept == true)
+        {
+            Talk(talkData.procTalk);
+            return;
+        }
+        
+        // 레벨이 되면 퀘스트 대화 시작
+        if (questData.minLevel <= Managers.Game.Level)
+        {
+            Talk(talkData);
+            return;
+        }
+
+        // 여기까지 오면 퀘스트 해당 없으므로 기본 대화 진행
+        Talk(talkData.basicsTalk);
+    }
+
+    // 대화 시작
+    void Talk(string text)
+    {
+        UI_TalkPopup talkPopup = Managers.Game._playScene._talk;
+        Managers.UI.OnPopupUI(talkPopup);
+        talkPopup.SetInfo(text);
+    }
+
+    void Talk(TalkData texts)
+    {
+        UI_TalkPopup talkPopup = Managers.Game._playScene._talk;
+        Managers.UI.OnPopupUI(talkPopup);
+        talkPopup.SetInfo(texts, questData);
     }
 }
