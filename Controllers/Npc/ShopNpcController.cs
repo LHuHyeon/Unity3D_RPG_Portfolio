@@ -17,6 +17,7 @@ public class ShopNpcController : NpcController
     {
         if (Managers.Game.IsInteract)
         {
+            Managers.UI.CloseAllPopupUI();
             Managers.Game.StopPlayer();
             OnShop();
         }

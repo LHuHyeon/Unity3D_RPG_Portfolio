@@ -16,6 +16,12 @@ public class QuestNpcController : NpcController
     {
         base.Init();
 
+        Invoke("DelayData", 3f);
+    }
+
+    // TODO : 나중에 Init으로 옮기기
+    void DelayData()
+    {
         talkData = Managers.Data.Talk[talkId];
         questData = Managers.Data.Quest[questId];
     }
@@ -27,6 +33,7 @@ public class QuestNpcController : NpcController
 
         if (Managers.Game.IsInteract)
         {
+            Managers.UI.CloseAllPopupUI();
             Managers.Game.StopPlayer();
             TalkCheck();
         }

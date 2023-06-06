@@ -77,8 +77,6 @@ public class GameManager
                 isInventory = false;
                 isEquipment = false;
                 isSkillUI = false;
-
-                Managers.UI.CloseAllPopupUI();
             }
         }
     }

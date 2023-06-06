@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
-public class UI_RewardItem : MonoBehaviour
+public class UI_RewardItem : UI_Base
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public ItemData _item;
+    public Image itemImage;
+    public TextMeshProUGUI itemCountText;
 
-    // Update is called once per frame
-    void Update()
+    public void SetInfo(ItemData item, int itemCount)
     {
-        
+        itemImage.sprite = item.itemIcon;
+        itemCountText.text = itemCount.ToString();
     }
 }
