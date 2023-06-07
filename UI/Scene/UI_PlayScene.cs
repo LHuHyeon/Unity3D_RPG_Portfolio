@@ -19,6 +19,7 @@ public class UI_PlayScene : UI_Scene
         SkillBar,
         ItemBar,
         ultSkillSlot,
+        QuestListBar,
     }
 
     enum Images
@@ -86,7 +87,6 @@ public class UI_PlayScene : UI_Scene
         RefreshStat();
     }
 
-    int skillBarCount = 6;
     public void SetInfo()
     {
         GetText((int)Texts.NameBarText).text = Managers.Game.Name;
@@ -114,6 +114,9 @@ public class UI_PlayScene : UI_Scene
 
         GetObject((int)Gameobjects.ultSkillSlot).SetActive(false);
 
+        foreach(Transform child in GetObject((int)Gameobjects.QuestListBar).transform)
+            Managers.Resource.Destroy(child.gameObject);
+
         RefreshUI();
     }
 
@@ -136,6 +139,14 @@ public class UI_PlayScene : UI_Scene
         SetRatio(Get<Slider>((int)Sliders.HpBar), (float)Managers.Game.Hp / Managers.Game.MaxHp);
         SetRatio(Get<Slider>((int)Sliders.MpBar), (float)Managers.Game.Mp / Managers.Game.MaxMp);
         SetRatio(Get<Slider>((int)Sliders.ExpBar), (float)Managers.Game.Exp / Managers.Game.TotalExp);
+    }
+
+    // 씬에 퀘스트 알림 추가
+    public UI_QuestNoticeSlot SetQuestNoticeBar(QuestData quest)
+    {
+        UI_QuestNoticeSlot sceneQuestSlot = Managers.UI.MakeSubItem<UI_QuestNoticeSlot>(parent: GetObject((int)Gameobjects.QuestListBar).transform);
+        sceneQuestSlot.SetInfo(quest);
+        return sceneQuestSlot;
     }
 
     public void SetRatio(Slider slider, float ratio)

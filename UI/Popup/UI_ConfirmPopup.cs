@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,12 +18,8 @@ public class UI_ConfirmPopup : UI_Popup
         NoButton,
     }
 
-    enum Texts
-    {
-        MessageText,
-    }
-
-    string _text;
+    [SerializeField]
+    TextMeshProUGUI _Messagetext;
 
     public override bool Init()
     {
@@ -31,7 +28,6 @@ public class UI_ConfirmPopup : UI_Popup
 
         BindObject(typeof(Gameobjects));
         BindButton(typeof(Buttons));
-        BindText(typeof(Texts));
 
         // Order 설정
         GetObject((int)Gameobjects.Background).BindEvent((PointerEventData eventData)=>
@@ -42,8 +38,6 @@ public class UI_ConfirmPopup : UI_Popup
         GetButton((int)Buttons.YesButton).onClick.AddListener(OnClickYesButton);
         GetButton((int)Buttons.NoButton).onClick.AddListener(OnClickNoButton);
 
-        GetText((int)Texts.MessageText).text = _text;
-
         return true;
     }
     
@@ -53,7 +47,7 @@ public class UI_ConfirmPopup : UI_Popup
         Managers.UI.SetOrder(GetComponent<Canvas>());
         
         _onClickYesButton = onClickYesButton;
-        _text = text;
+        _Messagetext.text = text;
     }
 
     void OnClickYesButton()

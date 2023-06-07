@@ -56,7 +56,18 @@ public class QuestNpcController : NpcController
         // 퀘스트가 수락 중이라면
         if (questData.isAccept == true)
         {
-            Talk(talkData.procTalk);
+            // 퀘스트 목표 개수 충족 되면
+            if (questData.currnetTargetCount >= questData.targetCount)
+            {
+                Talk(talkData.clearTalk);
+                questData.QuestClear();
+
+                // 알람 되어 있는 퀘스트라면 삭제
+                Managers.Game._playScene._quest.CloseQuestNotice(questData);
+            }
+            else
+                Talk(talkData.procTalk);
+                
             return;
         }
         
@@ -76,13 +87,13 @@ public class QuestNpcController : NpcController
     {
         UI_TalkPopup talkPopup = Managers.Game._playScene._talk;
         Managers.UI.OnPopupUI(talkPopup);
-        talkPopup.SetInfo(text);
+        talkPopup.SetInfo(text, npcName);
     }
 
     void Talk(TalkData texts)
     {
         UI_TalkPopup talkPopup = Managers.Game._playScene._talk;
         Managers.UI.OnPopupUI(talkPopup);
-        talkPopup.SetInfo(texts, questData);
+        talkPopup.SetInfo(texts, questData, npcName);
     }
 }

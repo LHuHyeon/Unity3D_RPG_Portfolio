@@ -89,11 +89,12 @@ public class UI_TalkPopup : UI_Popup
     }
 
     // 일반 대화 세팅
-    public void SetInfo(string text)
+    public void SetInfo(string text, string npcName=null)
     {
         if (text != null)
         {
-            Debug.Log("SetInfo : text");
+            if (npcName != null)
+                GetText((int)Texts.NameText).text = npcName;
 
             // 대화 진행 후 종료
             isNextTalk = false;
@@ -103,7 +104,7 @@ public class UI_TalkPopup : UI_Popup
     }
 
     // 퀘스트 대화 세팅
-    public void SetInfo(TalkData talk, QuestData quest)
+    public void SetInfo(TalkData talk, QuestData quest, string npcName=null)
     {
         if (talk == null || quest == null)
         {
@@ -111,7 +112,8 @@ public class UI_TalkPopup : UI_Popup
             return;
         }
 
-        Debug.Log("SetInfo : Quest");
+        if (npcName != null)
+            GetText((int)Texts.NameText).text = npcName;
 
         talkData = talk;
         questData = quest;
@@ -124,9 +126,6 @@ public class UI_TalkPopup : UI_Popup
 
     public void NextTalk()
     {
-        Debug.Log("NextTalk()");
-        Debug.Log("nextIndex : " + nextIndex + ", ListCount : " + talkData.questStartTalk.Count);
-
         // 할 대화가 없으면 종료
         if (nextIndex >= talkData.questStartTalk.Count)
         {
@@ -152,7 +151,6 @@ public class UI_TalkPopup : UI_Popup
     // 타이핑 모션 코루틴
     IEnumerator TypingText(string sentence)
     {
-        Debug.Log("TypingText() : " + sentence);
         GetText((int)Texts.TalkText).text = "";
 
         isNext = false;
@@ -193,10 +191,9 @@ public class UI_TalkPopup : UI_Popup
     // 수락 버튼
     void OnClickAcceptButton()
     {
-        // TODO : 퀘스트 수락 진행
         Managers.Game.CurrentQuest.Add(questData);
         Managers.Game._playScene._quest.RefreshUI();
-        // TODO : 씬에 퀘스트 알림에도 추가
+        questData.isAccept = true;
 
         IsQuestActive(false);
         SetInfo(talkData.acceptTalk);
@@ -229,8 +226,6 @@ public class UI_TalkPopup : UI_Popup
 
     public void Clear()
     {
-        Debug.Log("Clear()");
-
         Managers.Game.IsInteract = false;
         Managers.Game.isTalk = false;
 

@@ -42,7 +42,7 @@ public class UI_InvenPopup : UI_Popup
         return true;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (Managers.Game.isInventory == true)
             RefreshUI();
@@ -56,7 +56,10 @@ public class UI_InvenPopup : UI_Popup
             Managers.Game.isInventory = !Managers.Game.isInventory;
 
             if (Managers.Game.isInventory)
+            {
+                RefreshUI();
                 Managers.UI.OnPopupUI(this);
+            }
             else
                 Managers.UI.ClosePopupUI(this);
         }

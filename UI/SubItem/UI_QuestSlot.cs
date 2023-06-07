@@ -10,6 +10,8 @@ public class UI_QuestSlot : UI_Base
     public QuestData _quest;
     public TextMeshProUGUI slotText;
     public Button sceneButton;
+    public GameObject okButtonIcon;
+    public bool isNotice = false;
 
     public override bool Init()
     {
@@ -28,13 +30,20 @@ public class UI_QuestSlot : UI_Base
 
     public void SetInfo(QuestData quest)
     {
-        Debug.Log("questSlot");
         _quest = quest;
         slotText.text = _quest.titleName;
     }
 
+    // 씬에 퀘스트 알림 추가
     void OnClickSceneButton()
     {
-        // TODO : 씬 알림 뜨게하기
+        isNotice = !isNotice;
+
+        if (isNotice == true)
+            Managers.Game._playScene._quest.SetQuestNotice(_quest);
+        else
+            Managers.Game._playScene._quest.CloseQuestNotice(_quest);
+
+        okButtonIcon.SetActive(!isNotice);
     }
 }

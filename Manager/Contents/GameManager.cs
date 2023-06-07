@@ -305,6 +305,25 @@ public class GameManager
         }
     }
 
+    // 퀘스트 목표 개수 반영
+    public void QuestTargetCount(GameObject go)
+    {
+        if (CurrentQuest.Count == 0)
+            return;
+
+        if (go.GetComponent<MonsterStat>())
+        {
+            foreach(QuestData questData in CurrentQuest)
+            {
+                if (questData.targetId == go.GetComponent<MonsterStat>().Id)
+                {
+                    questData.currnetTargetCount = Mathf.Clamp(++questData.currnetTargetCount, 0, questData.targetCount);
+                    return;
+                }
+            }
+        }
+    }
+
     public int addDefense = 0;
     public int addHp = 0;
     public int addMp = 0;

@@ -11,6 +11,11 @@ public class UI_QuestPopup : UI_Popup
         QuestRewardGrid,
     }
 
+    enum Buttons
+    {
+        ExitButton,
+    }
+
     enum Texts
     {
         QuestTitleText,
@@ -18,24 +23,27 @@ public class UI_QuestPopup : UI_Popup
         QuestTargetText,
         QuestRewardGoldText,
         QuestRewardExpText,
-        QuestSceneCountText,
+        QuestNoticeCountText,
     }
 
-    // PlayScene에 띄울 퀘스트 창 개수
-    int maxQuestSceneCount = 5;
-    List<QuestData> sceneQuest;
+    // 퀘스트 알림 개수
+    int maxquestNoticeCount = 5;
+    public List<UI_QuestNoticeSlot> questNoticeList;
+
+    QuestData currentClickQuest;
 
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
-        sceneQuest = new List<QuestData>();
+        questNoticeList = new List<UI_QuestNoticeSlot>();
 
         Managers.Input.KeyAction -= OnQuestPopup;
         Managers.Input.KeyAction += OnQuestPopup;
         
         BindObject(typeof(Gameobejcts));
+        BindButton(typeof(Buttons));
         BindText(typeof(Texts));
 
         SetInfo();
@@ -43,6 +51,15 @@ public class UI_QuestPopup : UI_Popup
         Managers.UI.ClosePopupUI(this);
 
         return true;
+    }
+
+    void Update()
+    {
+        if (Managers.Game.isQuest == true && currentClickQuest != null)
+        {
+            string str = currentClickQuest.targetDescription + "\n" + currentClickQuest.currnetTargetCount + " / " + currentClickQuest.targetCount;
+            GetText((int)Texts.QuestTargetText).text = str;
+        }
     }
 
     void OnQuestPopup()
@@ -63,6 +80,8 @@ public class UI_QuestPopup : UI_Popup
 
     void SetInfo()
     {
+        GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this); Managers.Game.isQuest = false;});
+
         // 미리보기 삭제
         foreach(Transform child in GetObject((int)Gameobejcts.Content).transform)
             Managers.Resource.Destroy(child.gameObject);
@@ -78,6 +97,8 @@ public class UI_QuestPopup : UI_Popup
             Debug.Log("OnQuest() : quest Null");
             return;
         }
+
+        currentClickQuest = quest;
 
         GetText((int)Texts.QuestTitleText).text = quest.titleName;
         GetText((int)Texts.QuestDescText).text = quest.description;
@@ -97,10 +118,42 @@ public class UI_QuestPopup : UI_Popup
         GetObject((int)Gameobejcts.QuestJournal).SetActive(true);
     }
 
+    // 씬에 퀘스트 알림 추가
+    public void SetQuestNotice(QuestData quest)
+    {
+        if (questNoticeList.Count > maxquestNoticeCount)
+            return;
+
+        questNoticeList.Add(Managers.Game._playScene.SetQuestNoticeBar(quest));
+
+        GetText((int)Texts.QuestNoticeCountText).text = questNoticeList.Count + " / " + maxquestNoticeCount;
+    }
+
+    // 씬 퀘스트 알람 끄기
+    public void CloseQuestNotice(QuestData quest)
+    {
+        foreach(UI_QuestNoticeSlot questNoticeSlot in questNoticeList)
+        {
+            if (questNoticeSlot._quest == quest)
+            {
+                questNoticeList.Remove(questNoticeSlot);
+                Managers.Resource.Destroy(questNoticeSlot.gameObject);
+                break;
+            }
+        }
+
+        GetText((int)Texts.QuestNoticeCountText).text = questNoticeList.Count + " / " + maxquestNoticeCount;
+    }
+
     public void RefreshUI()
     {
         // 현재 퀘스트 확인
         Managers.Game.RefreshQuest();
+
+        GetText((int)Texts.QuestNoticeCountText).text = questNoticeList.Count + " / " + maxquestNoticeCount;
+
+        if (Managers.Game.CurrentQuest.Count == 0)
+            GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
 
         foreach(Transform child in GetObject((int)Gameobejcts.Content).transform)
             Managers.Resource.Destroy(child.gameObject);

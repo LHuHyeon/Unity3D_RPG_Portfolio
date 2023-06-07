@@ -50,7 +50,7 @@ public class UI_EqStatPopup : UI_Popup
         return true;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (Managers.Game.isEquipment == true)
             RefreshUI();

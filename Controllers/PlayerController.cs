@@ -52,7 +52,6 @@ public class PlayerController : BaseController
             {
                 string result = Regex.Replace(obj.name, @"\D", "");
                 int id = int.Parse(result);
-                Debug.Log(obj.name + " : " + id);
 
                 // 아이템 안에 장비 오브젝트 저장
                 ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
@@ -390,7 +389,12 @@ public class PlayerController : BaseController
     // 스킬 사용
     void GetSkill()
     {
+        // 스킬 사용 중이면
         if (State == Define.State.Skill)
+            return;
+
+        // 무기가 없으면 스킬 사용 불가
+        if (Managers.Game.CurrentWeapon == null)
             return;
 
         // 스킬 진행

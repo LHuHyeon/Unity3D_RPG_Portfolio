@@ -16,6 +16,7 @@ public class QuestData
     public int minLevel;
     public int targetId;
     public int targetCount;
+    public int currnetTargetCount;
     public int rewardGold;
     public int rewardExp;
     public List<RewardItem> rewardItems;
@@ -25,12 +26,16 @@ public class QuestData
     public bool isAccept = false;   // 수락 상태
     public bool isClear = false;    // 클리어 상태
 
-    // 퀘스트 초기화 
-    public void Clear()
+    // 퀘스트 성공
+    public void QuestClear()
     {
-        isAccept = false;
-        isClear = false;
-        
-        targetCount = 0;
+        isClear = true;
+
+        // 보상 지급
+        foreach(RewardItem rewardItem in rewardItems)
+            Managers.Game._playScene._inventory.AcquireItem(Managers.Data.Item[rewardItem.ItemId], rewardItem.itemCount);
+
+        Managers.Game.Gold += rewardGold;
+        Managers.Game.Exp += rewardExp;
     }
 }

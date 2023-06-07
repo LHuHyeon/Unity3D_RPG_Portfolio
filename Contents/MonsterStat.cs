@@ -60,6 +60,9 @@ public class MonsterStat : MonoBehaviour
         Managers.Game.Exp += _dropExp;
         Managers.Game.Gold += _dropGold;
 
+        // 퀘스트 대상 몬스터면 반영
+        Managers.Game.QuestTargetCount(gameObject);
+
         OnDropItem();
         _monster.BattleClose();
     }
