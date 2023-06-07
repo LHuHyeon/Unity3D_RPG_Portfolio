@@ -54,6 +54,7 @@ public class UI_PlayScene : UI_Scene
     public UI_SlotTipPopup _slotTip;        // 슬롯팁
     public UI_ShopPopup _shop;              // 상점
     public UI_TalkPopup _talk;              // 대화
+    public UI_QuestPopup _quest;            // 퀘스트
 
     public override bool Init()
 	{
@@ -72,6 +73,7 @@ public class UI_PlayScene : UI_Scene
         _slotTip = Managers.UI.ShowPopupUI<UI_SlotTipPopup>();
         _shop = Managers.UI.ShowPopupUI<UI_ShopPopup>();
         _talk = Managers.UI.ShowPopupUI<UI_TalkPopup>();
+        _quest = Managers.UI.ShowPopupUI<UI_QuestPopup>();
         Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
 
         SetInfo();

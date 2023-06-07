@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class UI_TalkPopup : UI_Popup
 {
-    /*
-    1. 대화 진행 (이름, 내용)
-    2. 퀘스트 띄우기
-    3. 다음 버튼
-    */
-
     enum Gameobejcts
     {
         TalkBackground,
@@ -76,7 +70,11 @@ public class UI_TalkPopup : UI_Popup
         {
             // 말이 다 안 끝났다면
             if (isNext == false)
+            {
+                // 대화 속도 빠르게
+                delayTime = delayTime / 2;
                 return;
+            }
 
             // 퀘스트가 On이라면
             if (GetObject((int)Gameobejcts.QuestJournal).activeSelf == true)
@@ -156,7 +154,9 @@ public class UI_TalkPopup : UI_Popup
     {
         Debug.Log("TypingText() : " + sentence);
         GetText((int)Texts.TalkText).text = "";
+
         isNext = false;
+        delayTime = 0.1f;
 
         // 대화 타이밍 모션 실행
         foreach(var letter in sentence)
@@ -194,6 +194,9 @@ public class UI_TalkPopup : UI_Popup
     void OnClickAcceptButton()
     {
         // TODO : 퀘스트 수락 진행
+        Managers.Game.CurrentQuest.Add(questData);
+        Managers.Game._playScene._quest.RefreshUI();
+        // TODO : 씬에 퀘스트 알림에도 추가
 
         IsQuestActive(false);
         SetInfo(talkData.acceptTalk);

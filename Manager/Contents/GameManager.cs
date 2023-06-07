@@ -39,6 +39,12 @@ public class GameData
     // 현재 인벤토리
     public List<UI_InvenItem> invenSlots;
 
+    // 현재 퀘스트
+    public List<QuestData> CurrentQuest = new List<QuestData>();
+
+    // 클리어한 퀘스트
+    public List<QuestData> ClearQuest = new List<QuestData>();
+
     // 스킬 : 스킬 능력, 레벨, 흭득 횟수
     // 등록된 스킬 : 스킬 능력
     // 퀘스트 : 퀘스트 내용, 완료 보상, 클리어 유/무
@@ -64,6 +70,7 @@ public class GameManager
     public bool isEquipment = false;
     public bool isSkillUI = false;
     public bool isTalk = false;
+    public bool isQuest = false;
     private bool isInteract = false;
     public bool IsInteract
     {
@@ -231,6 +238,18 @@ public class GameManager
         set { _gameData.invenSlots = value; }
     }
 
+    public List<QuestData> CurrentQuest
+    {
+        get { return _gameData.CurrentQuest; }
+        set { _gameData.CurrentQuest = value; }
+    }
+
+    public List<QuestData> ClearQuest
+    {
+        get { return _gameData.ClearQuest; }
+        set { _gameData.ClearQuest = value; }
+    }
+
     public void OnUpdate()
     {
         
@@ -271,6 +290,19 @@ public class GameManager
         Mp = MaxMp;
 
         _playScene.RefreshUI();
+    }
+
+    // 클리어한 퀘스트가 있는지 확인
+    public void RefreshQuest()
+    {
+        for(int i=0; i<CurrentQuest.Count; i++)
+        {
+            if (CurrentQuest[i].isClear == true)
+            {
+                ClearQuest.Add(CurrentQuest[i]);
+                CurrentQuest.RemoveAt(i);
+            }
+        }
     }
 
     public int addDefense = 0;
