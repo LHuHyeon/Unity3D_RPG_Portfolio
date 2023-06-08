@@ -47,6 +47,7 @@ public class UI_PlayScene : UI_Scene
     {
         SpawnButton,
         LevelUpButton,
+        AddGoldButton,
     }
 
     public UI_InvenPopup _inventory;        // 인벤토리 
@@ -56,6 +57,7 @@ public class UI_PlayScene : UI_Scene
     public UI_ShopPopup _shop;              // 상점
     public UI_TalkPopup _talk;              // 대화
     public UI_QuestPopup _quest;            // 퀘스트
+    public UI_UpgradePopup _upgrade;        // 강화
 
     public override bool Init()
 	{
@@ -75,6 +77,7 @@ public class UI_PlayScene : UI_Scene
         _shop = Managers.UI.ShowPopupUI<UI_ShopPopup>();
         _talk = Managers.UI.ShowPopupUI<UI_TalkPopup>();
         _quest = Managers.UI.ShowPopupUI<UI_QuestPopup>();
+        _upgrade = Managers.UI.ShowPopupUI<UI_UpgradePopup>();
         Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
 
         SetInfo();
@@ -109,6 +112,8 @@ public class UI_PlayScene : UI_Scene
 
             Managers.Game.RefreshStat(++Managers.Game.Level);
         });
+
+        GetButton((int)Buttons.AddGoldButton).onClick.AddListener(()=>{ Managers.Game.Gold += 100; });
 
         // --
 

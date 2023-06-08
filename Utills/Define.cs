@@ -93,6 +93,7 @@ public class Define : MonoBehaviour
         Equipment,  // 장비 아이템 슬롯
         Skill,      // 스킬 슬롯 (Scene, Popup 둘다)
         UseItem,    // 사용 아이템 슬롯 (Scene)
+        Upgrade,    // 강화 아이템 슬롯
     }
 
     // 캐릭터 상태

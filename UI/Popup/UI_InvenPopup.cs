@@ -61,7 +61,7 @@ public class UI_InvenPopup : UI_Popup
                 Managers.UI.OnPopupUI(this);
             }
             else
-                Managers.UI.ClosePopupUI(this);
+                Exit();
         }
     }
 
@@ -144,13 +144,19 @@ public class UI_InvenPopup : UI_Popup
             if (Managers.Game.IsInteract == true)
                 return;
                 
-            Managers.Game.isInventory = false;
-            Managers.UI.ClosePopupUI(this);
+            Exit();
         }, Define.UIEvent.Click);
     }
 
     void RefreshUI()
     {   
         GetText((int)Texts.GoldText).text = Managers.Game.Gold.ToString();
+    }
+
+    void Exit()
+    {
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
+        Managers.Game.isInventory = false;
+        Managers.UI.ClosePopupUI(this);
     }
 }

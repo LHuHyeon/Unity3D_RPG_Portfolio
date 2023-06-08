@@ -38,7 +38,7 @@ public class UI_SkillPopup : UI_Popup
             if (Managers.Game.isSkillUI)
                 Managers.UI.OnPopupUI(this);
             else
-                Managers.UI.ClosePopupUI(this);
+                Exit();
         }
     }
 
@@ -67,5 +67,12 @@ public class UI_SkillPopup : UI_Popup
             Managers.Game.isSkillUI = false;
             Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);
+    }
+
+    void Exit()
+    {
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
+        Managers.Game.isSkillUI = false;
+        Managers.UI.ClosePopupUI(this);
     }
 }

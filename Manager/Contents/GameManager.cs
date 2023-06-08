@@ -147,7 +147,7 @@ public class GameManager
 		get 
         {
             if (CurrentWeapon != null)
-                return (STR * 2) + CurrentWeapon.attack;
+                return (STR * 2) + CurrentWeapon.attack + CurrentWeapon.addAttack;
             
             return (STR * 2);
         }
@@ -324,6 +324,36 @@ public class GameManager
         }
     }
 
+    // 강화 비용 계산
+    public int EquipmentUpgradeGold(EquipmentData equipment)
+    {
+        // 강화 금액 : 아이템 판매 가격 + ((판매 가격 / 2) * 강화 횟수)
+        int gold = equipment.itemPrice + (int)((equipment.itemPrice / 2) * (equipment.upgradeCount));
+        return gold;
+    }
+
+    // 강화 적용
+    public void EquipmentUpgrade(EquipmentData equipment)
+    {
+        equipment.upgradeCount += 1;
+
+        // 장비 종류 확인 후 적용
+        if (equipment is WeaponItemData)
+        {
+            WeaponItemData weapon = equipment as WeaponItemData;
+
+            weapon.addAttack = weapon.upgradeValue * weapon.upgradeCount;
+        }
+        else if (equipment is ArmorItemData)
+        {
+            ArmorItemData armor = equipment as ArmorItemData;
+
+            armor.addDefnece = armor.upgradeValue * armor.upgradeCount;
+            armor.addHp = (armor.upgradeValue * 5) * armor.upgradeCount;
+            armor.addMp = (armor.upgradeValue * 5) * armor.upgradeCount;
+        }
+    }
+
     public int addDefense = 0;
     public int addHp = 0;
     public int addMp = 0;
@@ -342,9 +372,9 @@ public class GameManager
             if (CurrentArmor.TryGetValue(i, out armorData) == true)
             {
                 // 장비가 있으면 더하고, 없으면 빼야됨.
-                addDefense += armorData.defnece;
-                addHp += armorData.hp;
-                addMp += armorData.mp;
+                addDefense += armorData.defnece + armorData.addDefnece;
+                addHp += armorData.hp + armorData.addHp;
+                addMp += armorData.mp + armorData.addMp;
                 addMoveSpeed += armorData.moveSpeed;
             }
         }

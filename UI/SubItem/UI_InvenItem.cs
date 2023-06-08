@@ -80,6 +80,13 @@ public class UI_InvenItem : UI_SlotItem
                 
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
+            // 강화창에서 온거면
+            if (dragSlot is UI_UpgradeItem)
+            {
+                Managers.Game._playScene._inventory.AcquireItem(dragSlot.item);
+                (dragSlot as UI_UpgradeItem).ClearSlot();
+            }
+
             // 장비창에서 온거면
             if (dragSlot is UI_ArmorItem || dragSlot is UI_WeaponItem)
             {

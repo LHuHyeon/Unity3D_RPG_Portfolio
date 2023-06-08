@@ -43,6 +43,15 @@ public abstract class NpcController : BaseController
 
             Interact();
         }
+
+        if (Managers.Game.IsInteract == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Managers.Game.IsInteract = false;
+                Interact();
+            }
+        }
     }
 
     // 상호작용
