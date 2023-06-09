@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 
 public class UI_UpgradeItem : UI_SlotItem
 {
-    int maxUpgradeCount = 10;
-
     public override void SetInfo()
     {
         slotType = Define.SlotType.Upgrade;
@@ -42,10 +40,6 @@ public class UI_UpgradeItem : UI_SlotItem
                 return;
 
             EquipmentData equipment = dragSlot.item as EquipmentData;
-
-            // 풀강이라면
-            if (equipment.upgradeCount > maxUpgradeCount)
-                return;
 
             // 강화 슬롯에 다른 아이템이 있다면 인벤으로 돌려 보내기
             if (item != null)

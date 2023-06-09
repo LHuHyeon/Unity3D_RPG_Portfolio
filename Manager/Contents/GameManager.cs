@@ -336,6 +336,8 @@ public class GameManager
     public void EquipmentUpgrade(EquipmentData equipment)
     {
         equipment.upgradeCount += 1;
+        if (equipment.upgradeCount > 5)
+            UpgradeMeshEffect(equipment);
 
         // 장비 종류 확인 후 적용
         if (equipment is WeaponItemData)
@@ -352,6 +354,23 @@ public class GameManager
             armor.addHp = (armor.upgradeValue * 5) * armor.upgradeCount;
             armor.addMp = (armor.upgradeValue * 5) * armor.upgradeCount;
         }
+    }
+
+    // 업그레이드 일정 수치 넘으면 Mesh 적용
+    public void UpgradeMeshEffect(EquipmentData equipment)
+    {
+        // 객체 안에 자식들 삭제
+        GameObject weaponObj = (equipment as WeaponItemData).charEquipment;
+        foreach(Transform child in weaponObj.transform)
+            Managers.Resource.Destroy(child.gameObject);
+
+        // 무기 객체 자식으로 이펙트 배치
+        string path = "Effect/Upgrade/UpgradeEffect_" + equipment.upgradeCount;
+        GameObject effectObj = Managers.Resource.Instantiate(path, weaponObj.transform);
+
+        PSMeshRendererUpdater meshRenderer = effectObj.GetComponent<PSMeshRendererUpdater>();
+        meshRenderer.MeshObject = weaponObj;
+        meshRenderer.UpdateMeshEffect(weaponObj);
     }
 
     public int addDefense = 0;

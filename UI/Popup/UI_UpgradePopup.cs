@@ -30,6 +30,8 @@ public class UI_UpgradePopup : UI_Popup
 
     public EquipmentData _equipment;
 
+    int maxUpgradeCount = 10;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -61,14 +63,27 @@ public class UI_UpgradePopup : UI_Popup
     {
         _equipment = equipment;
 
-        GetText((int)Texts.ItemNameText).text = _equipment.itemName;
-        GetText((int)Texts.UpgradeResultText).text = $"{_equipment.upgradeCount}   →   {_equipment.upgradeCount+1}";
-        GetText((int)Texts.UpgradeGoldText).text = Managers.Game.EquipmentUpgradeGold(_equipment).ToString();
+        // 풀강 확인
+        if (equipment.upgradeCount >= maxUpgradeCount)
+        {
+            GetText((int)Texts.ItemNameText).text = _equipment.itemName;
+            GetText((int)Texts.UpgradeResultText).text = $"Max";
+            GetText((int)Texts.UpgradeGoldText).text = "";
+        }
+        else
+        {
+            GetText((int)Texts.ItemNameText).text = _equipment.itemName;
+            GetText((int)Texts.UpgradeResultText).text = $"{_equipment.upgradeCount}   →   {_equipment.upgradeCount+1}";
+            GetText((int)Texts.UpgradeGoldText).text = Managers.Game.EquipmentUpgradeGold(_equipment).ToString();
+        }
     }
 
     void OnClickUpgradeButton()
     {
         if (_equipment == null)
+            return;
+
+        if (_equipment.upgradeCount >= maxUpgradeCount)
             return;
 
         // 금액 확인
