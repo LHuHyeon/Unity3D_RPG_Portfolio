@@ -34,6 +34,7 @@ public class MonsterStat : MonoBehaviour
     public virtual void OnAttacked(int skillAttack=0)
     {
         _monster.State = Define.State.Hit;
+        Managers.Game._playScene.OnMonsterBar(this);
 
         int damage;
         if (skillAttack != 0)
@@ -62,6 +63,7 @@ public class MonsterStat : MonoBehaviour
 
         // 퀘스트 대상 몬스터면 반영
         Managers.Game.QuestTargetCount(gameObject);
+        Managers.Game._playScene.ClostMonsterBar();
 
         OnDropItem();
         _monster.BattleClose();

@@ -44,6 +44,8 @@ public class MonsterController : BaseController
     protected override void UpdateMoving()
     {
         distance = TargetDistance(Managers.Game.GetPlayer());
+        Managers.Game._playScene.OnMonsterBar(_stat);
+        
         if (distance <= scanRange)
         {
             nav.SetDestination(_lockTarget.transform.position);
@@ -67,7 +69,10 @@ public class MonsterController : BaseController
         distance = TargetDistance(Managers.Game.GetPlayer());
 
         if (distance <= attackRange)
+        {
+            Managers.Game._playScene.OnMonsterBar(_stat);
             Managers.Game.OnAttacked(_stat);
+        }
     }
 
     // Anim Event
@@ -111,6 +116,8 @@ public class MonsterController : BaseController
     public void BattleClose()
     {
         _lockTarget = null;
+        Managers.Game._playScene.ClostMonsterBar();
+
         nav.SetDestination(transform.position);
         hpBarUI.SetActive(false);
     }

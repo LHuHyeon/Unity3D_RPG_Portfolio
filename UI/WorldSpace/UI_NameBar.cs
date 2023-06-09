@@ -16,6 +16,7 @@ public class UI_NameBar : UI_Base
         NameText,
     }
 
+    public Define.WorldObject objectType = Define.WorldObject.Unknown;
     public string nameText;
 
     public override bool Init()

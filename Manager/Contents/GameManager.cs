@@ -62,7 +62,7 @@ public class GameManager
 
     public GameObject GetPlayer() { return _player; }
 
-    public Action<int> OnSpawnEvent;
+    public MonsterStat currentMonster;   // 전투 중인 몬스터
 
     public UI_PlayScene _playScene;
 
@@ -477,6 +477,7 @@ public class GameManager
     }
 
     // 캐릭터 소환 (주소)
+    public Action<int> OnSpawnEvent;
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
         GameObject go = Managers.Resource.Instantiate(path, parent);

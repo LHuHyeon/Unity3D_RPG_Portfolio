@@ -20,6 +20,7 @@ public class UI_PlayScene : UI_Scene
         ItemBar,
         ultSkillSlot,
         QuestListBar,
+        MonsterBar,
     }
 
     enum Images
@@ -34,6 +35,8 @@ public class UI_PlayScene : UI_Scene
         HpBarText,
         MpBarText,
         ExpBarText,
+        MonsterHpBarText,
+        MonsterNameBarText,
     }
 
     enum Sliders
@@ -41,6 +44,7 @@ public class UI_PlayScene : UI_Scene
         HpBar,
         MpBar,
         ExpBar,
+        MonsterHpBar,
     }
 
     enum Buttons
@@ -118,6 +122,7 @@ public class UI_PlayScene : UI_Scene
         // --
 
         GetObject((int)Gameobjects.ultSkillSlot).SetActive(false);
+        ClostMonsterBar();
 
         foreach(Transform child in GetObject((int)Gameobjects.QuestListBar).transform)
             Managers.Resource.Destroy(child.gameObject);
@@ -144,6 +149,14 @@ public class UI_PlayScene : UI_Scene
         SetRatio(Get<Slider>((int)Sliders.HpBar), (float)Managers.Game.Hp / Managers.Game.MaxHp);
         SetRatio(Get<Slider>((int)Sliders.MpBar), (float)Managers.Game.Mp / Managers.Game.MaxMp);
         SetRatio(Get<Slider>((int)Sliders.ExpBar), (float)Managers.Game.Exp / Managers.Game.TotalExp);
+
+        // 몬스터랑 전투 중일 때
+        if (Managers.Game.currentMonster != null)
+        {
+            GetText((int)Texts.MonsterNameBarText).text = Managers.Game.currentMonster.Name;
+            GetText((int)Texts.MonsterHpBarText).text = Managers.Game.currentMonster.Hp + " / " + Managers.Game.currentMonster.MaxHp;
+            SetRatio(Get<Slider>((int)Sliders.MonsterHpBar), (float)Managers.Game.currentMonster.Hp / Managers.Game.currentMonster.MaxHp);
+        }
     }
 
     // 씬에 퀘스트 알림 추가
@@ -160,5 +173,19 @@ public class UI_PlayScene : UI_Scene
             slider.value = 0;
         else
             slider.value = ratio;
+    }
+
+    public void OnMonsterBar(MonsterStat monsterStat)
+    {
+        if (GetObject((int)Gameobjects.MonsterBar).activeSelf == false)
+            GetObject((int)Gameobjects.MonsterBar).SetActive(true);
+
+        Managers.Game.currentMonster = monsterStat;
+    }
+
+    public void ClostMonsterBar() 
+    { 
+        Managers.Game.currentMonster = null;
+        GetObject((int)Gameobjects.MonsterBar).SetActive(false); 
     }
 }

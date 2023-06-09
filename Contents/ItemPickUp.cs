@@ -18,6 +18,8 @@ public class ItemPickUp : MonoBehaviour
             nameBarUI.nameText = Managers.Data.Item[id].itemName + $" ({itemCount})";
         else
             nameBarUI.nameText = Managers.Data.Item[id].itemName;
+
+        nameBarUI.objectType = Define.WorldObject.Item;
     }
 
     void FixedUpdate()
