@@ -34,8 +34,13 @@ public class UI_InvenPopup : UI_Popup
         Managers.Input.KeyAction += OnInventoryUI;
 
         SetInfo();
-
-        AcquireItem(Managers.Data.Item[2001]);
+        
+        AcquireItem(Managers.Data.CallItem(2001));
+        AcquireItem(Managers.Data.CallItem(3001));
+        AcquireItem(Managers.Data.CallItem(3005));
+        AcquireItem(Managers.Data.CallItem(3009));
+        AcquireItem(Managers.Data.CallItem(3013));
+        AcquireItem(Managers.Data.CallItem(3017));
 
         Managers.UI.ClosePopupUI(this);
 
@@ -70,7 +75,7 @@ public class UI_InvenPopup : UI_Popup
     {
         foreach(UI_InvenItem slot in Managers.Game.InvenSlots)
         {
-            // 아이템이 없으면 넣기
+            // 슬롯에 아이템이 없으면 넣기
             if (slot.item == null)
             {
                 slot.AddItem(item, count);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemPickUp : MonoBehaviour
 {
-    public int id=0;
+    public ItemData item;
     public int itemCount = 1;   // 아이템 전용 개수
 
     UI_NameBar nameBarUI = null;
@@ -15,9 +15,9 @@ public class ItemPickUp : MonoBehaviour
     {
         nameBarUI = Managers.UI.MakeWorldSpaceUI<UI_NameBar>(transform);
         if (itemCount > 1)
-            nameBarUI.nameText = Managers.Data.Item[id].itemName + $" ({itemCount})";
+            nameBarUI.nameText = item.itemName + $" ({itemCount})";
         else
-            nameBarUI.nameText = Managers.Data.Item[id].itemName;
+            nameBarUI.nameText = item.itemName;
 
         nameBarUI.objectType = Define.WorldObject.Item;
     }

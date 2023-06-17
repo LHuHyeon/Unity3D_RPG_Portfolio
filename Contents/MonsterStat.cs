@@ -33,7 +33,10 @@ public class MonsterStat : MonoBehaviour
     MonsterController _monster;
     public virtual void OnAttacked(int skillAttack=0)
     {
-        _monster.State = Define.State.Hit;
+        // 일반 몬스터만 피격 상태 진행
+        if (_monster.monsterType == Define.MonsterType.Normal)
+            _monster.State = Define.State.Hit;
+
         Managers.Game._playScene.OnMonsterBar(this);
 
         int damage;
@@ -82,10 +85,11 @@ public class MonsterStat : MonoBehaviour
             int randomId = Random.Range(0, itemList.Count-1);
 
             // 아이템 소환
-            GameObject go = Managers.Resource.Instantiate(Managers.Data.Item[itemList[randomId]].itemObject);
-            ItemPickUp goData = go.GetOrAddComponent<ItemPickUp>();
+            ItemData item = Managers.Data.CallItem(randomId);
+            GameObject go = Managers.Resource.Instantiate(item.itemObject);
 
-            goData.id = itemList[randomId];
+            ItemPickUp goData = go.GetOrAddComponent<ItemPickUp>();
+            goData.item = item;
 
             // 소환 위치
             float ranPos = Random.Range(-0.5f, 0.5f);

@@ -33,7 +33,7 @@ public class QuestData
 
         // 보상 지급
         foreach(RewardItem rewardItem in rewardItems)
-            Managers.Game._playScene._inventory.AcquireItem(Managers.Data.Item[rewardItem.ItemId], rewardItem.itemCount);
+            Managers.Game._playScene._inventory.AcquireItem(Managers.Data.CallItem(rewardItem.ItemId), rewardItem.itemCount);
 
         Managers.Game.Gold += rewardGold;
         Managers.Game.Exp += rewardExp;

@@ -313,6 +313,7 @@ public class GameManager
 
         if (go.GetComponent<MonsterStat>())
         {
+            // 퀘스트 조건과 맞는지 id 확인
             foreach(QuestData questData in CurrentQuest)
             {
                 if (questData.targetId == go.GetComponent<MonsterStat>().Id)
@@ -432,9 +433,9 @@ public class GameManager
     }
 
     // 공격 받을때
-    public void OnAttacked(MonsterStat attacker)
+    public void OnAttacked(MonsterStat attacker, int addDamge = 0)
     {
-        Hp -= Mathf.Max(0, attacker.Attack - Defense);
+        Hp -= Mathf.Max(0, (attacker.Attack + addDamge) - Defense);
 
         if (Hp <= 0){
             Hp = 0;

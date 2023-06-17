@@ -16,4 +16,18 @@ public class ArmorItemData : EquipmentData
     public int addMoveSpeed=0;
 
     public List<GameObject> charEquipment;
+
+    public ArmorItemData ArmorClone()
+    {
+        ArmorItemData armor = new ArmorItemData();
+        armor.armorType = this.armorType;
+        armor.defnece = this.defnece;
+        armor.hp = this.hp;
+        armor.mp = this.mp;
+        armor.moveSpeed = this.moveSpeed;
+
+        armor.charEquipment = this.charEquipment;
+
+        return armor;
+    }
 }

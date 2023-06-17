@@ -351,7 +351,7 @@ public class PlayerController : BaseController
                 if (_item != null)
                 {
                     // 인벤에 넣기
-                    Managers.Game._playScene._inventory.AcquireItem(Managers.Data.Item[_item.id], _item.itemCount);
+                    Managers.Game._playScene._inventory.AcquireItem(_item.item, _item.itemCount);
                     Destroy(colliders[i].gameObject);
 
                     return;

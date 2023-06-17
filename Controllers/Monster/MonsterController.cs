@@ -5,16 +5,18 @@ using UnityEngine.AI;
 
 public class MonsterController : BaseController
 {
-    [SerializeField] private float scanRange;
-    [SerializeField] private float attackRange;
+    public Define.MonsterType monsterType = Define.MonsterType.Normal;
+
+    [SerializeField] protected float scanRange;
+    [SerializeField] protected float attackRange;
 
     protected float distance;           // 타겟과의 사이 거리
     protected float rValue=0;           // 준비 시간 랜덤 값
 
     protected bool isAttack = false;    // 공격 시 true
 
-    MonsterStat _stat;
-    NavMeshAgent nav;
+    protected MonsterStat _stat;
+    protected NavMeshAgent nav;
     
     public GameObject hpBarUI;
 
@@ -64,7 +66,7 @@ public class MonsterController : BaseController
     }
 
     // Anim Event
-    protected void OnAttackEvent()
+    protected virtual void OnAttackEvent()
     {
         distance = TargetDistance(Managers.Game.GetPlayer());
 
@@ -105,7 +107,7 @@ public class MonsterController : BaseController
 
         yield return new WaitForSeconds(3f);
 
-        Managers.Game.Despawn(gameObject);
+        Managers.Game.Despawn(this.gameObject);
     }
 
     protected float TargetDistance(GameObject _target)

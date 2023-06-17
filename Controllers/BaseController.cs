@@ -51,6 +51,10 @@ public abstract class BaseController : MonoBehaviour
                             number = 1;
                     }
                     break;
+                case Define.State.Skill:
+                    if (WorldObjectType == Define.WorldObject.Monster)
+                        anim.CrossFade("SKILL", 0.1f, -1, 0);
+                    break;
                 case Define.State.Hit:
                     {
                         anim.CrossFade("HIT", 0.1f, -1, 0);

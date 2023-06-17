@@ -10,4 +10,15 @@ public class WeaponItemData : EquipmentData
     public int addAttack=0;
 
     public GameObject charEquipment;
+
+    public WeaponItemData WeaponClone()
+    {
+        WeaponItemData weapon = new WeaponItemData();
+
+        weapon.weaponType = this.weaponType;
+        weapon.attack = this.attack;
+        weapon.charEquipment = this.charEquipment;
+
+        return weapon;
+    }
 }

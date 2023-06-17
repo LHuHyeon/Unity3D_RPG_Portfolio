@@ -61,7 +61,7 @@ public class UI_ShopBuyItem : UI_Base
         Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
         {
             Managers.Game.Gold -= _item.itemPrice;
-            Managers.Game._playScene._inventory.AcquireItem(_item);
+            Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone());
         }, Define.ShopSaleMessage);
     }
 }

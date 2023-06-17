@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Define : MonoBehaviour
 {
+    public enum MonsterType
+    {
+        Normal,
+        Named,
+        Boss,
+    }
+    
     public enum KeySkill
     {
         Unknown,

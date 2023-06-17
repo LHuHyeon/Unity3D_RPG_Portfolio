@@ -84,7 +84,7 @@ public class UI_SlotTipPopup : UI_Popup
         else if (item.itemType == Define.ItemType.Armor)
         {
             ArmorItemData armor = item as ArmorItemData;
-            GetText((int)Texts.ItemLevelText).text = "최소레벨 " + armor.minLevel.ToString();
+            GetText((int)Texts.ItemLevelText).text = "최소레벨 " + armor.minLevel;
 
             string statStr = "";
             // 강화 확인

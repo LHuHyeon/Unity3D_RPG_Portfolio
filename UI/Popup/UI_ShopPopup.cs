@@ -150,16 +150,23 @@ public class UI_ShopPopup : UI_Popup
 
             UI_InvenItem invenItem = dragSlot as UI_InvenItem;
 
-            // 판매 개수 선택
-            UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
-            numberCheckPopup.RefreshUI(invenItem, ()=>
+            // 장비거나 개수가 한개라면 바로 넣기
+            if (invenItem.item is EquipmentData || invenItem.itemCount == 1)
             {
-                // 판매 슬롯 생성
-                UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
-                saleItem.SetInfo(dragSlot as UI_InvenItem);
-                saleList.Add(saleItem);
-            });
-
+                SaleItemRegister(dragSlot as UI_InvenItem);
+            }
+            else
+            {
+                // 판매 개수 선택
+                UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
+                numberCheckPopup.RefreshUI(invenItem, ()=>
+                {
+                    // 판매 슬롯 생성
+                    UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
+                    saleItem.SetInfo(dragSlot as UI_InvenItem);
+                    saleList.Add(saleItem);
+                });
+            }
         }, Define.UIEvent.Drop);
 
         GetObject((int)Gameobjects.BuyButton).BindEvent(OnClickBuyListButton);
@@ -191,6 +198,14 @@ public class UI_ShopPopup : UI_Popup
             saleList[i].GetSale();
 
         saleList.Clear();
+    }
+
+    void SaleItemRegister(UI_InvenItem invenItem)
+    {
+        UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
+        invenItem.subItemCount = 1;
+        saleItem.SetInfo(invenItem);
+        saleList.Add(saleItem);
     }
 
     public void ExitShop()

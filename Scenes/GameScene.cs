@@ -24,11 +24,9 @@ public class GameScene : BaseScene
     {
         Managers.Game.Init();
         Managers.Game._playScene = Managers.UI.ShowSceneUI<UI_PlayScene>();
-        for(int i=0; i<5; i++)
-        {
-            GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, Managers.Data.Monster[2]);
-            obj.transform.position += new Vector3(0, 0, 5f);
-        }
+
+        // GameObject namedMonster = Managers.Game.Spawn(Define.WorldObject.Monster, "Monster/UndeadKnight");
+        // namedMonster.transform.position = Vector3.forward * 5;
     }
 
     // 나중엔 로그인 시 진행

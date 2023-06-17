@@ -66,6 +66,8 @@ public class UI_NumberCheckPopup : UI_Popup
     UI_InvenItem _invenItem;
     public void RefreshUI(UI_InvenItem invenItem, Action onClickYesButton)
     {
+        Managers.UI.SetOrder(GetComponent<Canvas>());
+        
         _onClickYesButton = onClickYesButton;
         _invenItem = invenItem;
 

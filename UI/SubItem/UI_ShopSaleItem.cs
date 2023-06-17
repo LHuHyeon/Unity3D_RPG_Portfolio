@@ -62,15 +62,22 @@ public class UI_ShopSaleItem : UI_Base
     {
         Managers.Game.Gold += _invenItem.item.itemPrice * _saleItemCount;
         _invenItem.SetCount(-_saleItemCount);
-        OnClickCloseButton();
+
+        Clear();
     }
 
     void OnClickCloseButton()
     {
-        _invenItem.subItemCount = 0;
-        _invenItem.IsLock = false;
         Managers.Game._playScene._shop.saleList.Remove(this);
 
-        Managers.Resource.Destroy(gameObject);
+        Clear();
+    }
+
+    void Clear()
+    {
+        _invenItem.subItemCount = 0;
+        _invenItem.IsLock = false;
+
+        Managers.Resource.Destroy(this.gameObject);
     }
 }

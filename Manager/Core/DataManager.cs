@@ -21,6 +21,15 @@ public class DataManager
     public Dictionary<int, TalkData> Talk { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
 
+    // Deep Copy 아이템
+    public ItemData CallItem(int itemId)
+    {
+        if (Item.ContainsKey(itemId) == false)
+            return null;
+        
+        return Item[itemId].ItemClone();
+    }
+
     public void Init()
     {
         Item = new Dictionary<int, ItemData>();
@@ -296,17 +305,18 @@ public class DataManager
 			if (string.IsNullOrEmpty(row[0]))
 				continue;
 
-            GameObject monsterObject = Managers.Resource.Load<GameObject>("Prefabs/Monster/"+row[8]);
+            GameObject monsterObject = Managers.Resource.Load<GameObject>("Prefabs/Monster/"+row[9]);
             MonsterStat monsterStat = monsterObject.GetOrAddComponent<MonsterStat>();
 
             monsterStat.Id = int.Parse(row[0]);
             monsterStat.Name = row[1];
-            monsterStat.MaxHp = int.Parse(row[2]);
-            monsterStat.Attack = int.Parse(row[3]);
-            monsterStat.MoveSpeed = int.Parse(row[4]);
-            monsterStat.DropExp = int.Parse(row[5]);
-            monsterStat.DropGold = int.Parse(row[6]);
-            monsterStat.DropItemId = int.Parse(row[7]);
+            monsterObject.GetComponent<MonsterController>().monsterType = (Define.MonsterType)int.Parse(row[2]);
+            monsterStat.MaxHp = int.Parse(row[3]);
+            monsterStat.Attack = int.Parse(row[4]);
+            monsterStat.MoveSpeed = int.Parse(row[5]);
+            monsterStat.DropExp = int.Parse(row[6]);
+            monsterStat.DropGold = int.Parse(row[7]);
+            monsterStat.DropItemId = int.Parse(row[8]);
 
             Monster.Add(monsterStat.Id, monsterObject);
         }

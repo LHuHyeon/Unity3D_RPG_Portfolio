@@ -175,6 +175,7 @@ public class UI_PlayScene : UI_Scene
             slider.value = ratio;
     }
 
+    // 몬스터 정보 상단 활성화
     public void OnMonsterBar(MonsterStat monsterStat)
     {
         if (GetObject((int)Gameobjects.MonsterBar).activeSelf == false)

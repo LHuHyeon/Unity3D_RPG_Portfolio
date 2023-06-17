@@ -52,6 +52,10 @@ public class UI_WeaponItem : UI_SlotItem
                 if (weaponType != weapon.weaponType)
                     return;
 
+                // 레벨 체크
+                if (Managers.Game.Level < weapon.minLevel)
+                    return;
+
                 // 장비 장착 (or 교체)
                 ChangeArmor(dragSlot);
             }

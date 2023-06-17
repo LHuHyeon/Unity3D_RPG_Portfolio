@@ -46,7 +46,7 @@ public class UI_UpgradeItem : UI_SlotItem
                 Managers.Game._playScene._inventory.AcquireItem(item);
 
             Managers.Game._playScene._upgrade.RefreshUI(equipment);
-            AddItem(equipment);
+            AddItem(dragSlot.item);
 
             (dragSlot as UI_InvenItem).ClearSlot();
 

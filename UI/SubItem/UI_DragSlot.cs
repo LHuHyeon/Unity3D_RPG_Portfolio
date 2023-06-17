@@ -21,6 +21,7 @@ public class UI_DragSlot : MonoBehaviour
     // 드래그 할 경우 활성화
     public void DragSetImage(Image _icon)
     {
+        Managers.UI.SetOrder(GetComponent<Canvas>());
         icon.sprite = _icon.sprite;
         SetColor(1);
     }
