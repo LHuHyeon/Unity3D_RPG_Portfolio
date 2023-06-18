@@ -21,8 +21,32 @@ public class ItemData
     // Deep Copy (깊은 복사)
     public ItemData ItemClone()
     {
-        ItemData item = new ItemData();
-        
+        if (this is EquipmentData)
+        {
+            AddItemValue<EquipmentData>((this as EquipmentData).EquipmentClone());
+            
+            if (this is ArmorItemData)
+            {
+                return AddItemValue<ArmorItemData>((this as ArmorItemData).ArmorClone());
+            }
+            else if (this is WeaponItemData)
+            {
+                return AddItemValue<WeaponItemData>((this as WeaponItemData).WeaponClone());
+            }
+        }
+        else if (this is UseItemData)
+        {
+            return AddItemValue<UseItemData>((this as UseItemData).UseClone());
+        }
+
+        return AddItemValue<ItemData>();
+    }
+
+    T AddItemValue<T>(T item = null) where T : ItemData, new()
+    {
+        if (item == null)
+            item = new T();
+
         item.id = this.id;
         item.itemName = this.itemName;
         item.itemType = this.itemType;
@@ -32,31 +56,6 @@ public class ItemData
         item.itemObject = this.itemObject;
         item.itemDesc = this.itemDesc;
         item.itemIcon = this.itemIcon;
-
-        if (this is EquipmentData)
-        {
-            EquipmentData equip = item as EquipmentData;
-            equip = (this as EquipmentData).EquipmentClone();
-            
-            if (this is ArmorItemData)
-            {
-                ArmorItemData armor = item as ArmorItemData;
-                armor = (this as ArmorItemData).ArmorClone();
-
-                // TODO : 여기 부터 구현 시작
-                Debug.Log("armor minlevel : "+ (item as ArmorItemData).minLevel);
-            }
-            else if (this is WeaponItemData)
-            {
-                WeaponItemData weapon = item as WeaponItemData;
-                weapon = (this as WeaponItemData).WeaponClone();
-            }
-        }
-        else if (this is UseItemData)
-        {
-            UseItemData useItem = item as UseItemData;
-            useItem = (this as UseItemData).UseClone();
-        }
 
         return item;
     }
