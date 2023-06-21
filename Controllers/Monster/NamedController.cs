@@ -29,12 +29,13 @@ public class NamedController : MonsterController
         if (attackCount == 2)
         {
             // 스킬 공격 범위 생성
-            attackRangeObj = Managers.Resource.Instantiate("Object/AttackRange", this.transform);
+            attackRangeObj = Managers.Resource.Instantiate("Object/BoxAttackRange", this.transform);
             attackRangeObj.transform.localPosition = skillRangePos;
             attackRangeObj.transform.localScale = skillRangeScale;
-            attackRangeObj.GetComponent<AttackRange>().SetInfo(_stat);
+            attackRangeObj.GetOrAddComponent<AttackRange>().SetInfo(_stat, false);
 
             State = Define.State.Skill;
+            anim.CrossFade("SKILL", 0.1f, -1, 0);
         }
 
         base.OnAttackEvent();

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemData
+public abstract class ItemData
 {
     public int id;
     public string itemName;
@@ -23,8 +23,6 @@ public class ItemData
     {
         if (this is EquipmentData)
         {
-            AddItemValue<EquipmentData>((this as EquipmentData).EquipmentClone());
-            
             if (this is ArmorItemData)
             {
                 return AddItemValue<ArmorItemData>((this as ArmorItemData).ArmorClone());
@@ -39,14 +37,11 @@ public class ItemData
             return AddItemValue<UseItemData>((this as UseItemData).UseClone());
         }
 
-        return AddItemValue<ItemData>();
+        return null;
     }
 
-    T AddItemValue<T>(T item = null) where T : ItemData, new()
+    T AddItemValue<T>(T item) where T : ItemData
     {
-        if (item == null)
-            item = new T();
-
         item.id = this.id;
         item.itemName = this.itemName;
         item.itemType = this.itemType;

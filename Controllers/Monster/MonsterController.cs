@@ -78,7 +78,7 @@ public class MonsterController : BaseController
     }
 
     // Anim Event
-    protected void ExitAttack()
+    protected virtual void ExitAttack()
     {
         State = Define.State.Moving;
     }
@@ -108,6 +108,24 @@ public class MonsterController : BaseController
         yield return new WaitForSeconds(3f);
 
         Managers.Game.Despawn(this.gameObject);
+    }
+
+    protected void IsNavStop(bool isTrue)
+    {
+        if (isTrue == true)
+        {
+            nav.isStopped = true;
+            nav.updatePosition = false;
+            nav.updateRotation = false;
+            nav.velocity = Vector3.zero;
+        }
+        else
+        {
+            nav.ResetPath();
+            nav.isStopped = false;
+            nav.updatePosition = true;
+            nav.updateRotation = true;
+        }
     }
 
     protected float TargetDistance(GameObject _target)

@@ -9,6 +9,7 @@ public class PlayerController : BaseController
     bool _stopAttack = true;   // 공격 가능 여부
     
     bool _isDiveRoll = false;    // 구르기 여부
+    bool _isDown = false;       // 넘어진 상태 여부
 
     // LayerMask 변수
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
@@ -172,6 +173,40 @@ public class PlayerController : BaseController
             EffectClose();
             State = Define.State.Idle;
         }
+    }
+
+    public void OnHitDown(MonsterStat attacker, int addDamge = 0)
+    {
+        if (_isDiveRoll == true)
+            return;
+
+        StopCoroutine(HitDown(null));
+        StartCoroutine(HitDown(attacker, addDamge));
+    }
+
+    // 플레이어 피격 넘어지기
+    public IEnumerator HitDown(MonsterStat attacker, int addDamge = 0)
+    {   
+        Managers.Game.OnAttacked(attacker, addDamge);
+
+        if (State == Define.State.Die)
+            yield break;
+
+        State = Define.State.Down;
+        _isDown = true;
+
+        // 공격자 바라보기
+        Vector3 dir = attacker.transform.position - transform.position;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 1);
+
+        yield return new WaitForSeconds(1f);
+
+        State = Define.State.Rise;
+
+        yield return new WaitForSeconds(1f);
+
+        State = Define.State.Idle;
+        _isDown = false;
     }
 
 #endregion
@@ -372,7 +407,11 @@ public class PlayerController : BaseController
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            _isDown = false;
             _isDiveRoll = true;
+
+            StopCoroutine(HitDown(null));
+
             State = Define.State.DiveRoll;
 
             Managers.Game.Mp -= 10;
@@ -390,7 +429,7 @@ public class PlayerController : BaseController
     void GetSkill()
     {
         // 스킬 사용 중이면
-        if (State == Define.State.Skill)
+        if (State == Define.State.Skill && _isDown == true)
             return;
 
         // 무기가 없으면 스킬 사용 불가

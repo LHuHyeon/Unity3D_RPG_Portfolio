@@ -20,6 +20,9 @@ public class ArmorItemData : EquipmentData
     public ArmorItemData ArmorClone()
     {
         ArmorItemData armor = new ArmorItemData();
+
+        (this as EquipmentData).EquipmentClone(armor);
+
         armor.armorType = this.armorType;
         armor.defnece = this.defnece;
         armor.hp = this.hp;

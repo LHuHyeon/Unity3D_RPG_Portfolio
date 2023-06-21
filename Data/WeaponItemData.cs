@@ -15,6 +15,8 @@ public class WeaponItemData : EquipmentData
     {
         WeaponItemData weapon = new WeaponItemData();
 
+        (this as EquipmentData).EquipmentClone(weapon);
+
         weapon.weaponType = this.weaponType;
         weapon.attack = this.attack;
         weapon.charEquipment = this.charEquipment;

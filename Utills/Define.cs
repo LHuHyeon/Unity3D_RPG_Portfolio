@@ -110,6 +110,8 @@ public class Define : MonoBehaviour
         DiveRoll,
         Idle,
         Hit,
+        Down,
+        Rise,
         Die,
         Attack,
         Skill,
