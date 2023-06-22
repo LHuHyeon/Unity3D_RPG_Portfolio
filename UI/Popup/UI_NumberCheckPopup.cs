@@ -62,18 +62,35 @@ public class UI_NumberCheckPopup : UI_Popup
         });
     }
 
-    Action _onClickYesButton;
+    Action<int> _onClickYesButton;
     UI_InvenItem _invenItem;
-    public void RefreshUI(UI_InvenItem invenItem, Action onClickYesButton)
+    // 판매할 때 사용 중
+    public void RefreshUI(UI_InvenItem invenItem, Action<int> onClickYesButton)
     {
-        Managers.UI.SetOrder(GetComponent<Canvas>());
-        
         _onClickYesButton = onClickYesButton;
         _invenItem = invenItem;
 
-        itemCount = 1;
         itemMaxCount = invenItem.itemCount;
-        
+
+        RefreshUI();
+    }
+    
+    // 구매할 때 사용 중
+    public void RefreshUI(ItemData item, Action<int> onClickYesButton)
+    {
+        _onClickYesButton = onClickYesButton;
+
+        itemMaxCount = (int)(Managers.Game.Gold / item.itemPrice);
+
+        RefreshUI();
+    }
+
+    void RefreshUI()
+    {
+        Managers.UI.SetOrder(GetComponent<Canvas>());
+
+        itemCount = 1;
+
         numberSlider.minValue = itemCount;
         numberSlider.maxValue = itemMaxCount;
         numberSlider.value = itemCount;
@@ -99,11 +116,8 @@ public class UI_NumberCheckPopup : UI_Popup
     {
         Managers.UI.ClosePopupUI(this);
 
-        // 인벤에 차감개수 알려주기
-        _invenItem.subItemCount = itemCount;
-
         if (_onClickYesButton != null)
-            _onClickYesButton.Invoke();
+            _onClickYesButton.Invoke(itemCount);
     }
 
     void OnClickNoButton()

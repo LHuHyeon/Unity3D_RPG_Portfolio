@@ -43,10 +43,10 @@ public class UI_ShopSaleItem : UI_Base
         return true;
     }
 
-    public void SetInfo(UI_InvenItem invenItem)
+    public void SetInfo(UI_InvenItem invenItem, int subItemCount = 1)
     {
         _invenItem = invenItem;
-        _saleItemCount = _invenItem.subItemCount;
+        _saleItemCount = subItemCount;
 
         _invenItem.IsLock = true;
 
@@ -75,7 +75,6 @@ public class UI_ShopSaleItem : UI_Base
 
     void Clear()
     {
-        _invenItem.subItemCount = 0;
         _invenItem.IsLock = false;
 
         Managers.Resource.Destroy(this.gameObject);

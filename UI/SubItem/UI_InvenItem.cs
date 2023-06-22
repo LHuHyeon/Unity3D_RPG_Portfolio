@@ -11,7 +11,6 @@ public class UI_InvenItem : UI_SlotItem
     public int itemCount;
 
     // 아이템을 팔때 사용 변수
-    public int subItemCount;    // 차감 예정 개수
     public GameObject _lock;    // 판매 등록될 시 인벤 Lock
 
     private bool isLock = false;
@@ -191,7 +190,6 @@ public class UI_InvenItem : UI_SlotItem
         IsLock = false;
         itemCount = 0;
         itemCountText.text = "0";
-        subItemCount = 0;
         Managers.Game._playScene._slotTip.OnSlotTip(false);
         
         SetColor(0);

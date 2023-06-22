@@ -111,7 +111,6 @@ public class Define : MonoBehaviour
         Idle,
         Hit,
         Down,
-        Rise,
         Die,
         Attack,
         Skill,

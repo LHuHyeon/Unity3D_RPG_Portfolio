@@ -159,11 +159,11 @@ public class UI_ShopPopup : UI_Popup
             {
                 // 판매 개수 선택
                 UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
-                numberCheckPopup.RefreshUI(invenItem, ()=>
+                numberCheckPopup.RefreshUI(invenItem, (int subItemCount)=>
                 {
                     // 판매 슬롯 생성
                     UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
-                    saleItem.SetInfo(dragSlot as UI_InvenItem);
+                    saleItem.SetInfo((dragSlot as UI_InvenItem), subItemCount);
                     saleList.Add(saleItem);
                 });
             }
@@ -203,7 +203,6 @@ public class UI_ShopPopup : UI_Popup
     void SaleItemRegister(UI_InvenItem invenItem)
     {
         UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
-        invenItem.subItemCount = 1;
         saleItem.SetInfo(invenItem);
         saleList.Add(saleItem);
     }

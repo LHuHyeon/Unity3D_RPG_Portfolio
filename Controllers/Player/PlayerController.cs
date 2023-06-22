@@ -199,13 +199,11 @@ public class PlayerController : BaseController
         Vector3 dir = attacker.transform.position - transform.position;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 1);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
-        State = Define.State.Rise;
-
-        yield return new WaitForSeconds(1f);
-
-        State = Define.State.Idle;
+        if (_isDiveRoll == false)
+            State = Define.State.Idle;
+            
         _isDown = false;
     }
 
@@ -429,7 +427,7 @@ public class PlayerController : BaseController
     void GetSkill()
     {
         // 스킬 사용 중이면
-        if (State == Define.State.Skill && _isDown == true)
+        if (State == Define.State.Skill || _isDown == true)
             return;
 
         // 무기가 없으면 스킬 사용 불가

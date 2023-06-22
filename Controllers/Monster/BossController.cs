@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class BossController : MonsterController
 {
-    /*
-    1. 콤보 공격, 점프 착지 공격
-    2. 체력이 반 깍이면 : 영혼 미사일(?) 스킬 추가
-    3. 점프 착지 후 플레이어 띄우기
-    */
     int attackCount = 0;    // 공격 횟수 (3번 하면 스킬 진행)
 
     GameObject attackRangeObj;
+
+    [SerializeField]
+    Transform missilePos1;
+    [SerializeField]
+    Transform missilePos2;
 
     public override void Init()
     {
@@ -27,14 +27,40 @@ public class BossController : MonsterController
         if (attackCount >= 3)
         {
             if (_lockTarget != null)
-            {
-                attackCount = 0;
-                StartCoroutine(JumpAttack());
-                State = Define.State.Skill;
-            }
+                ThinkSkill();
         }
         
         base.UpdateMoving();
+    }
+
+    void ThinkSkill()
+    {
+        State = Define.State.Skill;
+        attackCount = 0;
+
+        // Hp가 MaxHp의 반절 보다 높으면 점프 공격만 진행
+        if (_stat.Hp > (_stat.MaxHp / 2))
+        {
+            StopCoroutine(Missile());
+            StartCoroutine(Missile());
+            return;
+        }
+
+        int randomValue = Random.Range(0, 5);
+        switch (randomValue)
+        {
+            case 0:
+            case 1:
+            case 2:
+                StopCoroutine(JumpAttack());
+                StartCoroutine(JumpAttack());
+                break;
+            case 3:
+            case 4:
+                StopCoroutine(Missile());
+                StartCoroutine(Missile());
+                break;
+        }
     }
 
     protected override void UpdateAttack()
@@ -64,7 +90,7 @@ public class BossController : MonsterController
         // 점프하면서 플레이어에게 이동 
         IsNavStop(false);
         nav.SetDestination(_lockTarget.transform.position);
-        nav.speed = 20f;
+        nav.speed = 50f;
 
         yield return new WaitForSeconds(1f);
 
@@ -87,6 +113,44 @@ public class BossController : MonsterController
         nav.SetDestination(_lockTarget.transform.position);
 
         State = Define.State.Moving;
+    }
+
+    IEnumerator Missile()
+    {
+        anim.CrossFade("Roaring", 0.1f, -1, 0);
+
+        for(int i=1; i<=2; i++)
+        {
+            GameObject missile = Managers.Resource.Instantiate("Effect/Monster/Demon/Missile");
+            missile.GetComponent<MissileController>().SetInfo(_stat, 15f);
+
+            if (i == 1)
+                missile.transform.position = missilePos1.position;
+            else if (i == 2)
+                missile.transform.position = missilePos2.position;
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        State = Define.State.Moving;
+    }
+
+    protected void OnComboAttack()
+    {
+        base.OnAttackEvent();
+    }
+
+    // 넘어지도록 공격
+    protected void OnAttackDown(int addDamge = 0)
+    {
+        distance = TargetDistance(Managers.Game.GetPlayer());
+
+        if (distance <= attackRange)
+        {
+            Managers.Game._playScene.OnMonsterBar(_stat);
+
+            Managers.Game.GetPlayer().GetComponent<PlayerController>().OnHitDown(_stat, addDamge);
+        }
     }
 
     // 원형 공격 범위 생성
@@ -112,24 +176,6 @@ public class BossController : MonsterController
         yield return new WaitForSeconds(1.5f);
 
         Managers.Resource.Destroy(effect);
-    }
-
-    protected void OnComboAttack()
-    {
-        base.OnAttackEvent();
-    }
-
-    // 넘어지도록 공격
-    protected void OnAttackDown(int addDamge = 0)
-    {
-        distance = TargetDistance(Managers.Game.GetPlayer());
-
-        if (distance <= attackRange)
-        {
-            Managers.Game._playScene.OnMonsterBar(_stat);
-
-            Managers.Game.GetPlayer().GetComponent<PlayerController>().OnHitDown(_stat, addDamge);
-        }
     }
 
     protected override void UpdateHit() {}

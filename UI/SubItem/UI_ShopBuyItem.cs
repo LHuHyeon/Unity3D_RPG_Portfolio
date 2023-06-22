@@ -58,10 +58,23 @@ public class UI_ShopBuyItem : UI_Base
             return;
         }
         
-        Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
+        // 사용 아이템이면 개수 선택
+        if (_item.itemType == Define.ItemType.Use)
         {
-            Managers.Game.Gold -= _item.itemPrice;
-            Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone());
-        }, Define.ShopSaleMessage);
+            UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
+            numberCheckPopup.RefreshUI(_item, (int itemCount)=>
+            {
+                Managers.Game.Gold -= _item.itemPrice * itemCount;
+                Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone(), itemCount);
+            });
+        }
+        else
+        {
+            Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
+            {
+                Managers.Game.Gold -= _item.itemPrice;
+                Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone());
+            }, Define.ShopSaleMessage);
+        }
     }
 }

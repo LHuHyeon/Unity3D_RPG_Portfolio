@@ -61,12 +61,6 @@ public abstract class BaseController : MonoBehaviour
                         anim.CrossFade("DOWN", 0.1f, -1, 0);
                     }
                     break;
-                
-                case Define.State.Rise:
-                    {
-                        anim.CrossFade("RISE", 0.1f, -1, 0);
-                    }
-                    break;
                 case Define.State.Die:
                     {
                         anim.CrossFade("DIE", 0.1f, -1, 0);
