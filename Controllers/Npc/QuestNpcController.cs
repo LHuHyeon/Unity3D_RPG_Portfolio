@@ -6,15 +6,23 @@ public class QuestNpcController : NpcController
 {
     public Define.QuestType questType = Define.QuestType.Unknown;
 
-    public int questId;
-    public int talkId;
+    public int[] questId;
+    public int[] talkId;
 
-    TalkData talkData;
-    QuestData questData;
+    int nextQuest = 0;
+
+    List<QuestData> questDataList;
+    List<TalkData> talkDataList;
+
+    QuestData currentQuest;
+    TalkData currentTalk;
 
     public override void Init()
     {
         base.Init();
+
+        questDataList = new List<QuestData>();
+        talkDataList = new List<TalkData>();
 
         Invoke("DelayData", 3f);
     }
@@ -22,8 +30,16 @@ public class QuestNpcController : NpcController
     // TODO : 나중에 Init으로 옮기기
     void DelayData()
     {
-        talkData = Managers.Data.Talk[talkId];
-        questData = Managers.Data.Quest[questId];
+        for(int i=0; i<questId.Length; i++)
+        {
+            questDataList.Add(Managers.Data.Quest[questId[i]]);
+            talkDataList.Add(Managers.Data.Talk[talkId[i]]);
+        }
+
+        nextQuest = 0;
+
+        currentQuest = questDataList[nextQuest];
+        currentTalk = talkDataList[nextQuest];
     }
 
     public override void Interact()
@@ -41,45 +57,47 @@ public class QuestNpcController : NpcController
 
     void TalkCheck()
     {
-        if (talkData == null)
+        if (currentTalk == null)
             return;
 
         Managers.Game.isTalk = true;
 
         // 이미 퀘스트를 클리어 했는가?
-        if (questData.isClear == true)
+        if (currentQuest.isClear == true)
         {
-            Talk(talkData.basicsTalk);
+            Talk(currentTalk.basicsTalk);
             return;
         }
 
         // 퀘스트가 수락 중이라면
-        if (questData.isAccept == true)
+        if (currentQuest.isAccept == true)
         {
             // 퀘스트 목표 개수 충족 되면
-            if (questData.currnetTargetCount >= questData.targetCount)
+            if (currentQuest.currnetTargetCount >= currentQuest.targetCount)
             {
-                Talk(talkData.clearTalk);
-                questData.QuestClear();
+                Talk(currentTalk.clearTalk);
+                currentQuest.QuestClear();
+
+                NextQuest();
 
                 // 알람 되어 있는 퀘스트라면 삭제
-                Managers.Game._playScene._quest.CloseQuestNotice(questData);
+                Managers.Game._playScene._quest.CloseQuestNotice(currentQuest);
             }
             else
-                Talk(talkData.procTalk);
+                Talk(currentTalk.procTalk);
                 
             return;
         }
         
         // 레벨이 되면 퀘스트 대화 시작
-        if (questData.minLevel <= Managers.Game.Level)
+        if (currentQuest.minLevel <= Managers.Game.Level)
         {
-            Talk(talkData);
+            Talk(currentTalk);
             return;
         }
 
         // 여기까지 오면 퀘스트 해당 없으므로 기본 대화 진행
-        Talk(talkData.basicsTalk);
+        Talk(currentTalk.basicsTalk);
     }
 
     // 대화 시작
@@ -94,6 +112,18 @@ public class QuestNpcController : NpcController
     {
         UI_TalkPopup talkPopup = Managers.Game._playScene._talk;
         Managers.UI.OnPopupUI(talkPopup);
-        talkPopup.SetInfo(texts, questData, npcName);
+        talkPopup.SetInfo(texts, currentQuest, npcName);
+    }
+
+    void NextQuest()
+    {
+        nextQuest++;
+
+        // 퀘스트 개수 확인
+        if (nextQuest == questDataList.Count)
+            return;
+
+        currentQuest = questDataList[nextQuest];
+        currentTalk = talkDataList[nextQuest];
     }
 }

@@ -103,15 +103,22 @@ public class MonsterController : BaseController
 
     IEnumerator DelayDestroy()
     {
-        Destroy(GetComponent<CapsuleCollider>());
+        GetComponent<CapsuleCollider>().enabled = false;
 
         yield return new WaitForSeconds(3f);
 
+        State = Define.State.Idle;
         Managers.Game.Despawn(this.gameObject);
+
+        GetComponent<CapsuleCollider>().enabled = true;
+        _stat.Hp = _stat.MaxHp;
     }
 
-    protected void IsNavStop(bool isTrue)
+    public void IsNavStop(bool isTrue)
     {
+        if (nav == null)
+            nav = GetComponent<NavMeshAgent>();
+            
         if (isTrue == true)
         {
             nav.isStopped = true;

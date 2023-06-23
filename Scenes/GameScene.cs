@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameScene : BaseScene
 {
-    Coroutine co;
+    [SerializeField]
+    Transform playerSpawn;
 
     protected override void Init()
     {
@@ -17,6 +18,8 @@ public class GameScene : BaseScene
         GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "TestPlayer2");
         Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(_player);
 
+        _player.transform.position = playerSpawn.position;
+
         Invoke("DelayScene", 3f);
     }
 
@@ -24,9 +27,6 @@ public class GameScene : BaseScene
     {
         Managers.Game.Init();
         Managers.Game._playScene = Managers.UI.ShowSceneUI<UI_PlayScene>();
-
-        // GameObject namedMonster = Managers.Game.Spawn(Define.WorldObject.Monster, "Monster/Demon");
-        // namedMonster.transform.position = Vector3.forward * 7;
     }
 
     // 나중엔 로그인 시 진행

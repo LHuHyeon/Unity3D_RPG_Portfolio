@@ -466,6 +466,8 @@ public class PlayerController : BaseController
             return;
         }
 
+        StopAttack();
+
         // 마우스 방향으로 회전
         _destPos = GetMousePoint();
         dir = _destPos - transform.position;

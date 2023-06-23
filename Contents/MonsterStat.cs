@@ -85,7 +85,7 @@ public class MonsterStat : MonoBehaviour
             int randomId = Random.Range(0, itemList.Count-1);
 
             // 아이템 소환
-            ItemData item = Managers.Data.CallItem(randomId);
+            ItemData item = Managers.Data.CallItem(itemList[randomId]);
             GameObject go = Managers.Resource.Instantiate(item.itemObject);
 
             ItemPickUp goData = go.GetOrAddComponent<ItemPickUp>();

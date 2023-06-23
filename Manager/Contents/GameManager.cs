@@ -478,7 +478,7 @@ public class GameManager
     }
 
     // 캐릭터 소환 (주소)
-    public Action<int> OnSpawnEvent;
+    public Action<Transform, int> OnSpawnEvent;
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
         GameObject go = Managers.Resource.Instantiate(path, parent);
@@ -487,7 +487,7 @@ public class GameManager
             case Define.WorldObject.Monster:
                 _monsters.Add(go);
                 if (OnSpawnEvent != null)
-                    OnSpawnEvent.Invoke(1);
+                    OnSpawnEvent.Invoke(parent, 1);
                 break;
             case Define.WorldObject.Player:
                 _player = go;
@@ -509,7 +509,7 @@ public class GameManager
             case Define.WorldObject.Monster:
                 _monsters.Add(go);
                 if (OnSpawnEvent != null)
-                    OnSpawnEvent.Invoke(1);
+                    OnSpawnEvent.Invoke(parent, 1);
                 break;
             case Define.WorldObject.Player:
                 _player = go;
@@ -541,7 +541,9 @@ public class GameManager
                     if (_monsters.Contains(go)){ // 존재 여부 확인
                         _monsters.Remove(go);
                         if (OnSpawnEvent != null)
-                            OnSpawnEvent.Invoke(-1);
+                        {
+                            OnSpawnEvent.Invoke(go.transform.parent, -1);
+                        }
                     }
                 }
                 break;

@@ -25,7 +25,10 @@ public class DataManager
     public ItemData CallItem(int itemId)
     {
         if (Item.ContainsKey(itemId) == false)
+        {
+            Debug.Log("CallItem Failed : " + itemId);
             return null;
+        }
         
         return Item[itemId].ItemClone();
     }

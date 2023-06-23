@@ -9,29 +9,31 @@ public class SpawningPool : MonoBehaviour
     public GameObject _spawnMonsterNumber;
 
     [SerializeField]
-    int _monsterCount = 0;      // 현재 몬스터 수
+    private int _monsterCount = 0;      // 현재 몬스터 수
     int _reserveCount = 0;      // 임시 변수 (에러 방지)
 
     [SerializeField]
-    int _keepMonsterCount = 0;  // 최대 몬스터 수
+    private int _keepMonsterCount = 0;  // 최대 몬스터 수
 
     [SerializeField]
     Vector3 _spawnPos;          // 스폰 위치
 
     [SerializeField]
-    float _spawnRedius = 15f;   // 스폰 최대 거리
+    float _spawnRedius = 5f;   // 스폰 최대 거리
 
     [SerializeField]
     float _spawnTime = 5f;      // 스폰 최대 시간
 
     // 외부에서 값 접근을 위한 메소드
-    public void AddMonsterCount(int value) { _monsterCount += value; }          // 몬스터 수 증가
-    public void SetKeepMonsterCount(int count) { _keepMonsterCount = count; }   // 최대 몬스터 지정
+    public void AddMonsterCount(Transform parent, int value)
+    {
+        if (transform == parent) 
+            this._monsterCount += value;      // 몬스터 수 증가
+    }
+    public void SetKeepMonsterCount(int count) { this._keepMonsterCount = count; }   // 최대 몬스터 지정
 
     void Start()
     {
-        _spawnPos = new Vector3(1, 0, -11);
-
         Managers.Game.OnSpawnEvent -= AddMonsterCount;
         Managers.Game.OnSpawnEvent += AddMonsterCount;
     }
@@ -52,7 +54,7 @@ public class SpawningPool : MonoBehaviour
         _reserveCount++;
         yield return new WaitForSeconds(Random.Range(1, _spawnTime));
 
-        GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, _spawnMonsterNumber);
+        GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, _spawnMonsterNumber, transform);
         NavMeshAgent nav = obj.GetOrAddComponent<NavMeshAgent>();
 
         Vector3 randPos;
@@ -65,10 +67,13 @@ public class SpawningPool : MonoBehaviour
 
             NavMeshPath path = new NavMeshPath();
             if (nav.CalculatePath(randPos, path))   // randPos 위치에 소환 가능 여부 확인
+            {
+                obj.transform.position = randPos;
                 break;
+            }
         }
 
-        obj.transform.position = randPos;
+        nav.nextPosition = randPos;
 
         // while의 에러 예방 목적인 변수이므로 코루틴이 끝날땐 --를 해준다.
         _reserveCount--;
