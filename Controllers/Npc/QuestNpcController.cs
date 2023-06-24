@@ -79,9 +79,6 @@ public class QuestNpcController : NpcController
                 currentQuest.QuestClear();
 
                 NextQuest();
-
-                // 알람 되어 있는 퀘스트라면 삭제
-                Managers.Game._playScene._quest.CloseQuestNotice(currentQuest);
             }
             else
                 Talk(currentTalk.procTalk);
@@ -117,6 +114,9 @@ public class QuestNpcController : NpcController
 
     void NextQuest()
     {
+        // 알람 되어 있는 퀘스트라면 삭제
+        Managers.Game._playScene._quest.CloseQuestNotice(currentQuest);
+
         nextQuest++;
 
         // 퀘스트 개수 확인

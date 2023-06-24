@@ -9,14 +9,18 @@ public class MonsterController : BaseController
 
     [SerializeField] protected float scanRange;
     [SerializeField] protected float attackRange;
+    [SerializeField] protected float spawnRange = 10;
 
     protected float distance;           // 타겟과의 사이 거리
     protected float rValue=0;           // 준비 시간 랜덤 값
 
     protected bool isAttack = false;    // 공격 시 true
+    protected bool isOverSpawn = false; // 스폰 거리 벗어나면
 
     protected MonsterStat _stat;
     protected NavMeshAgent nav;
+
+    public Vector3 spawnPos;
     
     public GameObject hpBarUI;
 
@@ -45,6 +49,17 @@ public class MonsterController : BaseController
 
     protected override void UpdateMoving()
     {
+        if (isOverSpawn == true)
+            return;
+
+        // 스폰 지점에서 일정 거리 벗어나면 스폰지점으로 이동
+        float spawnDistance = (spawnPos - transform.position).magnitude;
+        if (spawnDistance >= spawnRange)
+        {
+            StartCoroutine(SpawnMoving());
+            return;
+        }
+
         distance = TargetDistance(Managers.Game.GetPlayer());
         Managers.Game._playScene.OnMonsterBar(_stat);
         
@@ -60,9 +75,30 @@ public class MonsterController : BaseController
         }
         else
         {
-            State = Define.State.Idle;
-            BattleClose();
+            StartCoroutine(SpawnMoving());
         }
+    }
+
+    // 일정 거리 벗어나면 스폰 지점으로 이동하기
+    IEnumerator SpawnMoving()
+    {
+        isOverSpawn = true;
+
+        BattleClose();
+
+        nav.SetDestination(spawnPos);
+
+        while (true)
+        {
+            float spawnDistance = (spawnPos - transform.position).magnitude;
+            if (spawnDistance <= 0.2f)
+                break;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        State = Define.State.Idle;
+        isOverSpawn = false;
     }
 
     // Anim Event

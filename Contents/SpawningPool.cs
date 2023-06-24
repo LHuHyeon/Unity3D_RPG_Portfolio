@@ -75,6 +75,8 @@ public class SpawningPool : MonoBehaviour
 
         nav.nextPosition = randPos;
 
+        obj.GetComponent<MonsterController>().spawnPos = randPos;
+
         // while의 에러 예방 목적인 변수이므로 코루틴이 끝날땐 --를 해준다.
         _reserveCount--;
     }

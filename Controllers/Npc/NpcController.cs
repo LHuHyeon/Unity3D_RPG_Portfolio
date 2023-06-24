@@ -25,6 +25,8 @@ public abstract class NpcController : BaseController
 
             _lockTarget = Managers.Game.GetPlayer();
             nameBarUI.gameObject.SetActive(true);
+
+            dir.y = 0;
             transform.rotation = Quaternion.LookRotation(dir);
         }
         else

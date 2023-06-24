@@ -50,6 +50,7 @@ public class UI_ShopBuyItem : UI_Base
         itemPriceText = item.itemPrice.ToString();
     }
 
+    bool isBuyCheckPopup = false;
     void OnClickBuyButton(PointerEventData eventData)
     {
         if (Managers.Game.Gold < _item.itemPrice)
@@ -57,6 +58,12 @@ public class UI_ShopBuyItem : UI_Base
             Debug.Log("돈이 부족합니다.");
             return;
         }
+
+        // 구매 팝업창이 띄어져 있는지 확인
+        if (isBuyCheckPopup == true)
+            return;
+            
+        isBuyCheckPopup = true;
         
         // 사용 아이템이면 개수 선택
         if (_item.itemType == Define.ItemType.Use)
@@ -66,6 +73,7 @@ public class UI_ShopBuyItem : UI_Base
             {
                 Managers.Game.Gold -= _item.itemPrice * itemCount;
                 Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone(), itemCount);
+                isBuyCheckPopup = false;
             });
         }
         else
@@ -74,6 +82,7 @@ public class UI_ShopBuyItem : UI_Base
             {
                 Managers.Game.Gold -= _item.itemPrice;
                 Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone());
+                isBuyCheckPopup = false;
             }, Define.ShopSaleMessage);
         }
     }

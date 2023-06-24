@@ -154,7 +154,7 @@ public class UI_TalkPopup : UI_Popup
         GetText((int)Texts.TalkText).text = "";
 
         isNext = false;
-        delayTime = 0.1f;
+        delayTime = 0.05f;
 
         // 대화 타이밍 모션 실행
         foreach(var letter in sentence)

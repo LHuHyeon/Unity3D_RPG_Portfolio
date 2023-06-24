@@ -31,10 +31,15 @@ public class UI_EqStatPopup : UI_Popup
         LUKStatPointText,
     }
 
+    public List<UI_ArmorItem> armorSlots;
+    public UI_WeaponItem weaponSlot;
+
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
+
+        armorSlots = new List<UI_ArmorItem>();
 
         BindObject(typeof(Gameobjects));
         BindButton(typeof(Buttons));
@@ -70,15 +75,29 @@ public class UI_EqStatPopup : UI_Popup
         }
     }
 
-    public void SetInfo()
+    // 장비 장착
+    public void SetEquipment(UI_SlotItem itemSlot)
     {
-        // 버튼 클릭 적용
-        GetButton((int)Buttons.HpAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.HpAddPointButton); });
-        GetButton((int)Buttons.MpAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.MpAddPointButton); });
-        GetButton((int)Buttons.STRAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.STRAddPointButton); });
-        GetButton((int)Buttons.LUKAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.LUKAddPointButton); });
+        // 무기, 장비 확인
+        if (itemSlot.item.itemType == Define.ItemType.Armor)
+        {
+            ArmorItemData armor = itemSlot.item as ArmorItemData;
 
-        SetEventHandler();
+            // 장비 부위 체크
+            foreach(UI_ArmorItem armorSlot in armorSlots)
+            {
+                // 같은 장비면 장착 or 체인지
+                if (armorSlot.armorType == armor.armorType)
+                {
+                    armorSlot.ChangeArmor(itemSlot);
+                    break;
+                }
+            }
+        }
+        else if (itemSlot.item.itemType == Define.ItemType.Weapon)
+        {
+            weaponSlot.ChangeWeapon(itemSlot);
+        }
     }
 
     // 스탯 포인트 적용
@@ -105,6 +124,17 @@ public class UI_EqStatPopup : UI_Popup
 
         Managers.Game.StatPoint--;
         RefreshUI();
+    }
+
+    public void SetInfo()
+    {
+        // 버튼 클릭 적용
+        GetButton((int)Buttons.HpAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.HpAddPointButton); });
+        GetButton((int)Buttons.MpAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.MpAddPointButton); });
+        GetButton((int)Buttons.STRAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.STRAddPointButton); });
+        GetButton((int)Buttons.LUKAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.LUKAddPointButton); });
+
+        SetEventHandler();
     }
 
     void SetEventHandler()

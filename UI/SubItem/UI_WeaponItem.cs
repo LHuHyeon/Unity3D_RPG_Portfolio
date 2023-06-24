@@ -11,12 +11,27 @@ public class UI_WeaponItem : UI_SlotItem
     public override void SetInfo()
     {
         slotType = Define.SlotType.Equipment;
+        Managers.Game._playScene._equipment.weaponSlot = this;
+
         base.SetInfo();
     }
 
     protected override void SetEventHandler()
     {
         base.SetEventHandler();
+
+        gameObject.BindEvent((PointerEventData eventData)=>
+        {
+            if (item == null || UI_DragSlot.instance.dragSlotItem != null)
+                return;
+
+            // 장비 벗기
+            if (Input.GetMouseButtonUp(1))
+            {
+                Managers.Game._playScene._inventory.AcquireItem(weaponItem);
+                ClearSlot();
+            }
+        }, Define.UIEvent.Click);
 
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
@@ -43,28 +58,29 @@ public class UI_WeaponItem : UI_SlotItem
                 if (dragSlot == this)
                     return;
 
-                // 장비 확인
-                if ((dragSlot.item is WeaponItemData) == false)
-                    return;
-
-                // 같은 부위 확인
-                WeaponItemData weapon = dragSlot.item as WeaponItemData;
-                if (weaponType != weapon.weaponType)
-                    return;
-
-                // 레벨 체크
-                if (Managers.Game.Level < weapon.minLevel)
-                    return;
-
                 // 장비 장착 (or 교체)
-                ChangeArmor(dragSlot);
+                ChangeWeapon(dragSlot);
             }
 
         }, Define.UIEvent.Drop);
     }
 
-    public void ChangeArmor(UI_SlotItem itemSlot)
+    // 무기 장착
+    public void ChangeWeapon(UI_SlotItem itemSlot)
     {
+        // 장비 확인
+        if ((itemSlot.item is WeaponItemData) == false)
+            return;
+
+        // 같은 부위 확인
+        WeaponItemData weapon = itemSlot.item as WeaponItemData;
+        if (weaponType != weapon.weaponType)
+            return;
+
+        // 레벨 체크
+        if (Managers.Game.Level < weapon.minLevel)
+            return;
+
         ItemData _tempItem = item;
 
         // 장비 장착
@@ -102,5 +118,7 @@ public class UI_WeaponItem : UI_SlotItem
         Managers.Game.CurrentWeapon.charEquipment.SetActive(false);
         Managers.Game.CurrentWeapon = null;
         weaponItem = null;
+
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
     }
 }

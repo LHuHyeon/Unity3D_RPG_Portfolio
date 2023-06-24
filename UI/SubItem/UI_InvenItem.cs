@@ -35,22 +35,22 @@ public class UI_InvenItem : UI_SlotItem
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item == null || UI_DragSlot.instance.dragSlotItem == null)
+            if (item == null || UI_DragSlot.instance.dragSlotItem != null)
                 return;
 
-            // 아이템 사용
+            // 장비 장착 or 아이템 사용
             if (Input.GetMouseButtonUp(1))
             {
-                if ((item is UseItemData) == false)
-                    return;
-
-                UseItemData useItem = item as UseItemData;
-                if (useItem.useType == Define.UseType.Hp)
-                    Managers.Game.Hp += useItem.useValue;
-                else if (useItem.useType == Define.UseType.Mp)
-                    Managers.Game.Mp += useItem.useValue;
-
-                SetCount(-1);
+                if ((item is EquipmentData) == true)
+                {
+                    Managers.Game._playScene._equipment.SetEquipment(this);
+                }
+                else if ((item is UseItemData) == true)
+                {
+                    // 아이템 사용이 성공적으로 됐다면 -1 차감
+                    if ((item as UseItemData).UseItem(this.item) == true)
+                        SetCount(-1);
+                }
             }
         }, Define.UIEvent.Click);
 
