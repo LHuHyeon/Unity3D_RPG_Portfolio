@@ -13,6 +13,10 @@ public class UI_WeaponItem : UI_SlotItem
         slotType = Define.SlotType.Equipment;
         Managers.Game._playScene._equipment.weaponSlot = this;
 
+        // 해당 부위 장비가 장착되어 있다면
+        if (Managers.Game.CurrentWeapon != null)
+            AddItem(Managers.Game.CurrentWeapon);
+
         base.SetInfo();
     }
 

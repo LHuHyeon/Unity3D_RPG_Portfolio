@@ -34,13 +34,6 @@ public class UI_InvenPopup : UI_Popup
         Managers.Input.KeyAction += OnInventoryUI;
 
         SetInfo();
-        
-        AcquireItem(Managers.Data.CallItem(2001));
-        AcquireItem(Managers.Data.CallItem(3001));
-        AcquireItem(Managers.Data.CallItem(3005));
-        AcquireItem(Managers.Data.CallItem(3009));
-        AcquireItem(Managers.Data.CallItem(3013));
-        AcquireItem(Managers.Data.CallItem(3017));
 
         Managers.UI.ClosePopupUI(this);
 

@@ -27,8 +27,11 @@ public class GameData
 
     public int Gold;        // 골드 (게임 재화)
 
-    // 스킬바에 등록된 리스트
+    // Scene 스킬바에 등록된 리스트
     public Dictionary<Define.KeySkill, SkillData> SkillBarList = new Dictionary<Define.KeySkill, SkillData>();
+
+    // Scene 소비아이템바에 등록된 리스트
+    public Dictionary<int, UI_UseItemSlot> UseItemBarList = new Dictionary<int, UI_UseItemSlot>();
 
     // 현재 장착한 장비
     public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
@@ -217,6 +220,12 @@ public class GameManager
         set { _gameData.SkillBarList = value; }
     }
 
+    public Dictionary<int, UI_UseItemSlot> UseItemBarList
+    {
+        get { return _gameData.UseItemBarList; }
+        set { _gameData.UseItemBarList = value; }
+    }
+
     public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor
     {
         get { return _gameData.CurrentArmor; }
@@ -248,11 +257,6 @@ public class GameManager
     {
         get { return _gameData.ClearQuest; }
         set { _gameData.ClearQuest = value; }
-    }
-
-    public void OnUpdate()
-    {
-        
     }
 
     // Exp 증가시 레벨업 확인
@@ -324,6 +328,8 @@ public class GameManager
             }
         }
     }
+
+#region Equipment
 
     // 강화 비용 계산
     public int EquipmentUpgradeGold(EquipmentData equipment)
@@ -422,6 +428,8 @@ public class GameManager
         }
     }
 
+#endregion
+
     // 해당 키 스킬 반환 
     public SkillData GetSkill(Define.KeySkill keySkill)
     {
@@ -446,6 +454,29 @@ public class GameManager
     public void OnDead()
     {
         // TODO : 재시작
+    }
+
+    public void OnUpdate()
+    {
+        StatRecovery();
+    }
+
+    // Hp, Mp 재생 ( 5초마다 10 회복 )
+    float healthTime = 0f;
+    void StatRecovery()
+    {
+        // 둘다 Full이면 재생 X
+        if (Hp == MaxHp && Mp == MaxMp)
+            return;
+
+        healthTime += Time.deltaTime;
+        if (healthTime >= 5f)
+        {
+            Hp += 10;
+            Mp += 10;
+
+            healthTime = 0;
+        }
     }
 
     public void Init()

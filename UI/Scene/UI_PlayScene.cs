@@ -74,6 +74,8 @@ public class UI_PlayScene : UI_Scene
         BindText(typeof(Texts));
         Bind<Slider>(typeof(Sliders));
 
+        SetInfo();
+
         _inventory = Managers.UI.ShowPopupUI<UI_InvenPopup>();
         _equipment = Managers.UI.ShowPopupUI<UI_EqStatPopup>();
         _skill = Managers.UI.ShowPopupUI<UI_SkillPopup>();
@@ -84,7 +86,13 @@ public class UI_PlayScene : UI_Scene
         _upgrade = Managers.UI.ShowPopupUI<UI_UpgradePopup>();
         Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
 
-        SetInfo();
+        // 장비 미리 장착
+        Managers.Game.CurrentWeapon = Managers.Data.CallItem(2001) as WeaponItemData;
+        Managers.Game.CurrentArmor.Add(Define.ArmorType.Helm, Managers.Data.CallItem(3001) as ArmorItemData);
+        Managers.Game.CurrentArmor.Add(Define.ArmorType.Chest, Managers.Data.CallItem(3005) as ArmorItemData);
+        Managers.Game.CurrentArmor.Add(Define.ArmorType.Pants, Managers.Data.CallItem(3009) as ArmorItemData);
+        Managers.Game.CurrentArmor.Add(Define.ArmorType.Boots, Managers.Data.CallItem(3013) as ArmorItemData);
+        Managers.Game.CurrentArmor.Add(Define.ArmorType.Gloves, Managers.Data.CallItem(3017) as ArmorItemData);
 
 		return true;
 	}
@@ -120,6 +128,20 @@ public class UI_PlayScene : UI_Scene
         GetButton((int)Buttons.AddGoldButton).onClick.AddListener(()=>{ Managers.Game.Gold += 100; });
 
         // --
+
+        foreach(Transform child in GetObject((int)Gameobjects.ItemBar).transform)
+            Managers.Resource.Destroy(child.gameObject);
+
+        // 소비 아이템 키 슬롯
+        for(int i=1; i<=2; i++)
+        {
+            UI_UseItemSlot slot = Managers.UI.MakeSubItem<UI_UseItemSlot>(GetObject((int)Gameobjects.ItemBar).transform);
+            slot.key = i;
+            slot.keyText.text = i.ToString();
+            slot.itemCountText.text = "";
+
+            Managers.Game.UseItemBarList.Add(i, slot);
+        }
 
         GetObject((int)Gameobjects.ultSkillSlot).SetActive(false);
         ClostMonsterBar();

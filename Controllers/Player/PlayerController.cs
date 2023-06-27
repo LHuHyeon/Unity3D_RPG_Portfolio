@@ -364,6 +364,7 @@ public class PlayerController : BaseController
             GetSkill();
         }
 
+        GetUseItem();
         GetPickUp();
     }
 
@@ -421,6 +422,28 @@ public class PlayerController : BaseController
 
             EffectClose();
         }
+    }
+
+    // 번호키를 눌러 소비 아이템 사용
+    void GetUseItem()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            OnUseItem(1);
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+            OnUseItem(2);
+    }
+
+    void OnUseItem(int key)
+    {
+        if (Managers.Game.UseItemBarList[key].item == null)
+        {
+            Debug.Log("장착된 소비 아이템이 없습니다.");
+            return;
+        }
+
+        UseItemData useItem = Managers.Game.UseItemBarList[key].item as UseItemData;
+        if (useItem.UseItem(useItem) == true)
+            Managers.Game.UseItemBarList[key].SetCount(-1);
     }
 
     // 스킬 사용

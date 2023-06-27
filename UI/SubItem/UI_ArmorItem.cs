@@ -14,6 +14,10 @@ public class UI_ArmorItem : UI_SlotItem
         slotType = Define.SlotType.Equipment;
         Managers.Game._playScene._equipment.armorSlots.Add(this);
 
+        // 해당 부위 장비가 장착되어 있다면
+        if (Managers.Game.CurrentArmor.TryGetValue(armorType, out armorItem) == true)
+            Code_AddArmor(armorItem);
+
         base.SetInfo();
     }
 
@@ -118,6 +122,20 @@ public class UI_ArmorItem : UI_SlotItem
             Managers.Game.CurrentArmor.Add(armorType, armorItem);
         else
             Managers.Game.CurrentArmor[armorType] = armorItem;
+
+        // 장비 오브젝트 활성화
+        EquipmentActive(armorItem, true);
+
+        // 스탯 적용
+        Managers.Game.RefreshArmor(armorItem, true);
+    }
+
+    // 코드로 장비 장착
+    public void Code_AddArmor(ItemData _item)
+    {
+        base.AddItem(_item);
+
+        armorItem = _item as ArmorItemData;
 
         // 장비 오브젝트 활성화
         EquipmentActive(armorItem, true);

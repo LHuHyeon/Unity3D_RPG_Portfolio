@@ -50,10 +50,12 @@ public class UI_EqStatPopup : UI_Popup
 
         SetInfo();
 
-        Managers.UI.ClosePopupUI(this);
+        Invoke("DelayInit", 0.0001f);
 
         return true;
     }
+
+    void DelayInit() { Managers.UI.ClosePopupUI(this); }
 
     void Update()
     {
@@ -97,6 +99,31 @@ public class UI_EqStatPopup : UI_Popup
         else if (itemSlot.item.itemType == Define.ItemType.Weapon)
         {
             weaponSlot.ChangeWeapon(itemSlot);
+        }
+    }
+
+    // 코드로 넣어주는 장비
+    public void Code_SetEquipment(ItemData item)
+    {
+        // 무기, 장비 확인
+        if (item.itemType == Define.ItemType.Armor)
+        {
+            ArmorItemData armor = item as ArmorItemData;
+
+            // 장비 부위 체크
+            foreach(UI_ArmorItem armorSlot in armorSlots)
+            {
+                // 같은 장비면 장착 or 체인지
+                if (armorSlot.armorType == armor.armorType)
+                {
+                    armorSlot.AddItem(item);
+                    break;
+                }
+            }
+        }
+        else if (item.itemType == Define.ItemType.Weapon)
+        {
+            weaponSlot.AddItem(item);
         }
     }
 

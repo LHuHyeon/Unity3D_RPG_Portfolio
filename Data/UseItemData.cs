@@ -6,6 +6,7 @@ public class UseItemData : ItemData
 {
     public Define.UseType useType = Define.UseType.Unknown;
     public int useValue = 0;
+    public int itemCount = 0;
 
     public bool UseItem(ItemData item)
     {
@@ -27,6 +28,7 @@ public class UseItemData : ItemData
         UseItemData useItem = new UseItemData();
         useItem.useType = this.useType;
         useItem.useValue = this.useValue;
+        useItem.itemCount = this.itemCount;
 
         return useItem;
     }

@@ -81,30 +81,28 @@ public class UI_InvenItem : UI_SlotItem
 
             // 강화창에서 온거면
             if (dragSlot is UI_UpgradeItem)
-            {
-                Managers.Game._playScene._inventory.AcquireItem(dragSlot.item);
-                (dragSlot as UI_UpgradeItem).ClearSlot();
-            }
+                AddSlot<UI_UpgradeItem>(dragSlot as UI_UpgradeItem);
 
             // 장비창에서 온거면
             if (dragSlot is UI_ArmorItem || dragSlot is UI_WeaponItem)
             {
-                Managers.Game._playScene._inventory.AcquireItem(dragSlot.item);
-
                 if (dragSlot is UI_ArmorItem)
-                    (dragSlot as UI_ArmorItem).ClearSlot();
+                    AddSlot<UI_ArmorItem>(dragSlot as UI_ArmorItem);
                 else if (dragSlot is UI_WeaponItem)
-                    (dragSlot as UI_WeaponItem).ClearSlot();
+                    AddSlot<UI_WeaponItem>(dragSlot as UI_WeaponItem);
+            }
+
+            // 소비 아이템 슬롯에서 온거면 (Scene 슬롯)
+            if (dragSlot is UI_UseItemSlot)
+            {
+                UI_UseItemSlot useItemSlot = dragSlot as UI_UseItemSlot;
+                AddSlot<UI_UseItemSlot>(useItemSlot, useItemSlot.itemCount);
             }
 
             // 인벤토리에서 온거면
             if (dragSlot is UI_InvenItem)
             {
                 UI_InvenItem invenSlot = dragSlot as UI_InvenItem;
-                
-                // 자기 자신이라면
-                if (invenSlot == this)
-                    return;
 
                 // 두 슬롯의 아이템이 같은 아이템일 경우 개수 체크
                 if (item == invenSlot.item && (invenSlot.item is UseItemData))
@@ -145,6 +143,18 @@ public class UI_InvenItem : UI_SlotItem
             UI_DragSlot.instance.dragSlotItem.ClearSlot();
     }
 
+    // 슬롯 받기
+    private void AddSlot<T>(T slot, int count = 1) where T : UI_SlotItem
+    {
+        // 아이템이 있다면 다른 슬롯 || 없다면 지금 슬롯에 넣기
+        if (item != null)
+            Managers.Game._playScene._inventory.AcquireItem(slot.item, count);
+        else
+            AddItem(slot.item, count);
+
+        slot.ClearSlot();
+    }
+
     // 투명도 설정 (0 ~ 255)
     protected override void SetColor(float _alpha)
     {
@@ -161,6 +171,7 @@ public class UI_InvenItem : UI_SlotItem
         // 장비가 아니라면 개수 설정
         if ((item is UseItemData) == true)
         {
+            (item as UseItemData).itemCount = count;
             itemCount = count;
             itemCountText.text = itemCount.ToString();
         }
@@ -176,6 +187,9 @@ public class UI_InvenItem : UI_SlotItem
     {
         itemCount += count;
         itemCountText.text = itemCount.ToString();
+        
+        if (item is UseItemData)
+            (item as UseItemData).itemCount += count;
 
         // 개수가 없다면
         if (itemCount <= 0)
