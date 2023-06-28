@@ -47,10 +47,6 @@ public class GameData
 
     // 클리어한 퀘스트
     public List<QuestData> ClearQuest = new List<QuestData>();
-
-    // 스킬 : 스킬 능력, 레벨, 흭득 횟수
-    // 등록된 스킬 : 스킬 능력
-    // 퀘스트 : 퀘스트 내용, 완료 보상, 클리어 유/무
 }
 
 // 컨텐츠에서 사용될 매니저 (플레이어, 몬스터 등..)
@@ -615,4 +611,10 @@ public class GameManager
 		return true;
 	}
 	#endregion
+
+    public void Clear()
+    {
+        _monsters.Clear();
+        currentMonster = null;
+    }
 }

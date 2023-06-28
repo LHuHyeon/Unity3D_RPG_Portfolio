@@ -72,11 +72,8 @@ public class Managers : MonoBehaviour
     public static void Clear()
     {
         Sound.Clear();
-        Input.Clear();
         UI.Clear();
         Scene.Clear();
-        Pool.Clear();   // Pool 객체를 다른 매니저에서 사용할 수 있으므로 마지막에 Clear
-
-    //  Data.Clear();  <- Data는 게임 중 항상 들고 있는 것이 맞기 때문에 Clear 하지 않는다.
+        Game.Clear();
     }
 }

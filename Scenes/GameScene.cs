@@ -20,6 +20,8 @@ public class GameScene : BaseScene
 
         _player.transform.position = playerSpawn.position;
 
+        DontDestroyOnLoad(_player);
+
         Invoke("DelayScene", 3f);
     }
 

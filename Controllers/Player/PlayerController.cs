@@ -119,9 +119,7 @@ public class PlayerController : BaseController
             State = Define.State.Idle;
         else
         {
-            // 건물을 클릭하여 이동하면 건물 앞에 멈추기 (1.0f 거리에서 멈추기)
-            Debug.DrawRay(transform.position + (Vector3.up * 0.5f), dir.normalized, Color.red);
-            if (Physics.Raycast(transform.position + (Vector3.up * 0.5f), dir, 1.0f, 1 << 10)){ // 10 : Block
+            if (BlockCheck() == true){
                 if (Input.GetMouseButton(0) == false)
                     State = Define.State.Idle;
                 return;
@@ -144,6 +142,13 @@ public class PlayerController : BaseController
 
         transform.position += dir.normalized * moveDist;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
+
+        if (BlockCheck() == true)
+        {
+            _isDiveRoll = false;
+            Managers.Game.MoveSpeed = 5;
+            return;
+        }
     }
 
     float _attackCloseTime = 0;
@@ -407,6 +412,9 @@ public class PlayerController : BaseController
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (BlockCheck() == true)
+                return;
+                
             _isDown = false;
             _isDiveRoll = true;
 
@@ -559,5 +567,14 @@ public class PlayerController : BaseController
         effect.transform.localRotation = Quaternion.identity;
 
         effect.SetActive(false);
+    }
+
+    // 전방 Block 체크하여 멈추기 (1.0f 거리에서 멈추기)
+    bool BlockCheck()
+    {
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.5f), dir, 1.0f, 1 << 10)) // 10 : Block
+            return true;
+
+        return false;
     }
 }
