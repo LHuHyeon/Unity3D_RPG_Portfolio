@@ -55,6 +55,7 @@ public class UI_QuestPopup : UI_Popup
 
     void Update()
     {
+        // 퀘스트 목표 계속 새로고침
         if (Managers.Game.isQuest == true && currentClickQuest != null)
         {
             string str = currentClickQuest.targetDescription + "\n" + currentClickQuest.currnetTargetCount + " / " + currentClickQuest.targetCount;
@@ -119,14 +120,16 @@ public class UI_QuestPopup : UI_Popup
     }
 
     // 씬에 퀘스트 알림 추가
-    public void SetQuestNotice(QuestData quest)
+    public bool SetQuestNotice(QuestData quest)
     {
         if (questNoticeList.Count > maxquestNoticeCount)
-            return;
+            return false;
 
         questNoticeList.Add(Managers.Game._playScene.SetQuestNoticeBar(quest));
 
         GetText((int)Texts.QuestNoticeCountText).text = questNoticeList.Count + " / " + maxquestNoticeCount;
+
+        return true;
     }
 
     // 씬 퀘스트 알람 끄기
@@ -164,5 +167,9 @@ public class UI_QuestPopup : UI_Popup
             UI_QuestSlot questSlot = Managers.UI.MakeSubItem<UI_QuestSlot>(parent: GetObject((int)Gameobejcts.Content).transform);
             questSlot.SetInfo(questData);
         }
+        
+        // 현재 첫 번째 퀘스트 정보
+        if (Managers.Game.CurrentQuest.Count >= 1)
+            OnQuest(Managers.Game.CurrentQuest[0]);
     }
 }

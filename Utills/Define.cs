@@ -126,6 +126,7 @@ public class Define : MonoBehaviour
 
     public enum Layer
     {
+        UIWorldSpace = 6,
         Monster = 8,
         Ground = 9,
         Block = 10,

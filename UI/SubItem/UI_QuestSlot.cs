@@ -11,7 +11,7 @@ public class UI_QuestSlot : UI_Base
     public TextMeshProUGUI slotText;
     public Button sceneButton;
     public GameObject okButtonIcon;
-    public bool isNotice = false;
+    public bool isNotice = true;
 
     public override bool Init()
     {
@@ -24,6 +24,8 @@ public class UI_QuestSlot : UI_Base
         });
 
         sceneButton.onClick.AddListener(OnClickSceneButton);
+
+        okButtonIcon.SetActive(!isNotice);
 
         return true;
     }
@@ -40,7 +42,7 @@ public class UI_QuestSlot : UI_Base
         isNotice = !isNotice;
 
         if (isNotice == true)
-            Managers.Game._playScene._quest.SetQuestNotice(_quest);
+            isNotice = Managers.Game._playScene._quest.SetQuestNotice(_quest);
         else
             Managers.Game._playScene._quest.CloseQuestNotice(_quest);
 

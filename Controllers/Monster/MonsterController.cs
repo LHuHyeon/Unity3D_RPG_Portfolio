@@ -9,7 +9,7 @@ public class MonsterController : BaseController
 
     [SerializeField] protected float scanRange;
     [SerializeField] protected float attackRange;
-    [SerializeField] protected float spawnRange = 10;
+    [SerializeField] protected float spawnRange = 16;
 
     protected float distance;           // 타겟과의 사이 거리
     protected float rValue=0;           // 준비 시간 랜덤 값
@@ -91,7 +91,7 @@ public class MonsterController : BaseController
         while (true)
         {
             float spawnDistance = (spawnPos - transform.position).magnitude;
-            if (spawnDistance <= 0.2f)
+            if (spawnDistance <= 0.5f)
                 break;
 
             yield return new WaitForSeconds(0.1f);

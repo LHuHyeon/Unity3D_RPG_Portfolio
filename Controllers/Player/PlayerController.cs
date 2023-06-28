@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : BaseController
 {
@@ -168,7 +169,7 @@ public class PlayerController : BaseController
     protected override void UpdateSkill()
     {
         if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Skill") &&
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f)
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
         {
             EffectClose();
             State = Define.State.Idle;

@@ -35,10 +35,12 @@ public class UI_InvenPopup : UI_Popup
 
         SetInfo();
 
-        Managers.UI.ClosePopupUI(this);
+        Invoke("DelayInit", 0.0001f);
 
         return true;
     }
+    
+    void DelayInit() { Managers.UI.ClosePopupUI(this); }
 
     void Update()
     {

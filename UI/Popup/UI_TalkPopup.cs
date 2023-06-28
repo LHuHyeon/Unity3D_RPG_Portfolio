@@ -193,6 +193,7 @@ public class UI_TalkPopup : UI_Popup
     {
         Managers.Game.CurrentQuest.Add(questData);
         Managers.Game._playScene._quest.RefreshUI();
+        Managers.Game._playScene._quest.SetQuestNotice(questData);
         questData.isAccept = true;
 
         IsQuestActive(false);

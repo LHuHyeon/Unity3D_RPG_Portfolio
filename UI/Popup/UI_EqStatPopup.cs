@@ -50,7 +50,7 @@ public class UI_EqStatPopup : UI_Popup
 
         SetInfo();
 
-        Invoke("DelayInit", 0.0001f);
+        Invoke("DelayInit", 0.001f);
 
         return true;
     }
@@ -73,7 +73,7 @@ public class UI_EqStatPopup : UI_Popup
             if (Managers.Game.isEquipment)
                 Managers.UI.OnPopupUI(this);
             else
-                Managers.UI.ClosePopupUI(this);
+                Exit();
         }
     }
 
@@ -198,5 +198,12 @@ public class UI_EqStatPopup : UI_Popup
         GetText((int)Texts.MpStatPointText).text = Managers.Game.MpPoint.ToString();
         GetText((int)Texts.STRStatPointText).text = Managers.Game.STR.ToString();
         GetText((int)Texts.LUKStatPointText).text = Managers.Game.LUK.ToString();
+    }
+
+    void Exit()
+    {
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
+        Managers.Game.isEquipment = false;
+        Managers.UI.ClosePopupUI(this);
     }
 }
