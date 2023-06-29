@@ -86,8 +86,6 @@ public class UIManager
         T sceneUI = Util.GetOrAddComponent<T>(go);
         _sceneUI = sceneUI;
 
-        go.transform.SetParent(Root.transform);
-
         return sceneUI;
     }
 
@@ -155,6 +153,5 @@ public class UIManager
     public void Clear()
     {
         CloseAllPopupUI();
-        _sceneUI = null;
     }
 }

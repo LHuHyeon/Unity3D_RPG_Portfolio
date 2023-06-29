@@ -26,6 +26,12 @@ public class NamedController : MonsterController
 
     protected override void OnAttackEvent()
     {
+        base.OnAttackEvent();
+        attackCount++;
+    }
+
+    protected override void ExitAttack()
+    {
         if (attackCount == 2)
         {
             // 스킬 공격 범위 생성
@@ -37,9 +43,8 @@ public class NamedController : MonsterController
             State = Define.State.Skill;
             anim.CrossFade("SKILL", 0.1f, -1, 0);
         }
-
-        base.OnAttackEvent();
-        attackCount++;
+        else
+            base.ExitAttack();
     }
 
     public void OnSkillEvent()

@@ -10,9 +10,20 @@ using UnityEngine;
 public class Portal : MonoBehaviour
 {
     [SerializeField]
+    Define.Scene sceneType;
+
+    [SerializeField]
     GameObject portalObject;
 
-    void Update()
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            portalObject.SetActive(true);
+        }
+    }
+
+    void OnTriggerStay(Collider other)
     {
         if (portalObject.activeSelf == true)
         {
@@ -20,16 +31,8 @@ public class Portal : MonoBehaviour
             if (distance <= 3.2f)
             {
                 Managers.Game.StopPlayer();
-                Managers.Scene.LoadScene(Define.Scene.Dungeon);
+                Managers.Scene.LoadScene(sceneType);
             }
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            portalObject.SetActive(true);
         }
     }
 

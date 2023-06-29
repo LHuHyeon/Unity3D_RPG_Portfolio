@@ -140,6 +140,7 @@ public class Define : MonoBehaviour
         Loby,
         Game,
         Dungeon,
+        Boss,
     }
 
     public enum Sound

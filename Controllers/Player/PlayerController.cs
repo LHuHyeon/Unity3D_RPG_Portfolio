@@ -171,16 +171,6 @@ public class PlayerController : BaseController
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
     }
 
-    protected override void UpdateSkill()
-    {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Skill") &&
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
-        {
-            EffectClose();
-            State = Define.State.Idle;
-        }
-    }
-
     public void OnHitDown(MonsterStat attacker, int addDamge = 0)
     {
         if (_isDiveRoll == true)
@@ -498,6 +488,10 @@ public class PlayerController : BaseController
             return;
         }
 
+        // 마나 체크
+        if (skill.skillConsumMp > Managers.Game.Mp)
+            return;
+
         StopAttack();
 
         // 마우스 방향으로 회전
@@ -525,6 +519,13 @@ public class PlayerController : BaseController
         Managers.Game.Mp -= currentSkill.skillConsumMp;
 
         currentEffect.SetActive(true);
+    }
+
+    // 스킬 끝날 때 [ Anim Event ]
+    public void EventEndSkill()
+    {
+        EffectClose();
+        State = Define.State.Idle;
     }
 
 #endregion

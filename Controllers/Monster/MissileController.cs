@@ -24,7 +24,7 @@ public class MissileController : MonoBehaviour
         StartCoroutine(this.DelayDisable());
     }
 
-    void Update()
+    void FixedUpdate()
     {
         nav.SetDestination(Managers.Game.GetPlayer().transform.position);
     }

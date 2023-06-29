@@ -28,18 +28,7 @@ public class InputManager
 
         // UI를 클릭했을 때
         if (EventSystem.current.IsPointerOverGameObject())
-        {
-            // Ray를 쏘고 WorldSpace UI인지 확인
-            Ray rayUI = Camera.main.ScreenPointToRay(Input.mousePosition);
-            
-            if (Physics.Raycast(rayUI, 150f, (1 << (int)Define.Layer.UIWorldSpace)) == true)
-                Debug.Log("Ray True!!");
-            else
-            {
-                Debug.Log("Ray False!!");
-                return;
-            }
-        }
+            return;
         
         if (MouseAction != null){
             if (Input.GetMouseButton(1)){

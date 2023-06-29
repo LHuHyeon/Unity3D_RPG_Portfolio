@@ -29,6 +29,7 @@ public class GameScene : BaseScene
     {
         Managers.Game.Init();
         Managers.Game._playScene = Managers.UI.ShowSceneUI<UI_PlayScene>();
+        DontDestroyOnLoad(Managers.Game._playScene.gameObject);
     }
 
     // 나중엔 로그인 시 진행

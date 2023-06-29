@@ -33,6 +33,8 @@ public class MonsterController : BaseController
         nav = GetComponent<NavMeshAgent>();
 
         hpBarUI = Managers.UI.MakeWorldSpaceUI<UI_HpBar>(transform).gameObject;
+
+        spawnPos = transform.position;
     }
 
     protected override void UpdateIdle()
@@ -99,6 +101,13 @@ public class MonsterController : BaseController
 
         State = Define.State.Idle;
         isOverSpawn = false;
+    }
+
+    protected override void UpdateAttack()
+    {
+        Vector3 dir = Managers.Game.GetPlayer().transform.position - transform.position;
+        dir.y = 0;
+        transform.rotation = Quaternion.LookRotation(dir);
     }
 
     // Anim Event

@@ -76,7 +76,7 @@ public class UI_PlayScene : UI_Scene
         _talk = Managers.UI.ShowPopupUI<UI_TalkPopup>();
         _quest = Managers.UI.ShowPopupUI<UI_QuestPopup>();
         _upgrade = Managers.UI.ShowPopupUI<UI_UpgradePopup>();
-        Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot");
+        DontDestroyOnLoad(Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot"));
 
         // 장비 미리 장착
         Managers.Game.CurrentWeapon = Managers.Data.CallItem(2001) as WeaponItemData;

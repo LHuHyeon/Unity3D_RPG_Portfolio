@@ -616,5 +616,6 @@ public class GameManager
     {
         _monsters.Clear();
         currentMonster = null;
+        OnSpawnEvent = null;
     }
 }

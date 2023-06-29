@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class DungeonScene : BaseScene
+public class BossScene : BaseScene
 {
     [SerializeField]
     Transform playerSpawn;
@@ -11,7 +10,7 @@ public class DungeonScene : BaseScene
     protected override void Init()
     {
         base.Init();
-        SceneType = Define.Scene.Dungeon;  // 타입 설정
+        SceneType = Define.Scene.Boss;  // 타입 설정
 
         Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(Managers.Game.GetPlayer());
 

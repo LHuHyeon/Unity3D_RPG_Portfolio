@@ -37,6 +37,8 @@ public class Managers : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 50;
+
         Init();     // 싱글톤
     }
 
