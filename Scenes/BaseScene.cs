@@ -18,6 +18,9 @@ public abstract class BaseScene : MonoBehaviour
         
         if (obj == null)
             Managers.Resource.Instantiate("UI/EventSystem").name = "@EventSystem";
+
+        if (SceneType == Define.Scene.Game)
+            Managers.Game.beforeSpawnPos = Managers.Game.GetPlayer().transform.position;
     }
 
     public abstract void Clear();

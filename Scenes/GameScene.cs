@@ -12,17 +12,26 @@ public class GameScene : BaseScene
         base.Init();
         SceneType = Define.Scene.Game;  // 타입 설정
 
-        OnDataRequest();
+        if (Managers.Data.isData == false)
+            OnDataRequest();
 
-        gameObject.GetOrAddComponent<CursorController>();   // 마우스 커서 생성
-        GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "TestPlayer2");
-        Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(_player);
+        if (Managers.Game.GetPlayer() == false)
+        {
+            gameObject.GetOrAddComponent<CursorController>();   // 마우스 커서 생성
+            GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "TestPlayer2");
+            _player.transform.position = playerSpawn.position;
+            DontDestroyOnLoad(_player);
+        }
 
-        _player.transform.position = playerSpawn.position;
+        if (Managers.Game._playScene == false)
+            Invoke("DelayScene", 3f);
 
-        DontDestroyOnLoad(_player);
+        if (Managers.Game.beforeSpawnPos != Vector3.zero)
+            Managers.Game.GetPlayer().transform.position = Managers.Game.beforeSpawnPos;
 
-        Invoke("DelayScene", 3f);
+        Managers.Game.StopPlayer();
+        
+        Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(Managers.Game.GetPlayer());
     }
 
     void DelayScene()
@@ -46,6 +55,8 @@ public class GameScene : BaseScene
         StartCoroutine(Managers.Data.DataRequest(Define.ShopNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.TalkNumber));
         StartCoroutine(Managers.Data.DataRequest(Define.QuestNumber));
+
+        Managers.Data.isData = true;
     }
 
     public override void Clear()

@@ -65,6 +65,8 @@ public class GameManager
 
     public UI_PlayScene _playScene;
 
+    public Vector3 beforeSpawnPos = Vector3.zero;      // 씬이 이동될 때 이동 되기전 위치를 저장
+
     public bool isInventory = false;
     public bool isEquipment = false;
     public bool isSkillUI = false;

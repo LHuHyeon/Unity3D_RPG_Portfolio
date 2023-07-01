@@ -10,6 +10,8 @@ public class DataManager
 {
     const string URL = "https://docs.google.com/spreadsheets/d/1wGzHHrNKnq8LYkQHWN3DWJLY5zRBllqKT69KmzN5oWo/export?format=csv&gid=";
 
+    public bool isData = false;
+
     public StartData Start { get; private set; }
     public Dictionary<int, LevelData> Level { get; private set; }
     public Dictionary<int, SkillData> Skill { get; private set; }

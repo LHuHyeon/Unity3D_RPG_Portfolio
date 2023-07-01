@@ -13,11 +13,17 @@ public class BossController : MonsterController
     [SerializeField]
     Transform missilePos2;
 
+    Portal exitPortal;
+
     public override void Init()
     {
         base.Init();
 
         monsterType = Define.MonsterType.Boss;
+
+        exitPortal = GameObject.FindObjectOfType<Portal>();
+        if (exitPortal != null)
+            exitPortal.gameObject.SetActive(false);
     }
 
     protected override void UpdateMoving()
@@ -230,4 +236,16 @@ public class BossController : MonsterController
     }
 
     protected override void UpdateHit() {}
+
+    protected override void UpdateDie()
+    {
+        base.UpdateDie();
+
+        if (exitPortal == null)
+            return;
+
+        // 나가는 포탈 생성
+        if (exitPortal.gameObject.activeSelf == false)
+            exitPortal.gameObject.SetActive(true);
+    }
 }

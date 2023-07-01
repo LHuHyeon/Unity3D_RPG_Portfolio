@@ -19,7 +19,14 @@ public class Portal : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            portalObject.SetActive(true);
+            // 던전이나 보스방에서 Game 씬으로 이동했을 경우 포탈 x
+            if (Managers.Scene.CurrentScene.SceneType == Define.Scene.Game)
+            {
+                if (Managers.Game.beforeSpawnPos == Vector3.zero)
+                    portalObject.SetActive(true);
+            }
+            else
+                portalObject.SetActive(true);
         }
     }
 
@@ -31,6 +38,11 @@ public class Portal : MonoBehaviour
             if (distance <= 3.2f)
             {
                 Managers.Game.StopPlayer();
+
+                // 씬 이동 전 위치 저장
+                if (Managers.Scene.CurrentScene.SceneType == Define.Scene.Game)
+                    Managers.Game.beforeSpawnPos = Managers.Game.GetPlayer().transform.position;
+
                 Managers.Scene.LoadScene(sceneType);
             }
         }
@@ -41,6 +53,12 @@ public class Portal : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             portalObject.SetActive(false);
+
+            if (Managers.Scene.CurrentScene.SceneType == Define.Scene.Game)
+            {
+                if (Managers.Game.beforeSpawnPos != Vector3.zero)
+                    Managers.Game.beforeSpawnPos = Vector3.zero;
+            }
         }
     }
 }
