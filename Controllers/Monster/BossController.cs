@@ -25,28 +25,20 @@ public class BossController : MonsterController
         // 공격 횟수가 3회 도달하면 점프 공격 진행
         // 거리 상관없이 사용해야 되므로 Moving 상태에서 진행
         if (attackCount >= 3)
-        {
-            if (_lockTarget != null)
-                ThinkSkill();
-        }
+            ThinkSkill();
         
         base.UpdateMoving();
     }
 
     void ThinkSkill()
     {
+        if (_lockTarget == null)
+            return;
+
         State = Define.State.Skill;
         attackCount = 0;
 
-        // Hp가 MaxHp의 반절 보다 높으면 점프 공격만 진행
-        if (_stat.Hp > (_stat.MaxHp / 2))
-        {
-            StopCoroutine(Missile());
-            StartCoroutine(Missile());
-            return;
-        }
-
-        int randomValue = Random.Range(0, 5);
+        int randomValue = Random.Range(0, 9);
         switch (randomValue)
         {
             case 0:
@@ -57,8 +49,15 @@ public class BossController : MonsterController
                 break;
             case 3:
             case 4:
+            case 5:
                 StopCoroutine(Missile());
                 StartCoroutine(Missile());
+                break;
+            case 6:
+            case 7:
+            case 8:
+                StopCoroutine(AOEJumpAttackSkill());
+                StartCoroutine(AOEJumpAttackSkill());
                 break;
         }
     }
@@ -70,6 +69,7 @@ public class BossController : MonsterController
         {
             anim.CrossFade("Combo Attack", 0.1f, -1, 0);
             State = Define.State.Skill;
+            attackCount++;
         }
     }
 
@@ -79,6 +79,7 @@ public class BossController : MonsterController
         attackCount++;
     }
 
+    // 점프하여 플레이어에게 착지한다.
     IEnumerator JumpAttack()
     {
         // 점프 힘 모으고
@@ -99,7 +100,7 @@ public class BossController : MonsterController
         OnAttackDown((int)(_stat.Attack / 2));
 
         // 원형 공격 범위 생성
-        CircleAttackRange();
+        CircleAttackRange(new Vector3(3.5f, 0.001f, 3.5f));
 
         yield return new WaitForSeconds(1f);
 
@@ -110,19 +111,23 @@ public class BossController : MonsterController
 
         IsNavStop(false);
         nav.speed = 3.5f;
-        nav.SetDestination(_lockTarget.transform.position);
+        nav.SetDestination(Managers.Game.GetPlayer().transform.position);
 
         State = Define.State.Moving;
     }
 
+    // 두개의 작은 미사일을 쏜다.
     IEnumerator Missile()
     {
+        IsNavStop(true);
         anim.CrossFade("Roaring", 0.1f, -1, 0);
+
+        yield return new WaitForSeconds(0.5f);
 
         for(int i=1; i<=2; i++)
         {
             GameObject missile = Managers.Resource.Instantiate("Effect/Monster/Demon/Missile");
-            missile.GetComponent<MissileController>().SetInfo(_stat, 15f);
+            missile.GetComponent<MissileController>().SetInfo(_stat, 8f);
 
             if (i == 1)
                 missile.transform.position = missilePos1.position;
@@ -130,8 +135,55 @@ public class BossController : MonsterController
                 missile.transform.position = missilePos2.position;
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
+        // 미사일 쏘고 잠시 기다리기
+        anim.CrossFade("WAIT", 0.4f);
+
+        yield return new WaitForSeconds(4f);
+
+        IsNavStop(false);
+        nav.SetDestination(Managers.Game.GetPlayer().transform.position);
+        State = Define.State.Moving;
+    }
+
+    // 제자리 점프 후 착지한다. 착지 후 지속적으로 데미지를 주는 원을 생성한다.
+    IEnumerator AOEJumpAttackSkill()
+    {
+        // 가만히 점프!
+        IsNavStop(true);
+        anim.CrossFade("Idle Jump", 0.1f, -1, 0);
+
+        yield return new WaitForSeconds(2.2f);
+
+        // 착지 후
+        // 근처에 플레이어가 있으면 넘어트리며 공격
+        OnAttackDown((int)(_stat.Attack * 0.5f));
+
+        // 원형 공격 범위 생성
+        CircleAttackRange(new Vector3(4.5f, 0.001f, 4.5f));
+
+        yield return new WaitForSeconds(1f);
+
+        // 원형 공격 범위 제거
+        Managers.Resource.Destroy(attackRangeObj);
+
+        // 범위 지속 공격 생성
+        GameObject attackAOE = Managers.Resource.Instantiate("Effect/Monster/Demon/Meteors_AOE");
+        attackAOE.GetOrAddComponent<AOEController>().damage = (int)(_stat.Attack * 0.5f);
+        attackAOE.transform.position = transform.position + (Vector3.up * 0.1f);
+        attackAOE.transform.localScale = Vector3.one * 1.5f;
+
+        anim.CrossFade("WAIT", 0.4f);
+
+        yield return new WaitForSeconds(7f);
+
+        // 범위 지속 공격 제거
+        Managers.Resource.Destroy(attackAOE);
+
+        // 움직이기
+        IsNavStop(false);
+        nav.SetDestination(Managers.Game.GetPlayer().transform.position);
         State = Define.State.Moving;
     }
 
@@ -154,8 +206,7 @@ public class BossController : MonsterController
     }
 
     // 원형 공격 범위 생성
-    Vector3 circleAttackRange = new Vector3(3.5f, 0.001f, 3.5f);
-    void CircleAttackRange()
+    void CircleAttackRange(Vector3 circleAttackRange)
     {
         attackRangeObj = Managers.Resource.Instantiate("Object/CircleAttackRange", this.transform);
         attackRangeObj.transform.localPosition = Vector3.up * 0.01f;

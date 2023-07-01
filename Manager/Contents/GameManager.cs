@@ -439,7 +439,12 @@ public class GameManager
     // 공격 받을때
     public void OnAttacked(MonsterStat attacker, int addDamge = 0)
     {
-        Hp -= Mathf.Max(0, (attacker.Attack + addDamge) - Defense);
+        OnAttacked(attacker.Attack + addDamge);
+    }
+
+    public void OnAttacked(int damage)
+    {
+        Hp -= Mathf.Max(0, damage - Defense);
 
         if (Hp <= 0){
             Hp = 0;
