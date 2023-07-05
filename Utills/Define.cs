@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class Define : MonoBehaviour
 {
+    public enum DefaultPart // 캐릭터 기본 의상, 커스텀
+    {
+        Hair,           // 헤어
+        Head,           // 얼굴 문신
+        Eyebrows,       // 눈썹
+        FacialHair,     // 수염
+        Troso,          // 상체
+        Hips,           // 하체
+    }
+
     public enum MonsterType
     {
         Normal,
@@ -136,8 +146,8 @@ public class Define : MonoBehaviour
     public enum Scene
     {
         Unknown,
-        Login,
-        Loby,
+        Title,
+        PlayerCustom,
         Game,
         Dungeon,
         Boss,

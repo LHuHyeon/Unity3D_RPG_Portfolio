@@ -78,13 +78,9 @@ public class UI_PlayScene : UI_Scene
         _upgrade = Managers.UI.ShowPopupUI<UI_UpgradePopup>();
         DontDestroyOnLoad(Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot"));
 
-        // 장비 미리 장착
         Managers.Game.CurrentWeapon = Managers.Data.CallItem(2001) as WeaponItemData;
-        Managers.Game.CurrentArmor.Add(Define.ArmorType.Helm, Managers.Data.CallItem(3001) as ArmorItemData);
-        Managers.Game.CurrentArmor.Add(Define.ArmorType.Chest, Managers.Data.CallItem(3005) as ArmorItemData);
-        Managers.Game.CurrentArmor.Add(Define.ArmorType.Pants, Managers.Data.CallItem(3009) as ArmorItemData);
-        Managers.Game.CurrentArmor.Add(Define.ArmorType.Boots, Managers.Data.CallItem(3013) as ArmorItemData);
-        Managers.Game.CurrentArmor.Add(Define.ArmorType.Gloves, Managers.Data.CallItem(3017) as ArmorItemData);
+        Managers.Game.CurrentArmor.Add(Define.ArmorType.Chest, Managers.Data.CallItem(2) as ArmorItemData);
+        Managers.Game.CurrentArmor.Add(Define.ArmorType.Pants, Managers.Data.CallItem(3) as ArmorItemData);
 
 		return true;
 	}

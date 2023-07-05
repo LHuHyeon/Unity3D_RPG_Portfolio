@@ -15,6 +15,9 @@ public class PlayerController : BaseController
     // LayerMask 변수
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
 
+    [SerializeField]
+    GameObject rootBone;
+
     // 이펙트 관리 변수
     [SerializeField]
     private List<EffectData> effects = new List<EffectData>();
@@ -41,7 +44,7 @@ public class PlayerController : BaseController
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Invoke("SetInfo", 2f);  // TODO : Title 씬이 완성되면 기다리지 않기
+        SetInfo();
     }
 
     void SetInfo()
@@ -50,23 +53,47 @@ public class PlayerController : BaseController
         GameObject goChild = Util.FindChild(gameObject, "Modular_Characters");
         foreach(Transform obj in goChild.GetComponentsInChildren<Transform>())
         {
+            // 캐릭터의 커스텀 가져오기
+            if (obj.CompareTag("Custom"))
+            {
+                string result = Regex.Replace(obj.name, "Base", "");
+                Define.DefaultPart partType = (Define.DefaultPart)System.Enum.Parse(typeof(Define.DefaultPart), result);
+
+                SkinnedMeshRenderer objSkinned = obj.GetComponent<SkinnedMeshRenderer>();
+
+                objSkinned.ResetBounds();
+
+                SkinnedInfo skinnedInfo = Managers.Game.DefaultPart[partType];
+                objSkinned.sharedMesh = skinnedInfo.sharedMesh;
+                objSkinned.localBounds = skinnedInfo.bounds;
+                objSkinned.bones = skinnedInfo.bones;
+                objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);
+
+                continue;
+            }
+
             if (obj.CompareTag("Equipment"))
             {
-                string result = Regex.Replace(obj.name, @"\D", "");
-                int id = int.Parse(result);
+                if (obj.name.Contains("Base") == true)
+                {
+                    // 타입 이름 가져오기 ( BaseTroso1 ) => ( Troso )
+                    string result1 = Regex.Replace(obj.name, "Base", "");
+                    result1 = Regex.Replace(result1, @"\d", "");
+                    
+                    Define.DefaultPart partType = (Define.DefaultPart)System.Enum.Parse(typeof(Define.DefaultPart), result1);
 
-                // 아이템 안에 장비 오브젝트 저장
-                ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
-                if (armor.charEquipment == null)
-                    armor.charEquipment = new List<GameObject>();
-                
-                armor.charEquipment.Add(obj.gameObject);
-                
-                // 플레이어 안에서 저장
-                if (charEquipment.ContainsKey(id) == false)
-                    charEquipment.Add(id, new List<GameObject>());
+                    SkinnedMeshRenderer objSkinned = obj.GetComponent<SkinnedMeshRenderer>();
 
-                charEquipment[id].Add(obj.gameObject);
+                    SkinnedInfo skinnedInfo = Managers.Game.DefaultPart[partType];
+                    objSkinned.sharedMesh = skinnedInfo.sharedMesh;
+                    objSkinned.localBounds = skinnedInfo.bounds;
+                    objSkinned.bones = skinnedInfo.bones;
+                    objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);
+
+                    objSkinned.ResetBounds();
+                }
+
+                SetEquipment(obj);
 
                 obj.gameObject.SetActive(false);
             }
@@ -83,6 +110,25 @@ public class PlayerController : BaseController
 
             obj.gameObject.SetActive(false);
         }
+    }
+
+    void SetEquipment(Transform obj)
+    {
+        string result = Regex.Replace(obj.name, @"\D", "");
+        int id = int.Parse(result);
+
+        // 아이템 안에 장비 오브젝트 저장
+        ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
+        if (armor.charEquipment == null)
+            armor.charEquipment = new List<GameObject>();
+        
+        armor.charEquipment.Add(obj.gameObject);
+        
+        // 플레이어 안에서 저장
+        if (charEquipment.ContainsKey(id) == false)
+            charEquipment.Add(id, new List<GameObject>());
+
+        charEquipment[id].Add(obj.gameObject);
     }
 
 #region State 패턴

@@ -24,12 +24,6 @@ public class QuestNpcController : NpcController
         questDataList = new List<QuestData>();
         talkDataList = new List<TalkData>();
 
-        Invoke("DelayData", 3f);
-    }
-
-    // TODO : 나중에 Init으로 옮기기
-    void DelayData()
-    {
         for(int i=0; i<questId.Length; i++)
         {
             questDataList.Add(Managers.Data.Quest[questId[i]]);

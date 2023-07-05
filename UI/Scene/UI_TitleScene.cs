@@ -4,26 +4,39 @@ using UnityEngine;
 
 public class UI_TitleScene : UI_Scene
 {
-    /*
-    1. 게임 시작 버튼
-    2. 이어 하기 버튼
-    3. 게임 종료 버튼
-    */
+    enum Buttons
+    {
+        StartButton,
+        LoadButton,
+        ExitButton,
+    }
+
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
+        BindButton(typeof(Buttons));
+
+        GetButton((int)Buttons.StartButton).onClick.AddListener(OnClickStartButton);
+        GetButton((int)Buttons.LoadButton).onClick.AddListener(OnClickLoadButton);
+        GetButton((int)Buttons.ExitButton).onClick.AddListener(OnClickExitButton);
+
         return true;
     }
-
-    public void SetInfo()
+    
+    void OnClickStartButton()
     {
-
+        Managers.Scene.LoadScene(Define.Scene.PlayerCustom);
     }
 
-    void RefreshUI()
+    void OnClickLoadButton()
     {
+        // TODO : 세이브 로드
+    }
 
+    void OnClickExitButton()
+    {
+        Application.Quit();
     }
 }

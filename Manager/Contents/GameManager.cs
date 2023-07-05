@@ -27,6 +27,9 @@ public class GameData
 
     public int Gold;        // 골드 (게임 재화)
 
+    // 캐릭터 기본 부위
+    public Dictionary<Define.DefaultPart, SkinnedInfo> DefaultPart = new Dictionary<Define.DefaultPart, SkinnedInfo>();
+
     // Scene 스킬바에 등록된 리스트
     public Dictionary<Define.KeySkill, SkillData> SkillBarList = new Dictionary<Define.KeySkill, SkillData>();
 
@@ -91,6 +94,9 @@ public class GameManager
 
     public void StopPlayer()
     {
+        if (_player == null)
+            return;
+            
         PlayerController player = _player.GetComponent<PlayerController>();
         player.State = Define.State.Idle;
     }
@@ -211,6 +217,12 @@ public class GameManager
 		get { return _gameData.MpPoint; }
 		set { _gameData.MpPoint = value; Mp = MaxMp; }
 	}
+
+    public Dictionary<Define.DefaultPart, SkinnedInfo> DefaultPart
+    {
+        get { return _gameData.DefaultPart; }
+        set { _gameData.DefaultPart = value; }
+    }
 
     public Dictionary<Define.KeySkill, SkillData> SkillBarList
     {

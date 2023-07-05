@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class SceneManagerEx
@@ -11,6 +12,14 @@ public class SceneManagerEx
     {
         Managers.Clear();
         SceneManager.LoadScene(GetSceneName(type));
+    }
+
+    public AsyncOperation LoadAsynScene(Define.Scene type)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(Managers.Scene.GetSceneName(type));
+        operation.allowSceneActivation = false;
+
+        return operation;
     }
 
     string GetSceneName(Define.Scene type)
