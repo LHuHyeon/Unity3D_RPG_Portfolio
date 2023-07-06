@@ -21,6 +21,7 @@ public class DataManager
     public Dictionary<int, List<int>> Shop { get; private set; }
     public Dictionary<int, QuestData> Quest { get; private set; }
     public Dictionary<int, TalkData> Talk { get; private set; }
+    public Dictionary<int, List<SkinnedData>> Skinned { get; private set; }
     // public Dictionary<int, TextData> Texts { get; private set; }
 
     // Deep Copy 아이템
@@ -250,27 +251,34 @@ public class DataManager
 			if (string.IsNullOrEmpty(row[0]))
 				continue;
 
-            ArmorItemData armorItem = new ArmorItemData()
-            {
-                id = int.Parse(row[0]),
-                itemName = row[1],
-                armorType = (Define.ArmorType)int.Parse(row[2]),
-                itemGrade = (Define.itemGrade)int.Parse(row[3]),
-                minLevel = int.Parse(row[4]),
-                upgradeValue = int.Parse(row[5]),
-                itemPrice = int.Parse(row[6]),
-                defnece = int.Parse(row[7]),
-                hp = int.Parse(row[8]),
-                mp = int.Parse(row[9]),
-                moveSpeed = int.Parse(row[10]),
-                itemDesc = row[11],
-                itemMaxCount = 1,
-                itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Armor/"+row[12]),
-                itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Armor/"+row[13]),
-                itemType = Define.ItemType.Armor,
-            };
+            ArmorItemData armor;
+            int id = int.Parse(row[0]);
 
-            Item.Add(armorItem.id, armorItem);
+            // 이미 만들어져 있는지 확인
+            if (Item.ContainsKey(id) == true)
+                armor = Item[id] as ArmorItemData;
+            else
+                armor = new ArmorItemData();
+
+            armor.id = int.Parse(row[0]);
+            armor.itemName = row[1];
+            armor.armorType = (Define.ArmorType)int.Parse(row[2]);
+            armor.itemGrade = (Define.itemGrade)int.Parse(row[3]);
+            armor.minLevel = int.Parse(row[4]);
+            armor.upgradeValue = int.Parse(row[5]);
+            armor.itemPrice = int.Parse(row[6]);
+            armor.defnece = int.Parse(row[7]);
+            armor.hp = int.Parse(row[8]);
+            armor.mp = int.Parse(row[9]);
+            armor.moveSpeed = int.Parse(row[10]);
+            armor.itemDesc = row[11];
+            armor.itemMaxCount = 1;
+            armor.itemIcon = Managers.Resource.Load<Sprite>("Art/UI/Item/Armor/"+row[12]);
+            armor.itemObject = Managers.Resource.Load<GameObject>("Prefabs/Object/Armor/"+row[13]);
+            armor.itemType = Define.ItemType.Armor;
+
+            if (Item.ContainsKey(id) == false)
+                Item.Add(armor.id, armor);
         }
     }
 

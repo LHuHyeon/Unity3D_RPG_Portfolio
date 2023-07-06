@@ -28,6 +28,7 @@ public class PlayerController : BaseController
 
     // 장비 오브젝트 저장 (입는 장비)
     public Dictionary<int, List<GameObject>> charEquipment;
+    public Dictionary<Define.DefaultPart, SkinnedMeshRenderer> charSkinned;
 
     // 무기 오브젝트 저장 객체
     public GameObject waeponObjList;
@@ -37,6 +38,8 @@ public class PlayerController : BaseController
         WorldObjectType = Define.WorldObject.Player;
         
         charEquipment = new Dictionary<int, List<GameObject>>();
+        charSkinned = new Dictionary<Define.DefaultPart, SkinnedMeshRenderer>();
+
         anim = GetComponent<Animator>();
 
         Managers.Input.KeyAction -= OnKeyEvent;
@@ -49,86 +52,84 @@ public class PlayerController : BaseController
 
     void SetInfo()
     {
-        // 장착할 장비 객체 저장
+        // 캐릭터 파츠 가져오기
         GameObject goChild = Util.FindChild(gameObject, "Modular_Characters");
-        foreach(Transform obj in goChild.GetComponentsInChildren<Transform>())
+        foreach(Transform child in goChild.GetComponentsInChildren<Transform>())
         {
-            // 캐릭터의 커스텀 가져오기
-            if (obj.CompareTag("Custom"))
+            // 캐릭터의 기본 부위 저장 (+얼굴 커스텀)
+            if (child.CompareTag("Custom"))
             {
-                string result = Regex.Replace(obj.name, "Base", "");
+                string result = Regex.Replace(child.name, "Base", "");
                 Define.DefaultPart partType = (Define.DefaultPart)System.Enum.Parse(typeof(Define.DefaultPart), result);
 
-                SkinnedMeshRenderer objSkinned = obj.GetComponent<SkinnedMeshRenderer>();
-
-                objSkinned.ResetBounds();
-
-                SkinnedInfo skinnedInfo = Managers.Game.DefaultPart[partType];
-                objSkinned.sharedMesh = skinnedInfo.sharedMesh;
-                objSkinned.localBounds = skinnedInfo.bounds;
-                objSkinned.bones = skinnedInfo.bones;
-                objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);
-
+                SetSkinned(partType, child);
                 continue;
             }
 
-            if (obj.CompareTag("Equipment"))
+            // 장비 파츠 가져오기
+            if (child.CompareTag("Equipment"))
             {
-                if (obj.name.Contains("Base") == true)
+                // 기본 옷이라면 커스텀했던 옷 입혀주기
+                if (child.name.Contains("Defualt") == true)
                 {
-                    // 타입 이름 가져오기 ( BaseTroso1 ) => ( Troso )
-                    string result1 = Regex.Replace(obj.name, "Base", "");
-                    result1 = Regex.Replace(result1, @"\d", "");
+                    string defualtResult = Regex.Replace(child.name, "Defualt", "");
+                    defualtResult = Regex.Replace(defualtResult, @"\d", "");
+                    Define.DefaultPart partType = (Define.DefaultPart)System.Enum.Parse(typeof(Define.DefaultPart), defualtResult);
                     
-                    Define.DefaultPart partType = (Define.DefaultPart)System.Enum.Parse(typeof(Define.DefaultPart), result1);
-
-                    SkinnedMeshRenderer objSkinned = obj.GetComponent<SkinnedMeshRenderer>();
-
-                    SkinnedInfo skinnedInfo = Managers.Game.DefaultPart[partType];
-                    objSkinned.sharedMesh = skinnedInfo.sharedMesh;
-                    objSkinned.localBounds = skinnedInfo.bounds;
-                    objSkinned.bones = skinnedInfo.bones;
-                    objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);
-
-                    objSkinned.ResetBounds();
+                    SetSkinned(partType, child);
                 }
 
-                SetEquipment(obj);
+                string result = Regex.Replace(child.name, @"\D", "");
+                int id = int.Parse(result);
 
-                obj.gameObject.SetActive(false);
+                ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
+
+                if (armor.charEquipment == null)
+                    armor.charEquipment = new List<GameObject>();
+
+                armor.charEquipment.Add(child.gameObject);
+
+                child.gameObject.SetActive(false);
             }
         }
         
         // 장착할 무기 객체 아이템 안에 저장
-        foreach(Transform obj in waeponObjList.transform)
+        foreach(Transform child in waeponObjList.transform)
         {
-            string result = Regex.Replace(obj.name, @"\D", "");
+            string result = Regex.Replace(child.name, @"\D", "");
             int id = int.Parse(result);
 
             WeaponItemData weapon = Managers.Data.Item[id] as WeaponItemData;
-            weapon.charEquipment = obj.gameObject;
+            weapon.charEquipment = child.gameObject;
 
-            obj.gameObject.SetActive(false);
+            child.gameObject.SetActive(false);
         }
     }
 
-    void SetEquipment(Transform obj)
+    void SetSkinned(Define.DefaultPart partType, Transform go)
     {
-        string result = Regex.Replace(obj.name, @"\D", "");
-        int id = int.Parse(result);
+        SkinnedMeshRenderer objSkinned = go.GetComponent<SkinnedMeshRenderer>();
 
-        // 아이템 안에 장비 오브젝트 저장
-        ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
-        if (armor.charEquipment == null)
-            armor.charEquipment = new List<GameObject>();
-        
-        armor.charEquipment.Add(obj.gameObject);
-        
-        // 플레이어 안에서 저장
-        if (charEquipment.ContainsKey(id) == false)
-            charEquipment.Add(id, new List<GameObject>());
+        SkinnedData skinnedInfo = Managers.Game.DefaultPart[partType];
+        objSkinned.sharedMesh = skinnedInfo.sharedMesh;
+        objSkinned.localBounds = skinnedInfo.bounds;
+        objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);
 
-        charEquipment[id].Add(obj.gameObject);
+        // TODO : bones 고치기
+        Transform[] newBones = new Transform[objSkinned.bones.Length];
+        for(int i=0; i<objSkinned.bones.Length; i++)
+        {
+            foreach(Transform newBone in rootBone.GetComponentInChildren<Transform>())
+            {
+                if (newBone.name == objSkinned.bones[i].name)
+                {
+                    newBones[i] = newBone;
+                    continue;
+                }
+            }
+        }
+        
+        objSkinned.bones = newBones;
     }
 
 #region State 패턴

@@ -2,15 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkinnedInfo
-{
-    public Mesh sharedMesh;
-    public Bounds bounds;
-    public Material material;
-    public Transform[] bones;
-    public string rootBoneName;
-}
-
 public class CharacterCustom : MonoBehaviour
 {
     /*
@@ -22,14 +13,14 @@ public class CharacterCustom : MonoBehaviour
     [SerializeField] List<GameObject> headList = new List<GameObject>();
     [SerializeField] List<GameObject> eyebrowsList = new List<GameObject>();
     [SerializeField] List<GameObject> facialHairList = new List<GameObject>();
-    [SerializeField] List<GameObject> trosoList = new List<GameObject>();
+    [SerializeField] List<GameObject> torsoList = new List<GameObject>();
     [SerializeField] List<GameObject> hipsList = new List<GameObject>();
 
     int currentHairIndex = 0;
     int currentHeadIndex = 0;
     int currentEyebrowsIndex = 0;
     int currentFacialHairIndex = 0;
-    int currentTrosoIndex = 0;
+    int currentTorsoIndex = 0;
     int currentHipsIndex = 0;
 
     void Start()
@@ -38,7 +29,7 @@ public class CharacterCustom : MonoBehaviour
         currentHeadIndex = 0;
         currentEyebrowsIndex = 0;
         currentFacialHairIndex = 0;
-        currentTrosoIndex = 0;
+        currentTorsoIndex = 0;
         currentHipsIndex = 0;
     }
 
@@ -58,8 +49,8 @@ public class CharacterCustom : MonoBehaviour
             case Define.DefaultPart.FacialHair:
                 ChangePart(facialHairList, ref currentFacialHairIndex, isNext);
                 break;
-            case Define.DefaultPart.Troso:
-                ChangePart(trosoList, ref currentTrosoIndex, isNext);
+            case Define.DefaultPart.Torso:
+                ChangePart(torsoList, ref currentTorsoIndex, isNext);
                 break;
             case Define.DefaultPart.Hips:
                 ChangePart(hipsList, ref currentHipsIndex, isNext);
@@ -97,21 +88,24 @@ public class CharacterCustom : MonoBehaviour
         Managers.Game.DefaultPart.Add(Define.DefaultPart.Head, SetSkinned(headList[currentHeadIndex]));
         Managers.Game.DefaultPart.Add(Define.DefaultPart.Eyebrows, SetSkinned(eyebrowsList[currentEyebrowsIndex]));
         Managers.Game.DefaultPart.Add(Define.DefaultPart.FacialHair, SetSkinned(facialHairList[currentFacialHairIndex]));
-        Managers.Game.DefaultPart.Add(Define.DefaultPart.Troso, SetSkinned(trosoList[currentTrosoIndex]));
+        Managers.Game.DefaultPart.Add(Define.DefaultPart.Torso, SetSkinned(torsoList[currentTorsoIndex]));
         Managers.Game.DefaultPart.Add(Define.DefaultPart.Hips, SetSkinned(hipsList[currentHipsIndex]));
     }
 
-    public SkinnedInfo SetSkinned(GameObject skinnedObject)
+    SkinnedData SetSkinned(GameObject skinnedObject)
     {
         SkinnedMeshRenderer skinnedMesh = skinnedObject.GetComponent<SkinnedMeshRenderer>();
 
-        return new SkinnedInfo()
-        {
+        SkinnedData skinned = new SkinnedData(){
             sharedMesh = skinnedMesh.sharedMesh,
             bounds = skinnedMesh.localBounds,
-            material = skinnedMesh.material,
-            bones = (Transform[])skinnedMesh.bones.Clone(),
             rootBoneName = skinnedMesh.rootBone.name,
         };
+
+        skinned.bones = new List<string>();
+        foreach(Transform child in skinnedMesh.bones)
+            skinned.bones.Add(child.name);
+        
+        return skinned;
     }
 }

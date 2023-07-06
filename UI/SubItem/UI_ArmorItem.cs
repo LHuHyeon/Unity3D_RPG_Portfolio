@@ -144,7 +144,7 @@ public class UI_ArmorItem : UI_SlotItem
         Managers.Game.RefreshArmor(armorItem, true);
     }
 
-    // 캐릭터의 보여지는 장비 오브젝트 활성화 여부
+    // 캐릭터 장비 파츠 활성화 여부
     void EquipmentActive(ArmorItemData armor, bool isActive)
     {
         // 아이템이 현재 입고 있는 장비를 알고 있다면
@@ -155,6 +155,8 @@ public class UI_ArmorItem : UI_SlotItem
 
             return;
         }
+
+        Debug.Log("난 파츠 몰라용~");
 
         // 모른다면 id로 찾기
         PlayerController player = Managers.Game.GetPlayer().GetComponent<PlayerController>();

@@ -28,7 +28,7 @@ public class GameData
     public int Gold;        // 골드 (게임 재화)
 
     // 캐릭터 기본 부위
-    public Dictionary<Define.DefaultPart, SkinnedInfo> DefaultPart = new Dictionary<Define.DefaultPart, SkinnedInfo>();
+    public Dictionary<Define.DefaultPart, SkinnedData> DefaultPart = new Dictionary<Define.DefaultPart, SkinnedData>();
 
     // Scene 스킬바에 등록된 리스트
     public Dictionary<Define.KeySkill, SkillData> SkillBarList = new Dictionary<Define.KeySkill, SkillData>();
@@ -218,7 +218,7 @@ public class GameManager
 		set { _gameData.MpPoint = value; Mp = MaxMp; }
 	}
 
-    public Dictionary<Define.DefaultPart, SkinnedInfo> DefaultPart
+    public Dictionary<Define.DefaultPart, SkinnedData> DefaultPart
     {
         get { return _gameData.DefaultPart; }
         set { _gameData.DefaultPart = value; }

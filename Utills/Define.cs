@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class Define : MonoBehaviour
 {
-    public enum DefaultPart // 캐릭터 기본 의상, 커스텀
+    public enum DefaultPart // 캐릭터 기본 부위, 커스텀
     {
         Hair,           // 헤어
         Head,           // 얼굴 문신
         Eyebrows,       // 눈썹
         FacialHair,     // 수염
-        Troso,          // 상체
+        Torso,          // 상체
         Hips,           // 하체
+        FootLeft,       // 왼발
+        FootRight,      // 오른발
+        HendLeft,       // 왼손
+        HendRight,      // 오른손
     }
 
     public enum MonsterType
