@@ -115,18 +115,10 @@ public class PlayerController : BaseController
         objSkinned.localBounds = skinnedInfo.bounds;
         objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);
 
-        // TODO : bones 고치기
-        Transform[] newBones = new Transform[objSkinned.bones.Length];
-        for(int i=0; i<objSkinned.bones.Length; i++)
+        Transform[] newBones = new Transform[skinnedInfo.bones.Count];
+        for(int i=0; i<skinnedInfo.bones.Count; i++)
         {
-            foreach(Transform newBone in rootBone.GetComponentInChildren<Transform>())
-            {
-                if (newBone.name == objSkinned.bones[i].name)
-                {
-                    newBones[i] = newBone;
-                    continue;
-                }
-            }
+            newBones[i] = Util.FindChild<Transform>(rootBone, skinnedInfo.bones[i], true);
         }
         
         objSkinned.bones = newBones;

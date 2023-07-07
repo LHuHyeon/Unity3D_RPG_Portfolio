@@ -39,7 +39,10 @@ public class UI_LoadPopup : UI_Popup
             loadSlider.value = loadTime;
 
             if (loadTime > plusTime)
+            {
+                Managers.UI.ClosePopupUI(this);
                 operation.allowSceneActivation = true;
+            }
 
             yield return null;
         }

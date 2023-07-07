@@ -32,7 +32,10 @@ public class UI_TitleScene : UI_Scene
 
     void OnClickLoadButton()
     {
-        // TODO : 세이브 로드
+        if (Managers.Game.LoadGame() == false)
+            return;
+            
+        Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 7);
     }
 
     void OnClickExitButton()

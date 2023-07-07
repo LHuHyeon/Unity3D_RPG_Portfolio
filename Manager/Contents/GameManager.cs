@@ -474,6 +474,7 @@ public class GameManager
     public void OnUpdate()
     {
         StatRecovery();
+
     }
 
     // Hp, Mp 재생 ( 5초마다 10 회복 )
@@ -492,6 +493,14 @@ public class GameManager
 
             healthTime = 0;
         }
+    }
+
+    float saveTime = 0f;
+    void OnSave()
+    {
+        saveTime += Time.deltaTime;
+        if (saveTime >= 3f)
+            SaveGame();
     }
 
     public void Init()
