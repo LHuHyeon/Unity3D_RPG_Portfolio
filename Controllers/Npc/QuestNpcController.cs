@@ -38,7 +38,7 @@ public class QuestNpcController : NpcController
 
     public override void Interact()
     {
-        if (Managers.Game.isTalk == true)
+        if (Managers.Game.isPopups[Define.Popup.Talk] == true)
             return;
 
         if (Managers.Game.IsInteract)
@@ -54,7 +54,7 @@ public class QuestNpcController : NpcController
         if (currentTalk == null)
             return;
 
-        Managers.Game.isTalk = true;
+        Managers.Game.isPopups[Define.Popup.Talk] = true;
 
         // 이미 퀘스트를 클리어 했는가?
         if (currentQuest.isClear == true)

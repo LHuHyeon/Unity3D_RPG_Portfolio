@@ -41,6 +41,8 @@ public class UI_EqStatPopup : UI_Popup
 
         armorSlots = new List<UI_ArmorItem>();
 
+        popupType = Define.Popup.Equipment;
+
         BindObject(typeof(Gameobjects));
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
@@ -59,7 +61,7 @@ public class UI_EqStatPopup : UI_Popup
 
     void Update()
     {
-        if (Managers.Game.isEquipment == true)
+        if (Managers.Game.isPopups[Define.Popup.Equipment] == true)
             RefreshUI();
     }
 
@@ -68,9 +70,9 @@ public class UI_EqStatPopup : UI_Popup
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Managers.Game.isEquipment = !Managers.Game.isEquipment;
+            Managers.Game.isPopups[Define.Popup.Equipment] = !Managers.Game.isPopups[Define.Popup.Equipment];
 
-            if (Managers.Game.isEquipment)
+            if (Managers.Game.isPopups[Define.Popup.Equipment])
                 Managers.UI.OnPopupUI(this);
             else
                 Exit();
@@ -186,7 +188,7 @@ public class UI_EqStatPopup : UI_Popup
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
-            Managers.Game.isEquipment = false;
+            Managers.Game.isPopups[Define.Popup.Equipment] = false;
             Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);
     }
@@ -203,7 +205,7 @@ public class UI_EqStatPopup : UI_Popup
     void Exit()
     {
         Managers.Game._playScene._slotTip.OnSlotTip(false);
-        Managers.Game.isEquipment = false;
+        Managers.Game.isPopups[Define.Popup.Equipment] = false;
         Managers.UI.ClosePopupUI(this);
     }
 }

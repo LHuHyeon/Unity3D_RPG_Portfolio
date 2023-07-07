@@ -40,7 +40,6 @@ public class UI_LoadPopup : UI_Popup
 
             if (loadTime > plusTime)
             {
-                Managers.UI.ClosePopupUI(this);
                 operation.allowSceneActivation = true;
             }
 

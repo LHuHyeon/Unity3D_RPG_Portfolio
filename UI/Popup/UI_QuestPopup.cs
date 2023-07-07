@@ -37,6 +37,8 @@ public class UI_QuestPopup : UI_Popup
         if (base.Init() == false)
             return false;
 
+        popupType = Define.Popup.Quest;
+
         questNoticeList = new List<UI_QuestNoticeSlot>();
 
         Managers.Input.KeyAction -= OnQuestPopup;
@@ -56,7 +58,7 @@ public class UI_QuestPopup : UI_Popup
     void Update()
     {
         // 퀘스트 목표 계속 새로고침
-        if (Managers.Game.isQuest == true && currentClickQuest != null)
+        if (Managers.Game.isPopups[Define.Popup.Quest] == true && currentClickQuest != null)
         {
             string str = currentClickQuest.targetDescription + "\n" + currentClickQuest.currnetTargetCount + " / " + currentClickQuest.targetCount;
             GetText((int)Texts.QuestTargetText).text = str;
@@ -67,9 +69,9 @@ public class UI_QuestPopup : UI_Popup
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            Managers.Game.isQuest = !Managers.Game.isQuest;
+            Managers.Game.isPopups[Define.Popup.Quest] = !Managers.Game.isPopups[Define.Popup.Quest];
 
-            if (Managers.Game.isQuest)
+            if (Managers.Game.isPopups[Define.Popup.Quest])
             {
                 Managers.UI.OnPopupUI(this);
                 RefreshUI();
@@ -81,7 +83,7 @@ public class UI_QuestPopup : UI_Popup
 
     void SetInfo()
     {
-        GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this); Managers.Game.isQuest = false;});
+        GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this); Managers.Game.isPopups[Define.Popup.Quest] = false;});
 
         // 미리보기 삭제
         foreach(Transform child in GetObject((int)Gameobejcts.Content).transform)

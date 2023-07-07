@@ -49,6 +49,8 @@ public class UI_TalkPopup : UI_Popup
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
 
+        popupType = Define.Popup.Talk;
+
         GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
 
         GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextButton);
@@ -228,7 +230,7 @@ public class UI_TalkPopup : UI_Popup
     public void Clear()
     {
         Managers.Game.IsInteract = false;
-        Managers.Game.isTalk = false;
+        Managers.Game.isPopups[Define.Popup.Talk] = false;
 
         GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
         GetButton((int)Buttons.NextButton).gameObject.SetActive(false);

@@ -216,7 +216,7 @@ public class UI_ShopPopup : UI_Popup
         Managers.Game.IsInteract = false;
         Managers.UI.ClosePopupUI(this);
 
-        Managers.Game.isInventory = false;
+        Managers.Game.isPopups[Define.Popup.Inventory] = false;
         Managers.UI.ClosePopupUI(Managers.Game._playScene._inventory);
     }
 }

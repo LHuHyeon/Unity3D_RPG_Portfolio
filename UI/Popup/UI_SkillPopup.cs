@@ -19,6 +19,8 @@ public class UI_SkillPopup : UI_Popup
     
         BindObject(typeof(Gameobjects));
 
+        popupType = Define.Popup.SkillUI;
+
         Managers.Input.KeyAction -= OnSkillPopup;
         Managers.Input.KeyAction += OnSkillPopup;
 
@@ -33,9 +35,9 @@ public class UI_SkillPopup : UI_Popup
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            Managers.Game.isSkillUI = !Managers.Game.isSkillUI;
+            Managers.Game.isPopups[Define.Popup.SkillUI] = !Managers.Game.isPopups[Define.Popup.SkillUI];
 
-            if (Managers.Game.isSkillUI)
+            if (Managers.Game.isPopups[Define.Popup.SkillUI])
                 Managers.UI.OnPopupUI(this);
             else
                 Exit();
@@ -64,7 +66,7 @@ public class UI_SkillPopup : UI_Popup
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
-            Managers.Game.isSkillUI = false;
+            Managers.Game.isPopups[Define.Popup.SkillUI] = false;
             Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);
     }
@@ -72,7 +74,7 @@ public class UI_SkillPopup : UI_Popup
     void Exit()
     {
         Managers.Game._playScene._slotTip.OnSlotTip(false);
-        Managers.Game.isSkillUI = false;
+        Managers.Game.isPopups[Define.Popup.SkillUI] = false;
         Managers.UI.ClosePopupUI(this);
     }
 }

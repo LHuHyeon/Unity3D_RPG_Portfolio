@@ -36,7 +36,7 @@ public class UI_SlotTipPopup : UI_Popup
 
         background = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
 
-        Managers.Resource.Destroy(gameObject);
+        Managers.UI.ClosePopupUI(this);
 
         return true;
     }
@@ -46,7 +46,10 @@ public class UI_SlotTipPopup : UI_Popup
         if (isActive)
             Managers.UI.OnPopupUI(this);
         else
-            Managers.Resource.Destroy(gameObject);
+        {
+            if (this.gameObject.activeSelf == true)
+                Managers.UI.ClosePopupUI(this);
+        }
     }
 
     // 아이템 정보 확인시 새로고침

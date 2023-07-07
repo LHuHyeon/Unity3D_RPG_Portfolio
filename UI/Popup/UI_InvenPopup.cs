@@ -30,6 +30,8 @@ public class UI_InvenPopup : UI_Popup
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
+        popupType = Define.Popup.Inventory;
+
         Managers.Input.KeyAction -= OnInventoryUI;
         Managers.Input.KeyAction += OnInventoryUI;
 
@@ -44,7 +46,7 @@ public class UI_InvenPopup : UI_Popup
 
     void Update()
     {
-        if (Managers.Game.isInventory == true)
+        if (Managers.Game.isPopups[Define.Popup.Inventory] == true)
             RefreshUI();
     }
 
@@ -53,9 +55,9 @@ public class UI_InvenPopup : UI_Popup
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            Managers.Game.isInventory = !Managers.Game.isInventory;
+            Managers.Game.isPopups[Define.Popup.Inventory] = !Managers.Game.isPopups[Define.Popup.Inventory];
 
-            if (Managers.Game.isInventory)
+            if (Managers.Game.isPopups[Define.Popup.Inventory])
             {
                 RefreshUI();
                 Managers.UI.OnPopupUI(this);
@@ -156,7 +158,7 @@ public class UI_InvenPopup : UI_Popup
     void Exit()
     {
         Managers.Game._playScene._slotTip.OnSlotTip(false);
-        Managers.Game.isInventory = false;
+        Managers.Game.isPopups[Define.Popup.Inventory] = false;
         Managers.UI.ClosePopupUI(this);
     }
 }

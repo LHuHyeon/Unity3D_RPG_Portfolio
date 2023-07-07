@@ -35,27 +35,6 @@ public class UI_SkillItem : UI_SkillSlot
 
     protected override void SetEventHandler()
     {
-        // 스킬 정보 확인 (TODO : 스킬창 완성되면 구현 진행)
-        // if (slotType == Define.SlotType.Skill)
-        // {
-        //     gameObject.BindEvent((PointerEventData eventData)=>
-        //     {
-        //         if (GetSkill() == true)
-        //         {
-        //             Managers.Game._playScene._slotTip.OnSlotTip(true);
-
-        //             Managers.Game._playScene._slotTip.background.anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
-        //             Managers.Game._playScene._slotTip.RefreshUI(skillData);
-        //         }
-        //     }, Define.UIEvent.Enter);
-
-        //     gameObject.BindEvent((PointerEventData eventData)=>
-        //     {
-        //         if (GetSkill() == true)
-        //             Managers.Game._playScene._slotTip.OnSlotTip(false);
-        //     }, Define.UIEvent.Exit);
-        // }
-
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             if (Input.GetMouseButtonUp(1) && skillLock == true)

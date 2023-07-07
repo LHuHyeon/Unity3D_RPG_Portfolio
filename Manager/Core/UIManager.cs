@@ -138,6 +138,25 @@ public class UIManager
         _order--;
     }
 
+    public bool ClosePopupUI()
+    {
+        if (_popupList.Count == 0)
+            return false;
+
+        foreach(UI_Popup popup in _popupList)
+        {
+            if (popup != null)
+            {
+                Managers.Resource.Destroy(popup.gameObject);
+                Managers.Game.isPopups[popup.popupType] = false;
+                _popupList.Remove(popup);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // List 전체 Close
     public void CloseAllPopupUI()
     {
@@ -145,7 +164,10 @@ public class UIManager
             return;
 
         foreach(UI_Popup popup in _popupList)
-            Managers.Resource.Destroy(popup.gameObject);
+        {
+            if (popup != null)
+                Managers.Resource.Destroy(popup.gameObject);
+        }
 
         _popupList.Clear();
     }

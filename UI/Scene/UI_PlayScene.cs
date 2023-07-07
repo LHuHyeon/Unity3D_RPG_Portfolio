@@ -54,6 +54,7 @@ public class UI_PlayScene : UI_Scene
     public UI_TalkPopup _talk;              // 대화
     public UI_QuestPopup _quest;            // 퀘스트
     public UI_UpgradePopup _upgrade;        // 강화
+    public UI_MenuPopup _menu;              // 일시정시 메뉴
 
     public override bool Init()
 	{
@@ -68,6 +69,10 @@ public class UI_PlayScene : UI_Scene
 
         SetInfo();
 
+        // 팝업 초기화
+        Managers.UI.CloseAllPopupUI();
+
+        // 기능 팝업 생성
         _inventory = Managers.UI.ShowPopupUI<UI_InvenPopup>();
         _equipment = Managers.UI.ShowPopupUI<UI_EqStatPopup>();
         _skill = Managers.UI.ShowPopupUI<UI_SkillPopup>();
@@ -76,8 +81,10 @@ public class UI_PlayScene : UI_Scene
         _talk = Managers.UI.ShowPopupUI<UI_TalkPopup>();
         _quest = Managers.UI.ShowPopupUI<UI_QuestPopup>();
         _upgrade = Managers.UI.ShowPopupUI<UI_UpgradePopup>();
+        _menu = Managers.UI.ShowPopupUI<UI_MenuPopup>();
         DontDestroyOnLoad(Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot"));
 
+        // 기본 장비 장착
         Managers.Game.CurrentWeapon = Managers.Data.CallItem(2001) as WeaponItemData;
         Managers.Game.CurrentArmor.Add(Define.ArmorType.Chest, Managers.Data.CallItem(2) as ArmorItemData);
         Managers.Game.CurrentArmor.Add(Define.ArmorType.Pants, Managers.Data.CallItem(3) as ArmorItemData);

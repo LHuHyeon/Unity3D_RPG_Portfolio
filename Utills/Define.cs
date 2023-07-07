@@ -12,10 +12,18 @@ public class Define : MonoBehaviour
         FacialHair,     // 수염
         Torso,          // 상체
         Hips,           // 하체
-        FootLeft,       // 왼발
-        FootRight,      // 오른발
-        HendLeft,       // 왼손
-        HendRight,      // 오른손
+    }
+
+    public enum Popup
+    {
+        Unknown,
+        Inventory,
+        Equipment,
+        SkillUI,
+        Talk,
+        Quest,
+        Menu,
+        Max,
     }
 
     public enum MonsterType

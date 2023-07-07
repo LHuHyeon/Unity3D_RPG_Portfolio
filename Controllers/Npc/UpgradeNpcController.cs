@@ -25,7 +25,7 @@ public class UpgradeNpcController : NpcController
     {
         Managers.UI.OnPopupUI(Managers.Game._playScene._upgrade);
 
-        Managers.Game.isInventory = true;
+        Managers.Game.isPopups[Define.Popup.Inventory] = true;
         Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
         Managers.Game._playScene._inventory.ResetPos();
     }

@@ -70,11 +70,8 @@ public class GameManager
 
     public Vector3 beforeSpawnPos = Vector3.zero;      // 씬이 이동될 때 이동 되기전 위치를 저장
 
-    public bool isInventory = false;
-    public bool isEquipment = false;
-    public bool isSkillUI = false;
-    public bool isTalk = false;
-    public bool isQuest = false;
+    public Dictionary<Define.Popup, bool> isPopups;     // 팝업 bool 관리
+
     private bool isInteract = false;
     public bool IsInteract
     {
@@ -85,9 +82,9 @@ public class GameManager
             
             if (isInteract == true)
             {
-                isInventory = false;
-                isEquipment = false;
-                isSkillUI = false;
+                isPopups[Define.Popup.Inventory] = false;
+                isPopups[Define.Popup.Equipment] = false;
+                isPopups[Define.Popup.SkillUI] = false;
             }
         }
     }
@@ -153,10 +150,11 @@ public class GameManager
 	{
 		get 
         {
+            // 무기가 있으면 ( 무기 공격력 + 무기 추가 공격력 )
             if (CurrentWeapon != null)
-                return (STR * 2) + CurrentWeapon.attack + CurrentWeapon.addAttack;
+                return (int)(STR * 0.5) + CurrentWeapon.attack + CurrentWeapon.addAttack;
             
-            return (STR * 2);
+            return (int)(STR * 0.5);
         }
 		private set {}
 	}
@@ -507,8 +505,6 @@ public class GameManager
     {
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
 
-        CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
-
         if (Managers.Data.Start != null)
         {
             Debug.Log("GameManager Init : StartData True!");
@@ -530,6 +526,12 @@ public class GameManager
         }
 
         MoveSpeed = 5;
+
+        CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
+
+        isPopups = new Dictionary<Define.Popup, bool>();
+        for(int i=1; i<(int)Define.Popup.Max; i++)
+            isPopups.Add((Define.Popup)i, false);
     }
 
     // 캐릭터 소환 (주소)

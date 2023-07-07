@@ -30,7 +30,7 @@ public class ShopNpcController : NpcController
         Managers.UI.OnPopupUI(Managers.Game._playScene._shop);
         Managers.Game._playScene._shop.RefreshUI(this, shopBuyId);
 
-        Managers.Game.isInventory = true;
+        Managers.Game.isPopups[Define.Popup.Inventory] = true;
         Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
         Managers.Game._playScene._inventory.ResetPos();
     }
