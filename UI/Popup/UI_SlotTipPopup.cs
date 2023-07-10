@@ -64,11 +64,35 @@ public class UI_SlotTipPopup : UI_Popup
         
         Managers.UI.SetCanvas(gameObject);
 
+        // 위치 설정
+        RectTransform tipRect = background;
+        Vector3 slotTipPos = background.anchoredPosition;
+        slotTipPos.x = slotTipPos.x + (tipRect.rect.width * 0.65f);
+        slotTipPos.y = slotTipPos.y - (tipRect.rect.height * 0.65f); 
+        background.anchoredPosition = slotTipPos;
+
         GetImage((int)Images.ItemImage).sprite = item.itemIcon;
 
         GetText((int)Texts.ItemNameText).text = item.itemName;
         GetText((int)Texts.ItemTypeText).text = item.itemType.ToString();
         GetText((int)Texts.ItemGradeText).text = item.itemGrade.ToString();
+
+        // 아이템 등급에 따른 색깔
+        switch(item.itemGrade)
+        {
+            case Define.itemGrade.Common:
+                SetColor(Color.white);
+                break;
+            case Define.itemGrade.Rare:
+                SetColor(Color.green);
+                break;
+            case Define.itemGrade.Epic:
+                SetColor(Color.blue);
+                break;
+            case Define.itemGrade.Legendary:
+                SetColor(Color.yellow);
+                break;
+        }
 
         // 장비라면 
         if (item is EquipmentData)
@@ -119,6 +143,12 @@ public class UI_SlotTipPopup : UI_Popup
             else
                 GetText((int)Texts.ItemStatText).text = $"공격력 {weapon.attack}";
         }
+    }
+
+    void SetColor(Color color)
+    {
+        GetText((int)Texts.ItemNameText).color = color;
+        GetText((int)Texts.ItemGradeText).color = color;
     }
 
     // 스킬 정보 확인시 새로고침

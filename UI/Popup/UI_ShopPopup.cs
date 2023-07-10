@@ -209,6 +209,8 @@ public class UI_ShopPopup : UI_Popup
 
     public void ExitShop()
     {
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
+        
         GetObject((int)Gameobjects.BuyList).SetActive(true);
         GetObject((int)Gameobjects.SaleList).SetActive(false);
         GetObject((int)Gameobjects.GoSaleButton).SetActive(false);

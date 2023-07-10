@@ -32,10 +32,10 @@ public class AOEController : MonoBehaviour
     }
 
     float currentTime = 0f;
-    float damageTime = 1f;
+    float damageTime = 2f;
     void TargetDamage()
     {
-        currentTime = Time.deltaTime;
+        currentTime += Time.deltaTime;
 
         if (currentTime >= damageTime)
         {

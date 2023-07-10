@@ -38,6 +38,22 @@ public class UI_ShopBuyItem : UI_Base
         GetText((int)Texts.BuyItemName).text = itemNameText;
         GetText((int)Texts.BuyItemPrice).text = itemPriceText;
 
+        gameObject.BindEvent((PointerEventData eventData)=>
+        {
+            if (_item != null)
+            {
+                Managers.Game._playScene._slotTip.OnSlotTip(true);
+                Managers.Game._playScene._slotTip.background.position = GetImage((int)Images.BuyItemImage).transform.position;
+                Managers.Game._playScene._slotTip.RefreshUI(_item);
+            }
+        }, Define.UIEvent.Enter);
+
+        gameObject.BindEvent((PointerEventData eventData)=>
+        {
+            if (_item != null)
+                Managers.Game._playScene._slotTip.OnSlotTip(false);
+        }, Define.UIEvent.Exit);
+
         return true;
     }
 
@@ -53,6 +69,8 @@ public class UI_ShopBuyItem : UI_Base
     bool isBuyCheckPopup = false;
     void OnClickBuyButton(PointerEventData eventData)
     {
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
+        
         if (Managers.Game.Gold < _item.itemPrice)
         {
             Debug.Log("돈이 부족합니다.");

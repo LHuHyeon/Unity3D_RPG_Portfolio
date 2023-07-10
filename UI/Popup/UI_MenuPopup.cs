@@ -54,7 +54,10 @@ public class UI_MenuPopup : UI_Popup
             Time.timeScale = 0;
         }
         else
+        {
             Managers.Game.isPopups[Define.Popup.Menu] = false;
+            Managers.Game._playScene._slotTip.OnSlotTip(false);
+        }
     }
     
     void OnClickContinueButton()

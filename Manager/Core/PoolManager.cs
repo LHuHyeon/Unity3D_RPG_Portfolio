@@ -30,6 +30,12 @@ public class PoolManager
             return go.GetOrAddComponent<Poolable>();    // Poolable 컴포넌트 생성
         }
 
+        public void PushCreate(int count = 5)
+        {
+            for (int i = 0; i < count; i++)
+                Push(Create());
+        }
+
         // 객체 생성 메소드
         public void Push(Poolable poolable)
         {
@@ -85,6 +91,17 @@ public class PoolManager
         if (_pool.ContainsKey(original.name) == true)
             return;
 
+        AddCreatePool(original, count);
+    }
+
+    public void AddCreatePool(GameObject original, int count = 5)
+    {
+        if (_pool.ContainsKey(original.name) == true)
+        {
+            _pool[original.name].PushCreate(count);
+            return;
+        }
+        
         Pool pool = new Pool();
         pool.Init(original, count);     // Pool 생성
         pool.Root.SetParent(_root);       // _root(@Pool_Root)를 부모 객체로 설정

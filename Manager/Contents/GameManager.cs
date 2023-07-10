@@ -510,7 +510,6 @@ public class GameManager
             Debug.Log("GameManager Init : StartData True!");
             StartData data = Managers.Data.Start;
 
-            Name = "NoName";
             TotalExp = data.totalExp;
             Exp = data.exp;
             Level = data.level;
@@ -524,6 +523,8 @@ public class GameManager
             
             Gold = data.gold;
         }
+        else
+            Name = "NoName";
 
         MoveSpeed = 5;
 

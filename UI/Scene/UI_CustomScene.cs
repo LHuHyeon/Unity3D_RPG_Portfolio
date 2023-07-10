@@ -42,7 +42,11 @@ public class UI_CustomScene : UI_Scene
     {
         custom.SaveCustom();
 
-        Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 7);
+        Managers.UI.ShowPopupUI<UI_InputPopup>().SetInfo((string inputText)=>
+        {
+            Managers.Game.Name = inputText;
+            Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 7);
+        }, "이름을 입력해 주세요", "이름 입력란", Define.NameRegex);
     }
 
     void OnClickExitButton()

@@ -84,6 +84,8 @@ public class CharacterCustom : MonoBehaviour
 
     public void SaveCustom()
     {
+        Managers.Game.DefaultPart = new Dictionary<Define.DefaultPart, SkinnedData>();
+
         Managers.Game.DefaultPart.Add(Define.DefaultPart.Hair, SetSkinned(hairList[currentHairIndex]));
         Managers.Game.DefaultPart.Add(Define.DefaultPart.Head, SetSkinned(headList[currentHeadIndex]));
         Managers.Game.DefaultPart.Add(Define.DefaultPart.Eyebrows, SetSkinned(eyebrowsList[currentEyebrowsIndex]));

@@ -44,8 +44,7 @@ public class UI_SlotItem : UI_Base
                 if (item != null)
                 {
                     Managers.Game._playScene._slotTip.OnSlotTip(true);
-
-                    Managers.Game._playScene._slotTip.background.anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
+                    Managers.Game._playScene._slotTip.background.position = icon.transform.position;
                     Managers.Game._playScene._slotTip.RefreshUI(item);
                 }
             }, Define.UIEvent.Enter);
