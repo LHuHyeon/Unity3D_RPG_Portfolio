@@ -56,10 +56,14 @@ public class UI_PlayScene : UI_Scene
     public UI_UpgradePopup _upgrade;        // 강화
     public UI_MenuPopup _menu;              // 일시정시 메뉴
 
+    public List<UI_UseItemSlot> UseItemBarList;
+
     public override bool Init()
 	{
 		if (base.Init() == false)
 			return false;
+
+        UseItemBarList = new List<UI_UseItemSlot>();
 
         BindObject(typeof(Gameobjects));
         BindImage(typeof(Images));
@@ -84,10 +88,13 @@ public class UI_PlayScene : UI_Scene
         _menu = Managers.UI.ShowPopupUI<UI_MenuPopup>();
         DontDestroyOnLoad(Managers.Resource.Instantiate($"UI/SubItem/UI_DragSlot"));
 
-        // 기본 장비 장착
-        Managers.Game.CurrentWeapon = Managers.Data.CallItem(2001) as WeaponItemData;
-        Managers.Game.CurrentArmor.Add(Define.ArmorType.Chest, Managers.Data.CallItem(2) as ArmorItemData);
-        Managers.Game.CurrentArmor.Add(Define.ArmorType.Pants, Managers.Data.CallItem(3) as ArmorItemData);
+        if (Managers.Game.isSaveLoad == false)
+        {
+            // 기본 장비 장착
+            Managers.Game.CurrentWeapon = Managers.Data.CallItem(2001) as WeaponItemData;
+            Managers.Game.CurrentArmor.Add(Define.ArmorType.Chest, Managers.Data.CallItem(2) as ArmorItemData);
+            Managers.Game.CurrentArmor.Add(Define.ArmorType.Pants, Managers.Data.CallItem(3) as ArmorItemData);
+        }
 
 		return true;
 	}
@@ -135,7 +142,7 @@ public class UI_PlayScene : UI_Scene
             slot.keyText.text = i.ToString();
             slot.itemCountText.text = "";
 
-            Managers.Game.UseItemBarList.Add(i, slot);
+            UseItemBarList.Add(slot);
         }
 
         GetObject((int)Gameobjects.ultSkillSlot).SetActive(false);
@@ -182,6 +189,25 @@ public class UI_PlayScene : UI_Scene
         UI_QuestNoticeSlot sceneQuestSlot = Managers.UI.MakeSubItem<UI_QuestNoticeSlot>(parent: GetObject((int)Gameobjects.QuestListBar).transform);
         sceneQuestSlot.SetInfo(quest);
         return sceneQuestSlot;
+    }
+
+    // 소비 아이템 사용
+    public void UsingItem(int key)
+    {
+        for(int i=0; i<UseItemBarList.Count; i++)
+        {
+            if (key == UseItemBarList[i].key)
+            {
+                UseItemData useItem = UseItemBarList[i].item as UseItemData;
+                if (useItem.UseItem(useItem) == true)
+                {
+                    UseItemBarList[i].SetCount(-1);
+                    return;
+                }
+            }
+        }
+
+        Debug.Log("장착된 소비 아이템이 없습니다.");
     }
 
     public void SetRatio(Slider slider, float ratio)

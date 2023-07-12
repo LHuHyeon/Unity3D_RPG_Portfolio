@@ -1,13 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class RewardItem
 {
     public int ItemId;
     public int itemCount;
 }
 
+[Serializable]
 public class QuestData
 {
     public int id;

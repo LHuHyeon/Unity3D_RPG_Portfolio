@@ -2,7 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
+
+[Serializable]
+public class DataDictionary<TKey,TValue>
+{
+    public TKey Key;
+    public TValue Value;
+}
 
 [Serializable]
 public class GameData
@@ -27,6 +35,8 @@ public class GameData
 
     public int Gold;        // 골드 (게임 재화)
 
+    public Vector3 CurrentPos = Vector3.zero;
+
     // 캐릭터 기본 부위
     public Dictionary<Define.DefaultPart, SkinnedData> DefaultPart = new Dictionary<Define.DefaultPart, SkinnedData>();
 
@@ -34,16 +44,33 @@ public class GameData
     public Dictionary<Define.KeySkill, SkillData> SkillBarList = new Dictionary<Define.KeySkill, SkillData>();
 
     // Scene 소비아이템바에 등록된 리스트
-    public Dictionary<int, UI_UseItemSlot> UseItemBarList = new Dictionary<int, UI_UseItemSlot>();
+    public Dictionary<int, UseItemData> UseItemBarList = new Dictionary<int, UseItemData>();
 
     // 현재 장착한 장비
     public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
 
+    // 현재 인벤토리 아이템
+    public Dictionary<int, ItemData> InvenItem = new Dictionary<int, ItemData>();
+
+    // 인벤 Save 용도 
+    public Dictionary<int, UseItemData> InvenUseItem = new Dictionary<int, UseItemData>();
+    public Dictionary<int, WeaponItemData> InvenWeaponItem = new Dictionary<int, WeaponItemData>();
+    public Dictionary<int, ArmorItemData> InvenArmorItem = new Dictionary<int, ArmorItemData>();
+
+    // Dictionary 세이브
+    public List<DataDictionary<Define.DefaultPart, SkinnedData>> DefaultPartData = new List<DataDictionary<Define.DefaultPart, SkinnedData>>();
+    public List<DataDictionary<Define.KeySkill, SkillData>> SkillBarListData = new List<DataDictionary<Define.KeySkill, SkillData>>();
+    public List<DataDictionary<int, UseItemData>> UseItemBarListData = new List<DataDictionary<int, UseItemData>>();
+    public List<DataDictionary<Define.ArmorType, ArmorItemData>> CurrentArmorData = new List<DataDictionary<Define.ArmorType, ArmorItemData>>();
+    public List<DataDictionary<int, UseItemData>> InvenUseItemData = new List<DataDictionary<int, UseItemData>>();
+    public List<DataDictionary<int, WeaponItemData>> InvenWeaponItemData = new List<DataDictionary<int, WeaponItemData>>();
+    public List<DataDictionary<int, ArmorItemData>> InvenArmorItemData = new List<DataDictionary<int, ArmorItemData>>();
+
     // 현재 무기
     public WeaponItemData CurrentWeapon;
 
-    // 현재 인벤토리
-    public List<UI_InvenItem> invenSlots;
+    // 현재 흭득한 스킬
+    public List<SkillData> CurrentSkill = new List<SkillData>();
 
     // 현재 퀘스트
     public List<QuestData> CurrentQuest = new List<QuestData>();
@@ -55,20 +82,20 @@ public class GameData
 // 컨텐츠에서 사용될 매니저 (플레이어, 몬스터 등..)
 public class GameManager
 {
-    GameData _gameData = new GameData();
-    public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
-
     GameObject _player;
 
     HashSet<GameObject> _monsters = new HashSet<GameObject>();
+
+    GameData _gameData = new GameData();
+    public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
+
+    public bool isSaveLoad = false;
 
     public GameObject GetPlayer() { return _player; }
 
     public MonsterStat currentMonster;   // 전투 중인 몬스터
 
     public UI_PlayScene _playScene;
-
-    public Vector3 beforeSpawnPos = Vector3.zero;      // 씬이 이동될 때 이동 되기전 위치를 저장
 
     public Dictionary<Define.Popup, bool> isPopups;     // 팝업 bool 관리
 
@@ -216,6 +243,12 @@ public class GameManager
 		set { _gameData.MpPoint = value; Mp = MaxMp; }
 	}
 
+    public Vector3 CurrentPos
+	{
+		get { return _gameData.CurrentPos; }
+		set { _gameData.CurrentPos = value; }
+	}
+
     public Dictionary<Define.DefaultPart, SkinnedData> DefaultPart
     {
         get { return _gameData.DefaultPart; }
@@ -228,7 +261,7 @@ public class GameManager
         set { _gameData.SkillBarList = value; }
     }
 
-    public Dictionary<int, UI_UseItemSlot> UseItemBarList
+    public Dictionary<int, UseItemData> UseItemBarList
     {
         get { return _gameData.UseItemBarList; }
         set { _gameData.UseItemBarList = value; }
@@ -237,10 +270,13 @@ public class GameManager
     public Dictionary<Define.ArmorType, ArmorItemData> CurrentArmor
     {
         get { return _gameData.CurrentArmor; }
-        set
-        {
-            _gameData.CurrentArmor = value;
-        }
+        set { _gameData.CurrentArmor = value; }
+    }
+
+    public Dictionary<int, ItemData> InvenItem
+    {
+        get { return _gameData.InvenItem; }
+        set { _gameData.InvenItem = value; }
     }
 
     public WeaponItemData CurrentWeapon
@@ -249,10 +285,10 @@ public class GameManager
         set { _gameData.CurrentWeapon = value; }
     }
 
-    public List<UI_InvenItem> InvenSlots
+    public List<SkillData> CurrentSkill
     {
-        get { return _gameData.invenSlots; }
-        set { _gameData.invenSlots = value; }
+        get { return _gameData.CurrentSkill; }
+        set { _gameData.CurrentSkill = value; }
     }
 
     public List<QuestData> CurrentQuest
@@ -351,8 +387,7 @@ public class GameManager
     public void EquipmentUpgrade(EquipmentData equipment)
     {
         equipment.upgradeCount += 1;
-        if (equipment.upgradeCount > 5)
-            UpgradeMeshEffect(equipment);
+        UpgradeMeshEffect(equipment);
 
         // 장비 종류 확인 후 적용
         if (equipment is WeaponItemData)
@@ -374,6 +409,9 @@ public class GameManager
     // 업그레이드 일정 수치 넘으면 Mesh 적용
     public void UpgradeMeshEffect(EquipmentData equipment)
     {
+        if (equipment.upgradeCount < 6)
+            return;
+
         // 객체 안에 자식들 삭제
         GameObject weaponObj = (equipment as WeaponItemData).charEquipment;
         foreach(Transform child in weaponObj.transform)
@@ -505,7 +543,8 @@ public class GameManager
     {
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
 
-        if (Managers.Data.Start != null)
+        // 첫 시작일 경우
+        if (isSaveLoad == false && Managers.Data.Start != null)
         {
             Debug.Log("GameManager Init : StartData True!");
             StartData data = Managers.Data.Start;
@@ -523,12 +562,10 @@ public class GameManager
             
             Gold = data.gold;
         }
-        else
+        else if (Managers.Data.Start == null)
             Name = "NoName";
 
         MoveSpeed = 5;
-
-        CurrentArmor = new Dictionary<Define.ArmorType, ArmorItemData>();
 
         isPopups = new Dictionary<Define.Popup, bool>();
         for(int i=1; i<(int)Define.Popup.Max; i++)
@@ -621,8 +658,20 @@ public class GameManager
 
 	public void SaveGame()
 	{
-		string jsonStr = JsonUtility.ToJson(Managers.Game.SaveData);
-		File.WriteAllText(_savePath, jsonStr);
+        if (Managers.Scene.CurrentScene.SceneType == Define.Scene.Game)
+            CurrentPos = _player.transform.position;
+
+        _gameData.DefaultPartData = ToDictionary<Define.DefaultPart, SkinnedData>(DefaultPart);
+        _gameData.SkillBarListData = ToDictionary<Define.KeySkill, SkillData>(SkillBarList);
+        _gameData.UseItemBarListData = ToDictionary<int, UseItemData>(UseItemBarList);
+        _gameData.CurrentArmorData = ToDictionary<Define.ArmorType, ArmorItemData>(CurrentArmor);
+
+        ToInvenItem();
+
+		string jsonStr = JsonUtility.ToJson(Managers.Game.SaveData, true);
+
+        File.WriteAllText(_savePath, jsonStr);
+
 		Debug.Log($"Save Game Completed : {_savePath}");
 	}
 
@@ -635,12 +684,91 @@ public class GameManager
 		GameData data = JsonUtility.FromJson<GameData>(fileStr);
 		if (data != null)
 		{
+            data.DefaultPart = FromDictionary<Define.DefaultPart, SkinnedData>(data.DefaultPartData);
+            data.SkillBarList = FromDictionary<Define.KeySkill, SkillData>(data.SkillBarListData);
+            data.UseItemBarList = FromDictionary<int, UseItemData>(data.UseItemBarListData);
+            data.CurrentArmor = FromDictionary<Define.ArmorType, ArmorItemData>(data.CurrentArmorData);
+
+            FromInvenItem<UseItemData>(data.InvenUseItemData, data);
+            FromInvenItem<ArmorItemData>(data.InvenArmorItemData, data);
+            FromInvenItem<WeaponItemData>(data.InvenWeaponItemData, data);
+
 			Managers.Game.SaveData = data;
 		}
 
 		Debug.Log($"Save Game Loaded : {_savePath}");
+
+        isSaveLoad = true;
 		return true;
 	}
+
+    #region Save Inven Dictionary
+
+    void ToInvenItem()
+    {
+        _gameData.InvenUseItem.Clear();
+        _gameData.InvenArmorItem.Clear();
+        _gameData.InvenWeaponItem.Clear();
+
+        foreach(int key in InvenItem.Keys)
+        {
+            ItemData item = InvenItem[key];
+            if (item is UseItemData)
+                _gameData.InvenUseItem.Add(key, item as UseItemData);
+            else if (item is ArmorItemData)
+                _gameData.InvenArmorItem.Add(key, item as ArmorItemData);
+            else if (item is WeaponItemData)
+                _gameData.InvenWeaponItem.Add(key, item as WeaponItemData);
+        }
+
+        _gameData.InvenUseItemData = ToDictionary<int, UseItemData>(_gameData.InvenUseItem);
+        _gameData.InvenArmorItemData = ToDictionary<int, ArmorItemData>(_gameData.InvenArmorItem);
+        _gameData.InvenWeaponItemData = ToDictionary<int, WeaponItemData>(_gameData.InvenWeaponItem);
+    }
+
+    void FromInvenItem<TValue>(List<DataDictionary<int, TValue>> itemData, GameData gameData) where TValue : ItemData
+    {
+        Dictionary<int, TValue> dict = FromDictionary<int, TValue>(itemData);
+        foreach(int key in dict.Keys)
+        {
+            gameData.InvenItem.Add(key, dict[key]);
+        }
+    }
+
+    #endregion
+
+    #region Save Dictionary
+
+    public List<DataDictionary<TKey, TValue>> ToDictionary<TKey, TValue>(Dictionary<TKey, TValue> dicData)
+    {
+        List<DataDictionary<TKey, TValue>> dataList = new List<DataDictionary<TKey, TValue>>();
+        DataDictionary<TKey, TValue> dictionaryData;
+        foreach (TKey key in dicData.Keys)
+        {
+            dictionaryData = new DataDictionary<TKey, TValue>();
+            dictionaryData.Key = key;
+            dictionaryData.Value = dicData[key];
+            dataList.Add(dictionaryData);
+        }
+
+        return dataList;
+    }
+
+    public Dictionary<TKey, TValue> FromDictionary<TKey, TValue>(List<DataDictionary<TKey, TValue>> dataList)
+    {
+         Dictionary<TKey, TValue> returnDictionary = new Dictionary<TKey, TValue>();
+
+        for (int i = 0; i < dataList.Count; i++)
+        {
+            DataDictionary<TKey, TValue> dictionaryData = dataList[i];
+            returnDictionary[dictionaryData.Key] = dictionaryData.Value;
+        }
+
+        return returnDictionary;
+    }
+
+    #endregion
+
 	#endregion
 
     public void Clear()

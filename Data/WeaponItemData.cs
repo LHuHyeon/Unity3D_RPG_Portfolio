@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class WeaponItemData : EquipmentData
 {
     public Define.WeaponType weaponType = Define.WeaponType.Unknown;
@@ -9,6 +11,7 @@ public class WeaponItemData : EquipmentData
     public int attack=0;
     public int addAttack=0;
 
+    [NonSerialized]
     public GameObject charEquipment;
 
     public WeaponItemData WeaponClone()

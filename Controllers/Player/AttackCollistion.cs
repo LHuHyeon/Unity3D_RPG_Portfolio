@@ -16,6 +16,8 @@ public class AttackCollistion : MonoBehaviour
     {
         capsuleCollider = GetComponent<CapsuleCollider>();
 
+        skillIndex = 0;
+
         gameObject.SetActive(false);
     }
 

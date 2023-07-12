@@ -16,7 +16,10 @@ public class UI_ArmorItem : UI_SlotItem
 
         // 해당 부위 장비가 장착되어 있다면
         if (Managers.Game.CurrentArmor.TryGetValue(armorType, out armorItem) == true)
-            Code_AddArmor(armorItem);
+        {
+            base.AddItem(armorItem);
+            AddArmor(armorItem);
+        }
 
         base.SetInfo();
     }
@@ -117,25 +120,18 @@ public class UI_ArmorItem : UI_SlotItem
             Managers.Game.RefreshArmor(currentArmor, false);
         }
 
+        // 방어구 장착
+        AddArmor(armorItem);
+    }
+
+    // 장비 장착
+    void AddArmor(ArmorItemData armorItem)
+    {
         // 장비 장착 진행
         if (Managers.Game.CurrentArmor.ContainsKey(armorType) == false)
             Managers.Game.CurrentArmor.Add(armorType, armorItem);
         else
             Managers.Game.CurrentArmor[armorType] = armorItem;
-
-        // 장비 오브젝트 활성화
-        EquipmentActive(armorItem, true);
-
-        // 스탯 적용
-        Managers.Game.RefreshArmor(armorItem, true);
-    }
-
-    // 코드로 장비 장착
-    public void Code_AddArmor(ItemData _item)
-    {
-        base.AddItem(_item);
-
-        armorItem = _item as ArmorItemData;
 
         // 장비 오브젝트 활성화
         EquipmentActive(armorItem, true);
@@ -155,8 +151,6 @@ public class UI_ArmorItem : UI_SlotItem
 
             return;
         }
-
-        Debug.Log("난 파츠 몰라용~");
 
         // 모른다면 id로 찾기
         PlayerController player = Managers.Game.GetPlayer().GetComponent<PlayerController>();
@@ -182,6 +176,7 @@ public class UI_ArmorItem : UI_SlotItem
         EquipmentActive(armorItem, false);              // 장비 비활성화
         Managers.Game.RefreshArmor(armorItem, false);   // 장비 스탯 해제
         armorItem = null;
+        Managers.Game.CurrentArmor.Remove(armorType);
 
         Managers.Game._playScene._slotTip.OnSlotTip(false);
     }

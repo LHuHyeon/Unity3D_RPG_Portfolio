@@ -19,6 +19,8 @@ public class UI_InvenPopup : UI_Popup
         GoldText,
     }
 
+    List<UI_InvenItem> invenSlots;
+
     [SerializeField]
     int invenCount = 42;    // 인벤 슬롯 개수
 
@@ -30,6 +32,7 @@ public class UI_InvenPopup : UI_Popup
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
+        invenSlots = new List<UI_InvenItem>();
         popupType = Define.Popup.Inventory;
 
         Managers.Input.KeyAction -= OnInventoryUI;
@@ -70,7 +73,7 @@ public class UI_InvenPopup : UI_Popup
     // 인벤 슬롯 아이템 넣기
     public void AcquireItem(ItemData item, int count = 1)
     {
-        foreach(UI_InvenItem slot in Managers.Game.InvenSlots)
+        foreach(UI_InvenItem slot in invenSlots)
         {
             // 슬롯에 아이템이 없으면 넣기
             if (slot.item == null)
@@ -108,13 +111,29 @@ public class UI_InvenPopup : UI_Popup
     {
         // 슬롯 초기화
         GameObject grid = GetObject((int)Gameobjects.Content);
-        Managers.Game.InvenSlots = new List<UI_InvenItem>();
 
         foreach(Transform child in grid.transform)
             Managers.Resource.Destroy(child.gameObject);
 
         for(int i=0; i<invenCount; i++)
-            Managers.Game.InvenSlots.Add(Managers.UI.MakeSubItem<UI_InvenItem>(parent: grid.transform));
+        {
+            UI_InvenItem invenItem = Managers.UI.MakeSubItem<UI_InvenItem>(parent: grid.transform);
+            invenItem.invenNumber = i;
+
+            if (Managers.Game.InvenItem.TryGetValue(i, out ItemData item) == true)
+            {
+                // 소비 아이템이라면 개수 반영
+                if (item is UseItemData)
+                {
+                    UseItemData useItem = item as UseItemData;
+                    invenItem.AddItem(item, useItem.itemCount);
+                }
+                else
+                    invenItem.AddItem(item);
+            }
+
+            invenSlots.Add(invenItem);
+        }
     }
 
     void SetEventHandler()

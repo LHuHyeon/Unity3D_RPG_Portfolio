@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class UI_InvenItem : UI_SlotItem
 {
+    public int invenNumber; // 인벤 자리 번호
     public TextMeshProUGUI itemCountText;
     public int itemCount;
 
@@ -180,6 +181,12 @@ public class UI_InvenItem : UI_SlotItem
             itemCount = 0;
             itemCountText.text = "";
         }
+
+        // 매니저에 저장
+        if (Managers.Game.InvenItem.ContainsKey(invenNumber) == false)
+            Managers.Game.InvenItem.Add(invenNumber, _item);
+        else
+            Managers.Game.InvenItem[invenNumber] = _item;
     }
 
     // 아이템 개수 업데이트
@@ -205,6 +212,10 @@ public class UI_InvenItem : UI_SlotItem
         itemCount = 0;
         itemCountText.text = "0";
         Managers.Game._playScene._slotTip.OnSlotTip(false);
+
+        // 매니저에 저장
+        if (Managers.Game.InvenItem.ContainsKey(invenNumber) == true)
+            Managers.Game.InvenItem[invenNumber] = null;
         
         SetColor(0);
     }

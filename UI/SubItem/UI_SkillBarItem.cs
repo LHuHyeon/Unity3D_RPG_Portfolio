@@ -12,6 +12,10 @@ public class UI_SkillBarItem : UI_SkillSlot
     public override void SetInfo()
     {
         base.SetInfo();
+
+        // 시작할 때 스킬이 현재 키에 장착 중이라면
+        if (Managers.Game.SkillBarList.TryGetValue(keySkill, out skillData) == true)
+            SetSkill(skillData);
     }
 
     protected override void SetEventHandler()
@@ -64,26 +68,31 @@ public class UI_SkillBarItem : UI_SkillSlot
                     return;
 
                 // 스킬 장착
-                SetSkill(dragSlot as UI_SkillSlot);
+                ChangeSkill(dragSlot as UI_SkillSlot);
             }
 
         }, Define.UIEvent.Drop);
     }
 
-    void SetSkill(UI_SkillSlot skillSlot)
+    void ChangeSkill(UI_SkillSlot skillSlot)
+    {
+        // 스킬바에서 온거면 기존 슬롯 삭제
+        if (skillSlot is UI_SkillBarItem)
+            skillSlot.ClearSlot();
+
+        SetSkill(skillSlot.skillData);
+    }
+
+    void SetSkill(SkillData skill)
     {
         // 궁극기 경우 10렙 이상 스킬만 가능
         if (keySkill == Define.KeySkill.R)
         {
-            if (skillSlot.skillData.minLevel < 10)
+            if (skill.minLevel < 10)
                 return;
         }
 
-        skillData = skillSlot.skillData;
-
-        // 스킬바에서 온거면 기존 슬롯 삭제
-        if (skillSlot is UI_SkillBarItem)
-            skillSlot.ClearSlot();
+        skillData = skill;
 
         if (Managers.Game.SkillBarList.ContainsKey(keySkill) == false)
             Managers.Game.SkillBarList.Add(keySkill, skillData);

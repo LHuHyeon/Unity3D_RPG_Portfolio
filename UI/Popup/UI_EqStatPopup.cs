@@ -12,6 +12,7 @@ public class UI_EqStatPopup : UI_Popup
         Title,
         EqSlot,
         ExitButton,
+        StatBackground,
     }
 
     enum Buttons
@@ -20,6 +21,7 @@ public class UI_EqStatPopup : UI_Popup
         MpAddPointButton,
         STRAddPointButton,
         LUKAddPointButton,
+        StatButton,
     }
 
     enum Texts
@@ -29,10 +31,14 @@ public class UI_EqStatPopup : UI_Popup
         MpStatPointText,
         STRStatPointText,
         LUKStatPointText,
+        StatNameText,
+        StatText,
     }
 
     public List<UI_ArmorItem> armorSlots;
     public UI_WeaponItem weaponSlot;
+
+    bool isClickStatButton = false;
 
     public override bool Init()
     {
@@ -163,6 +169,20 @@ public class UI_EqStatPopup : UI_Popup
         GetButton((int)Buttons.STRAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.STRAddPointButton); });
         GetButton((int)Buttons.LUKAddPointButton).onClick.AddListener(()=>{ AddStat(Buttons.LUKAddPointButton); });
 
+        GetButton((int)Buttons.StatButton).onClick.AddListener(OnClickStatButton);
+        GetObject((int)Gameobjects.StatBackground).SetActive(false);
+
+        string statNameText = 
+$@"<color=white>이름</color>
+<color=yellow>Lv.</color>
+<color=white>체력</color>
+<color=white>마나</color>
+<color=white>이동속도</color>
+<color=red>공격력</color>
+<color=blue>방어력</color>";
+
+        GetText((int)Texts.StatNameText).text = statNameText;
+
         SetEventHandler();
     }
 
@@ -193,6 +213,13 @@ public class UI_EqStatPopup : UI_Popup
         }, Define.UIEvent.Click);
     }
 
+    void OnClickStatButton()
+    {
+        isClickStatButton = !isClickStatButton;
+
+        GetObject((int)Gameobjects.StatBackground).SetActive(isClickStatButton);
+    }
+
     void RefreshUI()
     {
         GetText((int)Texts.StatPointText).text = Managers.Game.StatPoint.ToString();
@@ -200,6 +227,17 @@ public class UI_EqStatPopup : UI_Popup
         GetText((int)Texts.MpStatPointText).text = Managers.Game.MpPoint.ToString();
         GetText((int)Texts.STRStatPointText).text = Managers.Game.STR.ToString();
         GetText((int)Texts.LUKStatPointText).text = Managers.Game.LUK.ToString();
+
+        string statText = 
+$@"<color=white>{Managers.Game.Name}</color>
+<color=white>{Managers.Game.Level}</color>
+<color=white>{Managers.Game.MaxHp} {(Managers.Game.addHp != 0 ? $"(+{Managers.Game.addHp})":"")}</color>
+<color=white>{Managers.Game.MaxMp} {(Managers.Game.addMp != 0 ? $"(+{Managers.Game.addMp})":"")}</color>
+<color=white>{Managers.Game.MoveSpeed} {(Managers.Game.addMoveSpeed != 0 ? $"(+{Managers.Game.addMoveSpeed})":"")}</color>
+<color=white>{Managers.Game.Attack}</color>
+<color=white>{Managers.Game.Defense}</color>";
+
+        GetText((int)Texts.StatText).text = statText;
     }
 
     void Exit()

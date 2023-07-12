@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System;
 
+[Serializable]
 public class UI_UseItemSlot : UI_SlotItem
 {
     public int key;
@@ -17,6 +19,9 @@ public class UI_UseItemSlot : UI_SlotItem
     {
         slotType = Define.SlotType.UseItem;
         keyText.text = key.ToString();
+
+        if (Managers.Game.UseItemBarList.ContainsKey(key) == true)
+            AddItem(Managers.Game.UseItemBarList[key]);
 
         base.SetInfo();
     }
@@ -69,11 +74,11 @@ public class UI_UseItemSlot : UI_SlotItem
 
         // 지금 슬롯에 아이템이 존재하면 인벤으로 보내기
         if (item != null)
+        {
             Managers.Game._playScene._inventory.AcquireItem(item, itemCount);
+        }
 
         AddItem(slot.item, (slot.item as UseItemData).itemCount);
-        itemCount = (item as UseItemData).itemCount;
-        itemCountText.text = itemCount.ToString();
 
         // 기존에 온 슬롯 삭제시키기 
         if (slot is UI_UseItemSlot)
@@ -81,6 +86,19 @@ public class UI_UseItemSlot : UI_SlotItem
 
         if (slot is UI_InvenItem)
             (slot as UI_InvenItem).ClearSlot();
+    }
+
+    public override void AddItem(ItemData _item, int count = 1)
+    {
+        base.AddItem(_item, count);
+
+        itemCount = (item as UseItemData).itemCount;
+        itemCountText.text = itemCount.ToString();
+
+        if (Managers.Game.UseItemBarList.ContainsKey(key) == false)
+            Managers.Game.UseItemBarList.Add(key, _item as UseItemData);
+        else
+            Managers.Game.UseItemBarList[key] = _item as UseItemData;
     }
 
     // 아이템 개수 업데이트
@@ -99,6 +117,8 @@ public class UI_UseItemSlot : UI_SlotItem
     public override void ClearSlot()
     {
         base.ClearSlot();
+
+        Managers.Game.UseItemBarList[key] = null;
 
         itemCount = 0;
         itemCountText.text = "";

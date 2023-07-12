@@ -214,6 +214,7 @@ public class Define : MonoBehaviour
 
     public const string SkillOpenMessage = "스킬을 해방하겠습니까?";
     public const string ShopSaleMessage = "구매 하겠습니까?";
+    public const string DungeonMessage = "던전에 입장하겠습니까?";
 
     public const string NameRegex = @"^[0-9a-zA-Z가-힣]{2,8}$";
 }

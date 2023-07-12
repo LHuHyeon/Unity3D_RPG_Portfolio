@@ -34,6 +34,32 @@ public class QuestNpcController : NpcController
 
         currentQuest = questDataList[nextQuest];
         currentTalk = talkDataList[nextQuest];
+
+        // 현재 클리어한 퀘스트가 있는지
+        while (true)
+        {
+            for(int i=0; i<Managers.Game.ClearQuest.Count; i++)
+            {
+                if (questDataList[nextQuest].id == Managers.Game.ClearQuest[i].id)
+                {
+                    Debug.Log("NextQuest()");
+                    NextQuest();
+                    continue;
+                }
+            }
+
+            break;
+        }
+
+        // 현재 진행 중인 퀘스트의 id와 같다면 퀘스트 진행사항 넣어주기
+        for(int i=0; i<Managers.Game.CurrentQuest.Count; i++)
+        {
+            if (questDataList[nextQuest].id == Managers.Game.CurrentQuest[i].id)
+            {
+                Debug.Log("QuestAccept()");
+                currentQuest = questDataList[nextQuest] = Managers.Game.CurrentQuest[i];
+            }
+        }
     }
 
     public override void Interact()
@@ -72,6 +98,10 @@ public class QuestNpcController : NpcController
                 Talk(currentTalk.clearTalk);
                 currentQuest.QuestClear();
 
+                // 알람 되어 있는 퀘스트라면 삭제
+                Managers.Game._playScene._quest.CloseQuestNotice(currentQuest);
+
+                // 다음 퀘스트 확인
                 NextQuest();
             }
             else
@@ -108,9 +138,6 @@ public class QuestNpcController : NpcController
 
     void NextQuest()
     {
-        // 알람 되어 있는 퀘스트라면 삭제
-        Managers.Game._playScene._quest.CloseQuestNotice(currentQuest);
-
         nextQuest++;
 
         // 퀘스트 개수 확인

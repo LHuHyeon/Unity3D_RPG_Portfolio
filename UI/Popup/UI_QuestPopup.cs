@@ -90,6 +90,19 @@ public class UI_QuestPopup : UI_Popup
             Managers.Resource.Destroy(child.gameObject);
 
         GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
+
+        for(int i=0; i<Managers.Game.CurrentQuest.Count; i++)
+            SetQuestNotice(Managers.Game.CurrentQuest[i]);
+    }
+
+    // 새로운 퀘스트 받기
+    public void SetQeust(QuestData quest)
+    {
+        quest.isAccept = true;
+        Managers.Game.CurrentQuest.Add(quest);
+
+        RefreshUI();
+        SetQuestNotice(quest);
     }
 
     // 퀘스트 목록을 누르면

@@ -29,8 +29,8 @@ public class GameScene : BaseScene
             DontDestroyOnLoad(Managers.Game._playScene.gameObject);
         }
 
-        if (Managers.Game.beforeSpawnPos != Vector3.zero)
-            Managers.Game.GetPlayer().transform.position = Managers.Game.beforeSpawnPos;
+        if (Managers.Game.CurrentPos != Vector3.zero)
+            Managers.Game.GetPlayer().transform.position = Managers.Game.CurrentPos;
         
         Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(Managers.Game.GetPlayer());
     }

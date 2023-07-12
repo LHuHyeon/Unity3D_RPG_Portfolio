@@ -15,7 +15,10 @@ public class UI_WeaponItem : UI_SlotItem
 
         // 해당 부위 장비가 장착되어 있다면
         if (Managers.Game.CurrentWeapon != null)
+        {
             AddItem(Managers.Game.CurrentWeapon);
+            Managers.Game.UpgradeMeshEffect(weaponItem);
+        }
 
         base.SetInfo();
     }
@@ -107,12 +110,23 @@ public class UI_WeaponItem : UI_SlotItem
         // 장착 중인 무기가 있다면 비활성화
         if (Managers.Game.CurrentWeapon != null)
         {
+            // 장비 파츠 확인
+            GetPart(Managers.Game.CurrentWeapon);
+
             Managers.Game.CurrentWeapon.charEquipment.SetActive(false);
         }
-
+        
+        // 장비 파츠 확인
+        GetPart(weaponItem);
         Managers.Game.CurrentWeapon = weaponItem;
 
         weaponItem.charEquipment.SetActive(true);
+    }
+
+    void GetPart(WeaponItemData weapon)
+    {
+        if (weapon.charEquipment == null)
+            weapon.charEquipment = (Managers.Data.Item[weapon.id] as WeaponItemData).charEquipment;
     }
 
     public override void ClearSlot()

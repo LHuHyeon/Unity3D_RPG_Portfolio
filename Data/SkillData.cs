@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class SkillData
 {
     public int skillId;
@@ -10,6 +12,7 @@ public class SkillData
     public int skillCoolDown;
     public int skillConsumMp;
     public bool isCoolDown = false;
+    public bool isLock = true;
     public string discription;
     public Sprite skillSprite;
     public List<int> powerList;

@@ -193,10 +193,7 @@ public class UI_TalkPopup : UI_Popup
     // 수락 버튼
     void OnClickAcceptButton()
     {
-        Managers.Game.CurrentQuest.Add(questData);
-        Managers.Game._playScene._quest.RefreshUI();
-        Managers.Game._playScene._quest.SetQuestNotice(questData);
-        questData.isAccept = true;
+        Managers.Game._playScene._quest.SetQeust(questData);
 
         IsQuestActive(false);
         SetInfo(talkData.acceptTalk);

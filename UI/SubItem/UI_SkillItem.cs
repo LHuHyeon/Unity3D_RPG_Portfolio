@@ -17,7 +17,6 @@ public class UI_SkillItem : UI_SkillSlot
     }
 
     public int skillId;
-    public bool skillLock = true;  // 스킬을 흭득하면 락 풀기
 
     public override void SetInfo()
     {
@@ -29,21 +28,36 @@ public class UI_SkillItem : UI_SkillSlot
 
         GetText((int)Texts.SkillLevelText).text = skillData.minLevel.ToString();
         icon.sprite = skillData.skillSprite;
+
+        // 시작 시 스킬이 흭득 상태인지 확인
+        foreach(SkillData skill in Managers.Game.CurrentSkill)
+        {
+            if (skillId == skill.skillId)
+            {
+                skillData.isLock = skill.isLock;
+                break;
+            }
+        }
+
+        if (skillData.isLock == false)
+            Managers.Resource.Destroy(GetObject((int)Gameobjects.LevelBlock));
         
         base.SetInfo();
     }
 
     protected override void SetEventHandler()
     {
+        // 스킬슬롯을 우클릭할 시 레벨체크 후 Lock 해제
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (Input.GetMouseButtonUp(1) && skillLock == true)
+            if (Input.GetMouseButtonUp(1) && skillData.isLock == true)
             {
                 if (LevelCheck() == true)
                 {
                     Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
                     {
-                        skillLock = false;
+                        skillData.isLock = false;
+                        Managers.Game.CurrentSkill.Add(this.skillData);
                         Managers.Resource.Destroy(GetObject((int)Gameobjects.LevelBlock));
                     }, Define.SkillOpenMessage);
                 }
@@ -53,7 +67,7 @@ public class UI_SkillItem : UI_SkillSlot
         // 스킬이 흭득 상태라면 마우스로 들기 가능.
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillLock == true || skillData == null)
+            if (skillData.isLock == true || skillData == null)
                 return;
 
             Debug.Log("skillItem BeginDrag");
@@ -67,14 +81,14 @@ public class UI_SkillItem : UI_SkillSlot
         // 마우스 드래그 방향으로 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillLock == false && skillData != null)
+            if (skillData.isLock == false && skillData != null)
                 UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
 
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillLock == true || skillData == null)
+            if (skillData.isLock == true || skillData == null)
                 return;
                 
             UI_DragSlot.instance.SetColor(0);

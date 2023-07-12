@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class ArmorItemData : EquipmentData
 {
     public Define.ArmorType armorType = Define.ArmorType.Unknown;
@@ -15,6 +17,7 @@ public class ArmorItemData : EquipmentData
     public int addMp=0;
     public int addMoveSpeed=0;
 
+    [NonSerialized]
     public List<GameObject> charEquipment;
 
     public ArmorItemData ArmorClone()

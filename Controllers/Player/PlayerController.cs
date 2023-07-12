@@ -82,12 +82,22 @@ public class PlayerController : BaseController
                 string result = Regex.Replace(child.name, @"\D", "");
                 int id = int.Parse(result);
 
+                // 아이템 안에 장비 파츠 저장
                 ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
-
                 if (armor.charEquipment == null)
                     armor.charEquipment = new List<GameObject>();
 
                 armor.charEquipment.Add(child.gameObject);
+
+                // 플레이어 안에서 장비 파츠 저장
+                List<GameObject> equipList;
+                if (charEquipment.TryGetValue(id, out equipList) == false)
+                {
+                    equipList = new List<GameObject>();
+                    charEquipment.Add(id, equipList);
+                }
+
+                equipList.Add(child.gameObject);
 
                 child.gameObject.SetActive(false);
             }
@@ -106,6 +116,7 @@ public class PlayerController : BaseController
         }
     }
 
+    // SkinnedMeshReaderer 변경
     void SetSkinned(Define.DefaultPart partType, Transform go)
     {
         SkinnedMeshRenderer objSkinned = go.GetComponent<SkinnedMeshRenderer>();
@@ -473,15 +484,7 @@ public class PlayerController : BaseController
 
     void OnUseItem(int key)
     {
-        if (Managers.Game.UseItemBarList[key].item == null)
-        {
-            Debug.Log("장착된 소비 아이템이 없습니다.");
-            return;
-        }
-
-        UseItemData useItem = Managers.Game.UseItemBarList[key].item as UseItemData;
-        if (useItem.UseItem(useItem) == true)
-            Managers.Game.UseItemBarList[key].SetCount(-1);
+        Managers.Game._playScene.UsingItem(key);
     }
 
     // 스킬 사용
