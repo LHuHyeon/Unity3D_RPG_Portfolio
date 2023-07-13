@@ -14,7 +14,6 @@ public class GameScene : BaseScene
 
         if (Managers.Game.GetPlayer() == false)
         {
-            gameObject.GetOrAddComponent<CursorController>();   // 마우스 커서 생성
             GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "TestPlayer2");
             _player.transform.position = playerSpawn.position;
             DontDestroyOnLoad(_player);

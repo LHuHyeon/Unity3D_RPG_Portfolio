@@ -18,6 +18,8 @@ public class PlayerController : BaseController
     [SerializeField]
     GameObject rootBone;
 
+    GameObject clickMoveEffect;
+
     // 이펙트 관리 변수
     [SerializeField]
     private List<EffectData> effects = new List<EffectData>();
@@ -39,6 +41,9 @@ public class PlayerController : BaseController
         
         charEquipment = new Dictionary<int, List<GameObject>>();
         charSkinned = new Dictionary<Define.DefaultPart, SkinnedMeshRenderer>();
+
+        clickMoveEffect = Managers.Resource.Instantiate("Effect/Click/ClickMoveEffect");
+        clickMoveEffect.SetActive(false);
 
         anim = GetComponent<Animator>();
 
@@ -295,6 +300,10 @@ public class PlayerController : BaseController
                     if (raycastHit && _stopAttack)
                     {
                         State = Define.State.Moving;
+                        
+                        clickMoveEffect.SetActive(false);
+                        clickMoveEffect.SetActive(true);
+                        clickMoveEffect.transform.position = _destPos;
 
                         if (hit.collider.gameObject.layer == (int)Define.Layer.Npc)
                             _lockTarget = hit.collider.gameObject;

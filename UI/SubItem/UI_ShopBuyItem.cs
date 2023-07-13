@@ -73,7 +73,7 @@ public class UI_ShopBuyItem : UI_Base
         
         if (Managers.Game.Gold < _item.itemPrice)
         {
-            Debug.Log("돈이 부족합니다.");
+            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("금액이 부족합니다.", Color.yellow);
             return;
         }
 

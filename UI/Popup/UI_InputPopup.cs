@@ -38,6 +38,7 @@ public class UI_InputPopup : UI_Popup
     Action<string> _onClickYesButton;
     public void SetInfo(Action<string> onClickYesButton, string messageText, string placeholderText, string regex)
     {
+        // TODO : 지금은 닉네임 전용으로 사용하지만 또 다른 Input이 필요하면 텍스트 클래스 만들어서 관리
         _onClickYesButton = onClickYesButton;
         _messageText.text = messageText;
         _regex = regex;
@@ -57,7 +58,6 @@ public class UI_InputPopup : UI_Popup
         }
         else
         {
-            // TODO : 지금은 닉네임 전용으로 사용하지만 또 다른 Input이 필요하면 텍스트 클래스 만들어서 관리
             Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("한글|영어|숫자 2글자 이상 8글자 이하", Color.red);
         }
     }

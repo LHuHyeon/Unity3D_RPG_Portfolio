@@ -12,6 +12,8 @@ public class UI_GuidePopup : UI_Popup
     Color _color;
     string _messageText;
 
+    Coroutine co;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -30,12 +32,15 @@ public class UI_GuidePopup : UI_Popup
         _color = color;
         _messageText = messageText;
 
-        StopCoroutine(MessageCoroutine());
-        StartCoroutine(MessageCoroutine());
+        if (co != null) StopCoroutine(co);
+        co = StartCoroutine(MessageCoroutine());
     }
 
     IEnumerator MessageCoroutine()
     {
+        if (GetText((int)Texts.MessageText) != null)
+            GetText((int)Texts.MessageText).transform.localPosition = Vector3.zero;
+
         yield return new WaitForSeconds(1f);
 
         // 점점 사라지며 올라가기
@@ -48,7 +53,6 @@ public class UI_GuidePopup : UI_Popup
 
             yield return null;
         }
-
         Managers.UI.ClosePopupUI(this);
     }
 }
