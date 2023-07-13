@@ -35,7 +35,21 @@ public class UI_TitleScene : UI_Scene
         if (Managers.Game.LoadGame() == false)
             return;
             
-        Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 7);
+        if(Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            // 인터넷 연결이 안되었을 때 행동
+            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("네트워크 연결이 필요합니다.", Color.red);
+        }
+        else if(Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
+        {
+            // 데이터로 연결이 되었을 때 행동
+            Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 7);
+        }
+        else
+        {
+            // 와이파이로 연결이 되었을 때 행동
+            Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 9);
+        }
     }
 
     void OnClickExitButton()

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 public class UI_LoadPopup : UI_Popup
@@ -9,10 +10,17 @@ public class UI_LoadPopup : UI_Popup
     [SerializeField]
     Slider loadSlider;
 
+    [SerializeField]
+    TextMeshProUGUI tipText;
+
+    int currentMessageNumber = 0;
+    string[] loadMessges = new string[]{Define.LoadMessage1, Define.LoadMessage2, Define.LoadMessage3, Define.LoadMessage4};
+
     public override bool Init() { return base.Init(); }
 
     public void SetInfo(Define.Scene type, int plusTime = 0)
     {
+        // 구글 시트 데이터 가져오기
         if (Managers.Data.isData == false)
             OnDataRequest();
 
@@ -20,8 +28,23 @@ public class UI_LoadPopup : UI_Popup
         loadSlider.minValue = 0;
         loadSlider.maxValue = plusTime;
 
+        currentMessageNumber = Random.Range(0,4);
+        tipText.text = $"Tip : {loadMessges[currentMessageNumber]}";
+
         Managers.Game.StopPlayer();
         StartCoroutine(LoadAsynSceneCoroutine(type, plusTime));
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            currentMessageNumber++;
+            if (currentMessageNumber >= loadMessges.Length)
+                currentMessageNumber = 0;
+
+            tipText.text = $"[{currentMessageNumber+1}] Tip : {loadMessges[currentMessageNumber]}";
+        }
     }
     
     // 비동기 로드

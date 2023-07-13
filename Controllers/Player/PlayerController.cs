@@ -42,7 +42,7 @@ public class PlayerController : BaseController
         charEquipment = new Dictionary<int, List<GameObject>>();
         charSkinned = new Dictionary<Define.DefaultPart, SkinnedMeshRenderer>();
 
-        clickMoveEffect = Managers.Resource.Instantiate("Effect/Click/ClickMoveEffect");
+        clickMoveEffect = Managers.Resource.Instantiate("Effect/ClickMoveEffect");
         clickMoveEffect.SetActive(false);
 
         anim = GetComponent<Animator>();
@@ -628,5 +628,22 @@ public class PlayerController : BaseController
             return true;
 
         return false;
+    }
+
+    Coroutine co;
+    public void LevelUpEffect()
+    {
+        if (co != null) StopCoroutine(co);
+        co = StartCoroutine(LevelUpCoroutine());
+    }
+
+    IEnumerator LevelUpCoroutine()
+    {
+        GameObject effect = Managers.Resource.Instantiate("Effect/LevelUpEffect", this.transform);
+        effect.transform.localPosition = Vector3.zero;
+
+        yield return new WaitForSeconds(4.5f);
+
+        Managers.Resource.Destroy(effect);
     }
 }

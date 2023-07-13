@@ -125,6 +125,8 @@ public class UI_PlayScene : UI_Scene
             }
 
             Managers.Game.RefreshStat(++Managers.Game.Level);
+            Managers.Game.GetPlayer().GetComponent<PlayerController>().LevelUpEffect();
+            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($"({Managers.Game.Level})\n레벨이 올랐습니다!! \n\n\n\n\n\n\n\n\n", Color.yellow);
         });
 
         GetButton((int)Buttons.AddGoldButton).onClick.AddListener(()=>{ Managers.Game.Gold += 100; });

@@ -319,6 +319,8 @@ public class GameManager
         
         // 레벨 업
         RefreshStat(++Level);
+        _player.GetComponent<PlayerController>().LevelUpEffect();
+        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($"Level Up!! \n({Level})", Color.yellow);
         Debug.Log("Level UP!!");
 	}
 

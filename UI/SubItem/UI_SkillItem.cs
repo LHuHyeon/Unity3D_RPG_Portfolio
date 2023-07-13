@@ -61,6 +61,8 @@ public class UI_SkillItem : UI_SkillSlot
                         Managers.Resource.Destroy(GetObject((int)Gameobjects.LevelBlock));
                     }, Define.SkillOpenMessage);
                 }
+                else
+                    Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
             }
         }, Define.UIEvent.Click);
 

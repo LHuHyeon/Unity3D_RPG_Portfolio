@@ -14,7 +14,7 @@ public class GameScene : BaseScene
 
         if (Managers.Game.GetPlayer() == false)
         {
-            GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "TestPlayer2");
+            GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
             _player.transform.position = playerSpawn.position;
             DontDestroyOnLoad(_player);
         }

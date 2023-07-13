@@ -44,7 +44,11 @@ public class UI_InvenItem : UI_SlotItem
             {
                 if ((item is EquipmentData) == true)
                 {
-                    Managers.Game._playScene._equipment.SetEquipment(this);
+                    // 장착 레벨 확인
+                    if (Managers.Game.Level >= (item as EquipmentData).minLevel)
+                        Managers.Game._playScene._equipment.SetEquipment(this);
+                    else
+                        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
                 }
                 else if ((item is UseItemData) == true)
                 {

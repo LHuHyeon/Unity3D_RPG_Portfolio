@@ -101,6 +101,9 @@ public class QuestNpcController : NpcController
                 // 알람 되어 있는 퀘스트라면 삭제
                 Managers.Game._playScene._quest.CloseQuestNotice(currentQuest);
 
+                // 클리어 퀘스트에 등록
+                Managers.Game.RefreshQuest();
+
                 // 다음 퀘스트 확인
                 NextQuest();
             }
