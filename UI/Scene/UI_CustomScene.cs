@@ -59,12 +59,12 @@ public class UI_CustomScene : UI_Scene
         else if(Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
         {
             // 데이터로 연결이 되었을 때 행동
-            Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 7);
+            Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 6);
         }
         else
         {
             // 와이파이로 연결이 되었을 때 행동
-            Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 9);
+            Managers.UI.ShowPopupUI<UI_LoadPopup>().SetInfo(Define.Scene.Game, 7);
         }
     }
 

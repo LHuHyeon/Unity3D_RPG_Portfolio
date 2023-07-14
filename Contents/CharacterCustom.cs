@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CharacterCustom : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class CharacterCustom : MonoBehaviour
     int currentTorsoIndex = 0;
     int currentHipsIndex = 0;
 
+    float playerRotationY = 0.01f;
+
+    [SerializeField]
+    float rotationSpeed = 3.5f;
+
     void Start()
     {
         currentHairIndex = 0;
@@ -31,6 +37,38 @@ public class CharacterCustom : MonoBehaviour
         currentFacialHairIndex = 0;
         currentTorsoIndex = 0;
         currentHipsIndex = 0;
+    }
+
+    void Update()
+    {
+        CharaterRotation();
+    }
+
+    void CharaterRotation()
+    {
+        // UI를 클릭했을 때
+        if (Input.GetMouseButtonDown(0) == true || Input.GetMouseButtonDown(1) == true)
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+        }
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || 
+            Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+        {
+            SetRotation(-Input.GetAxis("Horizontal"));
+        }
+        else if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            SetRotation(-Input.GetAxis("Mouse X"));
+        }
+    }
+
+    void SetRotation(float horizontal)
+    {
+        playerRotationY += horizontal * rotationSpeed;
+        
+        transform.localRotation = Quaternion.Euler(0f, playerRotationY, 0f);
     }
 
     public void NextPart(Define.DefaultPart partType, bool isNext)

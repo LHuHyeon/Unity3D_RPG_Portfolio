@@ -246,6 +246,11 @@ public class BossController : MonsterController
 
         // 나가는 포탈 생성
         if (exitPortal.gameObject.activeSelf == false)
+        {
+            string message = $"<size=170%>Clear!!</size> \n<color=yellow>Gold: 100</color> <color=green>Exp: 200</color>";
+            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo(message, new Color(1f, 0.5f, 0f));
+            
             exitPortal.gameObject.SetActive(true);
+        }
     }
 }

@@ -320,7 +320,7 @@ public class GameManager
         // 레벨 업
         RefreshStat(++Level);
         _player.GetComponent<PlayerController>().LevelUpEffect();
-        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($"Level Up!! \n({Level})", Color.yellow);
+        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($"Level Up!! \n({Level}) \n\n\n\n\n\n\n\n\n", Color.yellow);
         Debug.Log("Level UP!!");
 	}
 
@@ -658,6 +658,16 @@ public class GameManager
     #region Save & Load	
 	public string _savePath;
 
+    public bool IsSaveLoad()
+    {
+        if (File.Exists(_savePath) == false)
+			return false;
+        
+        Debug.Log($"Save Data True : {_savePath}");
+
+        return true;
+    }
+
 	public void SaveGame()
 	{
         if (Managers.Scene.CurrentScene.SceneType == Define.Scene.Game)
@@ -679,7 +689,7 @@ public class GameManager
 
 	public bool LoadGame()
 	{
-		if (File.Exists(_savePath) == false)
+		if (IsSaveLoad() == false)
 			return false;
 
 		string fileStr = File.ReadAllText(_savePath);
