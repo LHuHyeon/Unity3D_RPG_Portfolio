@@ -160,13 +160,10 @@ public class UIManager
     // List 전체 Close
     public void CloseAllPopupUI()
     {
-        if (_popupList.Count == 0)
-            return;
-
-        foreach(UI_Popup popup in _popupList)
+        while (true)
         {
-            if (popup != null)
-                Managers.Resource.Destroy(popup.gameObject);
+            if (ClosePopupUI() == false)
+                break;
         }
 
         _popupList.Clear();

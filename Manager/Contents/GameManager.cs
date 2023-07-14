@@ -105,14 +105,10 @@ public class GameManager
         get { return isInteract; }
         set {
             // 상호작용 중이면 Popup UI 끄기
+            if (value == true)
+                Managers.UI.CloseAllPopupUI();
+
             isInteract = value;
-            
-            if (isInteract == true)
-            {
-                isPopups[Define.Popup.Inventory] = false;
-                isPopups[Define.Popup.Equipment] = false;
-                isPopups[Define.Popup.SkillUI] = false;
-            }
         }
     }
 
@@ -477,6 +473,14 @@ public class GameManager
     }
 
 #endregion
+
+    // 상호작용 시 옮겨지는 슬롯에 관한 함수
+    public Action<UI_InvenItem> _getSlotInteract;
+    public void GetSlotInteract(UI_InvenItem invenSlot)
+    {
+        if (_getSlotInteract != null)
+            _getSlotInteract.Invoke(invenSlot);
+    }
 
     // 해당 키 스킬 반환 
     public SkillData GetSkill(Define.KeySkill keySkill)

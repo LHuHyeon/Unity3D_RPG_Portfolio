@@ -5,12 +5,6 @@ using UnityEngine.EventSystems;
 
 public class UI_ShopPopup : UI_Popup
 {
-    /*
-    1. UI_ShopBuyItem 초기화 후 상점 판매 아이템에 맞게 생성
-    2. UI_ShopSaleItem 초기화 후 판매 물품 들어오면 생성
-    3. 
-    */
-
     enum Gameobjects
     {
         Title,
@@ -58,11 +52,11 @@ public class UI_ShopPopup : UI_Popup
         buyList = new List<UI_ShopBuyItem>();
         saleList = new List<UI_ShopSaleItem>();
 
-        // 구매 슬롯 초기화
+        // 판매 슬롯 초기화
         foreach(Transform child in GetObject((int)Gameobjects.SaleList).transform)
             Managers.Resource.Destroy(child.gameObject);
 
-        // 판매 슬롯 초기화
+        // 구매 슬롯 초기화
         foreach(Transform child in GetObject((int)Gameobjects.BuyList).transform)
             Managers.Resource.Destroy(child.gameObject);
 
@@ -145,29 +139,14 @@ public class UI_ShopPopup : UI_Popup
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
             // 인벤토리 슬롯 확인
-            if (dragSlot is UI_InvenItem == false)
-                return;
-
-            UI_InvenItem invenItem = dragSlot as UI_InvenItem;
-
-            // 장비거나 개수가 한개라면 바로 넣기
-            if (invenItem.item is EquipmentData || invenItem.itemCount == 1)
-            {
+            if (dragSlot is UI_InvenItem == true)
                 SaleItemRegister(dragSlot as UI_InvenItem);
-            }
-            else
-            {
-                // 판매 개수 선택
-                UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
-                numberCheckPopup.RefreshUI(invenItem, (int subItemCount)=>
-                {
-                    // 판매 슬롯 생성
-                    UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
-                    saleItem.SetInfo((dragSlot as UI_InvenItem), subItemCount);
-                    saleList.Add(saleItem);
-                });
-            }
+
         }, Define.UIEvent.Drop);
+
+        // 우클릭으로 판매할 아이템 받기
+        Managers.Game._getSlotInteract -= GetSlotInteract;
+        Managers.Game._getSlotInteract += GetSlotInteract;
 
         GetObject((int)Gameobjects.BuyButton).BindEvent(OnClickBuyListButton);
         GetObject((int)Gameobjects.SaleButton).BindEvent(OnClickSaleListButton);
@@ -204,6 +183,36 @@ public class UI_ShopPopup : UI_Popup
         saleList.Clear();
     }
 
+    // 우클릭 아이템 받기
+    void GetSlotInteract(UI_InvenItem invenSlot)
+    {
+        // 판매 리스트가 현재 활성화 중이라면
+        if (GetObject((int)Gameobjects.SaleList).activeSelf == true)
+            SaleItemRegister(invenSlot);
+    }
+
+    // 판매 아이템 등록
+    void SetSaleItemRegister(UI_InvenItem invenSlot)
+    {
+        // 장비거나 개수가 한개라면 바로 넣기
+        if (invenSlot.item is EquipmentData || invenSlot.itemCount == 1)
+        {
+            SaleItemRegister(invenSlot);
+        }
+        else
+        {
+            // 판매 개수 선택
+            UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
+            numberCheckPopup.RefreshUI(invenSlot, (int subItemCount)=>
+            {
+                // 판매 슬롯 생성
+                UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
+                saleItem.SetInfo(invenSlot, subItemCount);
+                saleList.Add(saleItem);
+            });
+        }
+    }
+
     void SaleItemRegister(UI_InvenItem invenItem)
     {
         UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
@@ -213,16 +222,12 @@ public class UI_ShopPopup : UI_Popup
 
     public void ExitShop()
     {
-        Managers.Game._playScene._slotTip.OnSlotTip(false);
-        
         GetObject((int)Gameobjects.BuyList).SetActive(true);
         GetObject((int)Gameobjects.SaleList).SetActive(false);
         GetObject((int)Gameobjects.GoSaleButton).SetActive(false);
 
         Managers.Game.IsInteract = false;
-        Managers.UI.ClosePopupUI(this);
 
-        Managers.Game.isPopups[Define.Popup.Inventory] = false;
-        Managers.UI.ClosePopupUI(Managers.Game._playScene._inventory);
+        Managers.UI.CloseAllPopupUI();
     }
 }

@@ -18,7 +18,7 @@ public class PlayerController : BaseController
     [SerializeField]
     GameObject rootBone;
 
-    GameObject clickMoveEffect;
+    public GameObject clickMoveEffect;
 
     // 이펙트 관리 변수
     [SerializeField]
@@ -41,9 +41,6 @@ public class PlayerController : BaseController
         
         charEquipment = new Dictionary<int, List<GameObject>>();
         charSkinned = new Dictionary<Define.DefaultPart, SkinnedMeshRenderer>();
-
-        clickMoveEffect = Managers.Resource.Instantiate("Effect/ClickMoveEffect");
-        clickMoveEffect.SetActive(false);
 
         anim = GetComponent<Animator>();
 

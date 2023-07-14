@@ -105,6 +105,8 @@ public class UI_UpgradePopup : UI_Popup
     {
         _equipment = null;
 
+        Managers.Game._playScene._slotTip.OnSlotTip(false);
+
         GetText((int)Texts.ItemNameText).text = "강화할 장비를 선택하세요";
         GetText((int)Texts.UpgradeResultText).text = "";
         GetText((int)Texts.UpgradeGoldText).text = "0";
@@ -120,9 +122,7 @@ public class UI_UpgradePopup : UI_Popup
         GetObject((int)Gameobjects.ItemSlot).GetComponent<UI_UpgradeItem>().ClearSlot();
 
         Managers.Game.IsInteract = false;
-        Managers.UI.ClosePopupUI(this);
-
-        Managers.Game.isPopups[Define.Popup.Inventory] = false;
-        Managers.UI.ClosePopupUI(Managers.Game._playScene._inventory);
+        
+        Managers.UI.CloseAllPopupUI();
     }
 }

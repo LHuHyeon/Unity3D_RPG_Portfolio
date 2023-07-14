@@ -43,7 +43,7 @@ public class UI_LoadPopup : UI_Popup
             if (currentMessageNumber >= loadMessges.Length)
                 currentMessageNumber = 0;
 
-            tipText.text = $"[{currentMessageNumber+1}] Tip : {loadMessges[currentMessageNumber]}";
+            tipText.text = $"Tip : {loadMessges[currentMessageNumber]}";
         }
     }
     

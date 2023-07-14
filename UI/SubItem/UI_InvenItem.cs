@@ -39,9 +39,17 @@ public class UI_InvenItem : UI_SlotItem
             if (item == null || UI_DragSlot.instance.dragSlotItem != null)
                 return;
 
-            // 장비 장착 or 아이템 사용
+            // 슬롯 우클릭
             if (Input.GetMouseButtonUp(1))
             {
+                // 상호작용 중이라면
+                if (Managers.Game.IsInteract == true)
+                {
+                    Managers.Game.GetSlotInteract(this);
+                    return;
+                }
+
+                // 장비 or 소비 아이템이라면
                 if ((item is EquipmentData) == true)
                 {
                     // 장착 레벨 확인

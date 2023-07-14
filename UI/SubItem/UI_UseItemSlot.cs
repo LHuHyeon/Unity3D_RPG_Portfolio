@@ -72,10 +72,12 @@ public class UI_UseItemSlot : UI_SlotItem
         if ((slot.item is UseItemData) == false)
             return;
 
-        // 지금 슬롯에 아이템이 존재하면 인벤으로 보내기
+        // 지금 슬롯에 아이템이 존재할 때
         if (item != null)
         {
-            Managers.Game._playScene._inventory.AcquireItem(item, itemCount);
+            // 아이디가 다를 경우 인벤으로 보내기
+            if (item.id != slot.item.id)
+                Managers.Game._playScene._inventory.AcquireItem(item, itemCount);
         }
 
         AddItem(slot.item, (slot.item as UseItemData).itemCount);

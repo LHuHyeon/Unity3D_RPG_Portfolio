@@ -15,7 +15,7 @@ public abstract class BaseScene : MonoBehaviour
     protected virtual void Init()
     {
         Object obj = GameObject.FindObjectOfType(typeof(EventSystem));
-        
+
         if (obj == null)
             Managers.Resource.Instantiate("UI/EventSystem").name = "@EventSystem";
     }
