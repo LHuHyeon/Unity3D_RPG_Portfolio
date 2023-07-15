@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class SkinnedData
 {
-    public Mesh sharedMesh;
+    public string sharedMeshName;
     public Bounds bounds;
     public List<string> bones;
     public string rootBoneName;

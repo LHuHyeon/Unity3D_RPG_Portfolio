@@ -137,7 +137,7 @@ public class CharacterCustom : MonoBehaviour
         SkinnedMeshRenderer skinnedMesh = skinnedObject.GetComponent<SkinnedMeshRenderer>();
 
         SkinnedData skinned = new SkinnedData(){
-            sharedMesh = skinnedMesh.sharedMesh,
+            sharedMeshName = skinnedMesh.name,
             bounds = skinnedMesh.localBounds,
             rootBoneName = skinnedMesh.rootBone.name,
         };

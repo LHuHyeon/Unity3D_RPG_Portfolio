@@ -99,7 +99,15 @@ public class UI_SkillBarItem : UI_SkillSlot
         else
             Managers.Game.SkillBarList[keySkill] = skillData;
 
-        icon.sprite = skillData.skillSprite;
+        try
+        {
+            icon.sprite = skillData.skillSprite;
+        }
+        catch
+        {
+            icon.sprite = skillData.skillSprite = Managers.Data.Skill[skillData.skillId].skillSprite;
+        }
+        
         SetColor(255);
     }
 

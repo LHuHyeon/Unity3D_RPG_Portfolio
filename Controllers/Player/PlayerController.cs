@@ -124,7 +124,11 @@ public class PlayerController : BaseController
         SkinnedMeshRenderer objSkinned = go.GetComponent<SkinnedMeshRenderer>();
 
         SkinnedData skinnedInfo = Managers.Game.DefaultPart[partType];
-        objSkinned.sharedMesh = skinnedInfo.sharedMesh;
+
+        // 파츠를 가지고 있는 Model FBX를 찾아 파츠 이름 검색하여 Mesh 받기
+        GameObject meshObj = Managers.Resource.Load<GameObject>("Art/PolygonFantasyHeroCharacters/Models/ModularCharacters");
+
+        objSkinned.sharedMesh = Util.FindChild<SkinnedMeshRenderer>(meshObj, skinnedInfo.sharedMeshName, true).sharedMesh;
         objSkinned.localBounds = skinnedInfo.bounds;
         objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);
 

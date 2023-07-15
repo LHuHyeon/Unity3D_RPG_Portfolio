@@ -92,7 +92,15 @@ public class UI_SlotItem : UI_Base
     public virtual void AddItem(ItemData _item, int count = 1)
     {
         item = _item;
-        icon.sprite = item.itemIcon;
+
+        try
+        {
+            icon.sprite = item.itemIcon;
+        }
+        catch 
+        {
+            icon.sprite = item.itemIcon = Managers.Data.Item[item.id].itemIcon;
+        }
 
         // 색 활성화
         SetColor(255);
