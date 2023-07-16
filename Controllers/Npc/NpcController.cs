@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ NPC 컨트롤러 스크립트 ]
+1. 모든 NPC의 부모 클래스다.
+2. 상호작용 기능이 있다면 Interact를 수정하면 된다.
+*/
+
 public abstract class NpcController : BaseController
 {
     [SerializeField] protected string npcName;

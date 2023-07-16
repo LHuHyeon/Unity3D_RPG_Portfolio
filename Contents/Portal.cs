@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
+[ Scene 이동 포탈 ]
 1. 플레이어가 Collider에 닿으면 포탈이 열리고, 나가면 닫힘.
 2. 포탈에 플레이어가 닿으면 Scnce 이동.
 */

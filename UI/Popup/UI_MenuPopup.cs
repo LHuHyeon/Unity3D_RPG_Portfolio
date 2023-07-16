@@ -80,7 +80,6 @@ public class UI_MenuPopup : UI_Popup
     void Exit()
     {
         Time.timeScale = 1;
-        Managers.Game.isPopups[Define.Popup.Menu] = false;
         Managers.UI.ClosePopupUI(this);
     }
 }

@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 몬스터 공격 판정 스크립트 ]
+1. 몬스터가 공격할 시 범위 Collider 활성화 후 0.1f초 정도 뒤에 비활성화한다.
+2. Collider에 플레이어가 닿았을 때 비활성화 되면 데미지를 입힌다.
+*/
+
 public class AttackRange : MonoBehaviour
 {
     GameObject player;

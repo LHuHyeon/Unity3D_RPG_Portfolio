@@ -30,6 +30,8 @@ public class UI_QuestPopup : UI_Popup
     int maxquestNoticeCount = 5;
     public List<UI_QuestNoticeSlot> questNoticeList;
 
+    public UI_QuestNotice noticeObject;
+
     QuestData currentClickQuest;
 
     public override bool Init()
@@ -49,6 +51,8 @@ public class UI_QuestPopup : UI_Popup
         BindText(typeof(Texts));
 
         SetInfo();
+
+        noticeObject = Managers.UI.MakeWorldSpaceUI<UI_QuestNotice>();
 
         Managers.UI.ClosePopupUI(this);
 
@@ -83,7 +87,7 @@ public class UI_QuestPopup : UI_Popup
 
     void SetInfo()
     {
-        GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this); Managers.Game.isPopups[Define.Popup.Quest] = false;});
+        GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this);});
 
         // 미리보기 삭제
         foreach(Transform child in GetObject((int)Gameobejcts.Content).transform)

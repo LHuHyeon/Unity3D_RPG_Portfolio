@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 상점 NPC 컨트롤러 스크립트 ]
+1. 플레이어와 상호작용하면 상점 UI를 활성화 한다. (UI_ShopPopup)
+*/
+
 public class ShopNpcController : NpcController
 {
     public Define.ShopType shopType = Define.ShopType.Unknown;
@@ -30,7 +35,6 @@ public class ShopNpcController : NpcController
         Managers.UI.OnPopupUI(Managers.Game._playScene._shop);
         Managers.Game._playScene._shop.RefreshUI(this, shopBuyId);
 
-        Managers.Game.isPopups[Define.Popup.Inventory] = true;
         Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
         Managers.Game._playScene._inventory.ResetPos();
     }

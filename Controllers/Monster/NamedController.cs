@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 네임드 컨트롤러 스크립트 ]
+1. 패턴 : 일반 공격 2회 -> 강력한 근접 공격 1회
+*/
+
 public class NamedController : MonsterController
 {
     int attackCount = 0;    // 공격 횟수 (3번 하면 스킬 진행)

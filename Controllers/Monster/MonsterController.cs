@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/*
+[ 몬스터 컨트롤러 스크립트 ]
+1. 모든 몬스터의 부모 클래스다.
+2. 일반 몬스터를 사용할 시 그냥 사용해도 된다.
+*/
+
 public class MonsterController : BaseController
 {
     public Define.MonsterType monsterType = Define.MonsterType.Normal;

@@ -16,7 +16,7 @@ public class PlayerController : BaseController
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
 
     [SerializeField]
-    GameObject rootBone;
+    GameObject rootBone;    // SkinnedMeshRenderer 대표 뼈대
 
     public GameObject clickMoveEffect;
 

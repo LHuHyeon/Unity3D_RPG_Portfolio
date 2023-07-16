@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 캐릭터 커스텀 스크립트 ]
+1. 플레이어를 회전시키며 얼굴과 옷을 꾸민다. 다 완성되면 이름을 생성하고 Game Scene으로 이동한다.
+2. 커스텀 부위 : 머리카락, 눈썹, 수염, 얼굴 문신, 상체, 하체
+3. UI_CustomScene의 버튼으로 호출된다.
+*/
+
 public class CharacterCustom : MonoBehaviour
 {
-    /*
-    1. 커스텀 부위 : 머리카락, 눈썹, 수염, 얼굴 문신, 상체, 하체
-    2. 완성 시 해당 부위들 저장
-    */
-
     [SerializeField] List<GameObject> hairList = new List<GameObject>();
     [SerializeField] List<GameObject> headList = new List<GameObject>();
     [SerializeField] List<GameObject> eyebrowsList = new List<GameObject>();

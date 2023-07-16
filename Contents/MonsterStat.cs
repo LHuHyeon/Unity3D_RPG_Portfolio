@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 몬스터 정보 스크립트 ]
+1. 기본 정보가 담겨있다.
+2. 피격, 죽었을때, 드랍아이템 등을 관리한다.
+*/
+
 public class MonsterStat : MonoBehaviour
 {
     [SerializeField] protected int _id;

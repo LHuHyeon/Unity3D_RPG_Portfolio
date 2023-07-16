@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/*
+[ 미사일 컨트롤러 스크립트 ]
+1. 일정 시간동안 타겟을 따라다녀 부딪칠 시 데미지를 입힌다.
+2. 현재 보스 유도 미사일 공격으로 사용 중이다.
+*/
+
 public class MissileController : MonoBehaviour
 {
     MonsterStat _stat;

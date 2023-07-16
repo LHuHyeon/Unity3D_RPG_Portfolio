@@ -104,9 +104,15 @@ public class GameManager
     {
         get { return isInteract; }
         set {
-            // 상호작용 중이면 Popup UI 끄기
+            // NPC와 상호작용하면 플레이어만의 Popup창 끄기
             if (value == true)
-                Managers.UI.CloseAllPopupUI();
+            {
+                // 장비창, 인벤창, 스킬창, 퀘스트창 False
+                isPopups[Define.Popup.Equipment] = false;
+                isPopups[Define.Popup.Inventory] = false;
+                isPopups[Define.Popup.SkillUI] = false;
+                isPopups[Define.Popup.Quest] = false;
+            }
 
             isInteract = value;
         }
@@ -365,6 +371,10 @@ public class GameManager
                 if (questData.targetId == go.GetComponent<MonsterStat>().Id)
                 {
                     questData.currnetTargetCount = Mathf.Clamp(++questData.currnetTargetCount, 0, questData.targetCount);
+
+                    if (questData.currnetTargetCount >= questData.targetCount)
+                        Managers.Game._playScene._quest.noticeObject.SetInfo("?");
+                        
                     return;
                 }
             }

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-// 몬스터 자동 생성
+/*
+[ 몬스터 자동 생성 ]
+1. 스폰 위치에서 일정 범위를 정하여 몬스터를 소환한다.
+*/
+
 public class SpawningPool : MonoBehaviour
 {
     public GameObject _spawnMonsterNumber;

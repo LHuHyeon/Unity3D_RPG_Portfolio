@@ -177,7 +177,6 @@ public class UI_InvenPopup : UI_Popup
     void Exit()
     {
         Managers.Game._playScene._slotTip.OnSlotTip(false);
-        Managers.Game.isPopups[Define.Popup.Inventory] = false;
         Managers.UI.ClosePopupUI(this);
     }
 }

@@ -116,6 +116,8 @@ public class UIManager
         Managers.Pool.Pop(popup.gameObject);
         SetOrder(popup.GetComponent<Canvas>());
 
+        Managers.Game.isPopups[popup.popupType] = true;
+
         popup.transform.SetParent(Root.transform);
     }
 
@@ -131,8 +133,8 @@ public class UIManager
             return;
         }
 
+        Managers.Game.isPopups[_popup.popupType] = false;
         _popupList.Remove(_popup);
-
         Managers.Resource.Destroy(_popup.gameObject);
 
         _order--;
@@ -147,9 +149,9 @@ public class UIManager
         {
             if (popup != null)
             {
-                Managers.Resource.Destroy(popup.gameObject);
                 Managers.Game.isPopups[popup.popupType] = false;
                 _popupList.Remove(popup);
+                Managers.Resource.Destroy(popup.gameObject);
                 return true;
             }
         }

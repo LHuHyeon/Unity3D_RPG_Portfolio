@@ -194,6 +194,7 @@ public class UI_TalkPopup : UI_Popup
     void OnClickAcceptButton()
     {
         Managers.Game._playScene._quest.SetQeust(questData);
+        Managers.Game._playScene._quest.noticeObject.SetInfo("");
 
         IsQuestActive(false);
         SetInfo(talkData.acceptTalk);
@@ -227,7 +228,6 @@ public class UI_TalkPopup : UI_Popup
     public void Clear()
     {
         Managers.Game.IsInteract = false;
-        Managers.Game.isPopups[Define.Popup.Talk] = false;
 
         GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
         GetButton((int)Buttons.NextButton).gameObject.SetActive(false);

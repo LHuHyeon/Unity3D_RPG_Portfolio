@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 아이템 줍기 스크립트 ]
+1. 땅에 떨어져 있는 아이템에 들어있는 스크립트.
+2. 플레이어가 다가오면 이름을 표시한다.
+3. PlayerController에서 F를 눌렀을 때 ItemPickUp Class를 확인하여 아이템을 줍는다.
+*/
+
 public class ItemPickUp : MonoBehaviour
 {
     public ItemData item;

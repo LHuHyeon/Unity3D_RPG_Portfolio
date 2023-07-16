@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 보스(데몬) 컨트롤러 스크립트 ]
+1. 패턴 : 일반 공격 2회 -> 콤보 근접 공격 1회 -> 3개 스킬 무작위 사용
+2. 스킬 : 점프 공격, 유도 미사일 공격, 제자리 범위 지속 공격
+*/
+
 public class BossController : MonsterController
 {
     int attackCount = 0;    // 공격 횟수 (3번 하면 스킬 진행)

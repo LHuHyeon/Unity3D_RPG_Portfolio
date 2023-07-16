@@ -208,7 +208,6 @@ $@"<color=white>이름</color>
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
-            Managers.Game.isPopups[Define.Popup.Equipment] = false;
             Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);
     }
@@ -243,7 +242,6 @@ $@"<color=white>{Managers.Game.Name}</color>
     void Exit()
     {
         Managers.Game._playScene._slotTip.OnSlotTip(false);
-        Managers.Game.isPopups[Define.Popup.Equipment] = false;
         Managers.UI.ClosePopupUI(this);
     }
 }

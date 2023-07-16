@@ -66,7 +66,6 @@ public class UI_SkillPopup : UI_Popup
         // Exit 버튼
         GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
         {
-            Managers.Game.isPopups[Define.Popup.SkillUI] = false;
             Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);
     }
@@ -74,7 +73,6 @@ public class UI_SkillPopup : UI_Popup
     void Exit()
     {
         Managers.Game._playScene._slotTip.OnSlotTip(false);
-        Managers.Game.isPopups[Define.Popup.SkillUI] = false;
         Managers.UI.ClosePopupUI(this);
     }
 }

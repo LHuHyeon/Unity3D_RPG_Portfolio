@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 퀘스트 NPC 컨트롤러 스크립트 ]
+1. 대화 종류 : 일반 대화, 퀘스트 시작 대화, 수락 대화, 거절 대화, 퀘스트 진행 중 대화, 클리어 대화
+2. 퀘스트를 id로 미리 저장하고 Init에서 id에 맞는 퀘스트 데이터를 받아온다.
+3. 클리어 상태, 수락 상태, 미수락 상태 등 상황에 맞게 구현.
+*/
+
 public class QuestNpcController : NpcController
 {
     public Define.QuestType questType = Define.QuestType.Unknown;
@@ -42,7 +49,6 @@ public class QuestNpcController : NpcController
             {
                 if (questDataList[nextQuest].id == Managers.Game.ClearQuest[i].id)
                 {
-                    Debug.Log("NextQuest()");
                     NextQuest();
                     continue;
                 }
@@ -51,15 +57,19 @@ public class QuestNpcController : NpcController
             break;
         }
 
-        // 현재 진행 중인 퀘스트의 id와 같다면 퀘스트 진행사항 넣어주기
-        for(int i=0; i<Managers.Game.CurrentQuest.Count; i++)
+        Invoke("DelayInit", 0.1f);
+    }
+
+    void DelayInit()
+    {
+        // 퀘스트 중이 아니라면 ! 띄우기
+        if (currentQuest.isAccept == false)
         {
-            if (questDataList[nextQuest].id == Managers.Game.CurrentQuest[i].id)
-            {
-                Debug.Log("QuestAccept()");
-                currentQuest = questDataList[nextQuest] = Managers.Game.CurrentQuest[i];
-            }
+            if (currentQuest.minLevel <= Managers.Game.Level)
+                Managers.Game._playScene._quest.noticeObject.SetInfo("!", transform.position);
         }
+        else
+            Managers.Game._playScene._quest.noticeObject.SetInfo("", transform.position);
     }
 
     public override void Interact()
@@ -79,8 +89,6 @@ public class QuestNpcController : NpcController
     {
         if (currentTalk == null)
             return;
-
-        Managers.Game.isPopups[Define.Popup.Talk] = true;
 
         // 이미 퀘스트를 클리어 했는가?
         if (currentQuest.isClear == true)
@@ -145,9 +153,16 @@ public class QuestNpcController : NpcController
 
         // 퀘스트 개수 확인
         if (nextQuest == questDataList.Count)
+        {
+            Managers.Game._playScene._quest.noticeObject.SetInfo("", transform.position);
             return;
+        }
 
         currentQuest = questDataList[nextQuest];
         currentTalk = talkDataList[nextQuest];
+
+        // 레벨 체크
+        if (currentQuest.minLevel <= Managers.Game.Level)
+            Managers.Game._playScene._quest.noticeObject.SetInfo("!", transform.position);
     }
 }
