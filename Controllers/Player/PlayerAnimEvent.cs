@@ -2,7 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 공격마다 각 사거리가 다르므로 여기서 관리
+/*
+[ 플레이어 애니메이션 Event 스크립트 ]
+1. 플레이어의 공격, 스킬 등의 애니메이션 Event를 관리한다.
+2. 공격마다 각 사거리가 다르므로 하드코딩 해줬다.
+*/
+
 public class PlayerAnimEvent : MonoBehaviour
 {
     [SerializeField]

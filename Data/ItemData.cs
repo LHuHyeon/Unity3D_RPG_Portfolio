@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 아이템 데이터 ]
+1. 모든 아이템은 해당 클래스를 상속받음.
+*/
+
 [Serializable]
 public abstract class ItemData
 {

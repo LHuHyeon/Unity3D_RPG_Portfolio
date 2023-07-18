@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 카메라 컨트롤러 스크립트 ]
+1. 플레이어를 쿼터뷰 방식으로 따라다닌다.
+2. 장애물이 플레이어를 가리면 플레이어에게 더 가깝게 이동한다.
+*/
+
 public class CameraController : MonoBehaviour
 {
     [SerializeField]

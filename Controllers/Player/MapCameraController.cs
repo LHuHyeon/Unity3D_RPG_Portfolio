@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 맵 카메라 컨트롤러 스크립트 ]
+1. 미니맵 전용 카메라다.
+*/
+
 public class MapCameraController : MonoBehaviour
 {
     [SerializeField]

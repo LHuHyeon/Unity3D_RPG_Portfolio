@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
+/*
+[ 플레이어 컨트롤러 스크립트 ]
+1. SetInfo : 장비 파츠(SkinnedMeshRenderer) 찾아서 저장
+2. State : Idle, Moving, DiveRoll(구르기), Attack, Hit
+3. 기능 : 마우스 입력, 키 입력, 연속 공격, 스킬, 아이템 줍기
+*/
 
 public class PlayerController : BaseController
 {
-    bool _stopAttack = true;   // 공격 가능 여부
+    bool _stopAttack = true;    // 공격 가능 여부
     
-    bool _isDiveRoll = false;    // 구르기 여부
+    bool _isDiveRoll = false;   // 구르기 여부
     bool _isDown = false;       // 넘어진 상태 여부
 
-    // LayerMask 변수
+    // Click LayerMask
     int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Npc);
 
     [SerializeField]
-    GameObject rootBone;    // SkinnedMeshRenderer 대표 뼈대
+    GameObject rootBone;                // SkinnedMeshRenderer 대표 뼈대
 
-    public GameObject clickMoveEffect;
+    public GameObject clickMoveEffect;  // 이동 클릭 활성화 이펙트
 
     // 이펙트 관리 변수
     [SerializeField]
@@ -30,7 +36,6 @@ public class PlayerController : BaseController
 
     // 장비 오브젝트 저장 (입는 장비)
     public Dictionary<int, List<GameObject>> charEquipment;
-    public Dictionary<Define.DefaultPart, SkinnedMeshRenderer> charSkinned;
 
     // 무기 오브젝트 저장 객체
     public GameObject waeponObjList;
@@ -40,7 +45,6 @@ public class PlayerController : BaseController
         WorldObjectType = Define.WorldObject.Player;
         
         charEquipment = new Dictionary<int, List<GameObject>>();
-        charSkinned = new Dictionary<Define.DefaultPart, SkinnedMeshRenderer>();
 
         anim = GetComponent<Animator>();
 
@@ -143,6 +147,7 @@ public class PlayerController : BaseController
 
 #region State 패턴
 
+    // 멈춤 상태
     protected override void UpdateIdle()
     {
         // TODO : 가만히 있을때의 모션 있으면 사용
@@ -152,8 +157,10 @@ public class PlayerController : BaseController
 
     Vector3 dir;
     float _scanRange = 1.5f;
+    // 이동 상태
     protected override void UpdateMoving()
     {
+        // 이동한 곳에 타겟이 있으면 멈추기
         if (_lockTarget != null)
         {
             float distance = (_lockTarget.transform.position - transform.position).magnitude;
@@ -167,20 +174,22 @@ public class PlayerController : BaseController
         // 타겟 대상을 클릭했을 때 콜라이더 위쪽을 클릭하게 된다면 그쪽을 바라보고 달리기 때문에 y값을 0으로 준다.
         _destPos.y = 0; 
 
-        // 도착 위치 벡터에서 플레이어 위치 벡터를 뺀다.
+        // 타겟과의 거리
         dir = _destPos - transform.position;
 
-        // Vector3.magnitude = 벡터값의 길이
+        // 0.1만큼 가깝다면 멈추기
         if (dir.magnitude < 0.1f)
             State = Define.State.Idle;
         else
         {
+            // 가는 중에 벽이 있으면 멈추기
             if (BlockCheck() == true){
                 if (Input.GetMouseButton(0) == false)
                     State = Define.State.Idle;
                 return;
             }
 
+            // 회전
             float moveDist = Mathf.Clamp(Managers.Game.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
             
             transform.position += dir.normalized * moveDist;
@@ -188,6 +197,7 @@ public class PlayerController : BaseController
         }
     }
 
+    // 구르기 상태
     protected override void UpdateDiveRoll()
     {
         StopAttack();
@@ -208,6 +218,7 @@ public class PlayerController : BaseController
     }
 
     float _attackCloseTime = 0;
+    // 공격 상태
     protected override void UpdateAttack()
     {
         _attackCloseTime += Time.deltaTime;
@@ -227,6 +238,7 @@ public class PlayerController : BaseController
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
     }
 
+    // 피격 받기 (넘어지는 공격에 호출됨)
     public void OnHitDown(MonsterStat attacker, int addDamge = 0)
     {
         if (_isDiveRoll == true)
@@ -302,10 +314,12 @@ public class PlayerController : BaseController
                     {
                         State = Define.State.Moving;
                         
+                        // 클릭 장소에 파란 원 활성화시키기
                         clickMoveEffect.SetActive(false);
                         clickMoveEffect.SetActive(true);
                         clickMoveEffect.transform.position = _destPos;
 
+                        // 클릭 위치에 타겟이 있다면 저장
                         if (hit.collider.gameObject.layer == (int)Define.Layer.Npc)
                             _lockTarget = hit.collider.gameObject;
                         else
@@ -316,8 +330,10 @@ public class PlayerController : BaseController
             // 마우스를 클릭 중일 때
             case Define.MouseEvent.RightPress:
                 {
-                    if (_stopAttack)
+                    // 공격 상태가 아니라면
+                    if (_stopAttack == true)
                     {
+                        // 멈추고 있으면 움직이기
                         if (State == Define.State.Idle)
                             State = Define.State.Moving;
 
@@ -359,13 +375,13 @@ public class PlayerController : BaseController
 
 #region 연속 공격 스크립트
 
-    bool _onAttack = false;
-    bool _onComboAttack = false;
-    int attackClipNumber = 0;
+    bool _onAttack = false;         // 공격 여부 체크
+    bool _onComboAttack = false;    // 콤보 공격 여부 체크
+    int attackClipNumber = 0;       // 애니메이션 number
     string[] _attackClipList = new string[] {"ATTACK1", "ATTACK2"};
     void OnAttack()
     {
-        // 콤보 체크
+        // 콤보 체크 (공격 중에 다음 공격을 할 것인지?)
         if (_onAttack &&
             anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") &&
             anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.3f)
@@ -384,6 +400,7 @@ public class PlayerController : BaseController
     }
 
     // [ Anim Event ]
+    // 공격이 끝나면 발동.
     public void ExitAttack()
     {
         if (_onComboAttack == true)
@@ -398,6 +415,7 @@ public class PlayerController : BaseController
         }
     }
 
+    // 공격 중지
     void StopAttack()
     {
         _onAttack = false;
@@ -414,17 +432,18 @@ public class PlayerController : BaseController
     // 키보드 클릭
     void OnKeyEvent()
     {
+        // 구르지 않을 때 가능
         if (_isDiveRoll == false)
         {
-            GetDiveRoll();
-            GetSkill();
+            GetDiveRoll();  // 구르기
+            GetSkill();     // 스킬
         }
 
-        GetUseItem();
-        GetPickUp();
+        GetUseItem();       // 아이템 사용
+        GetPickUp();        // 아이템 줍기
     }
 
-    // 아이템 줍기
+    // F Key로 아이템 줍기
     [SerializeField]
     float itemMaxRadius = 5f;
     void GetPickUp()
@@ -451,6 +470,7 @@ public class PlayerController : BaseController
     }
 
     // [ Anim Event ]
+    // 구르기가 끝나면 발동.
     public void EventDiveRoll()
     {
         _isDiveRoll = false;
@@ -458,6 +478,7 @@ public class PlayerController : BaseController
         State = Define.State.Idle;
     }
 
+    // Space Bar로 구르기
     void GetDiveRoll()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -468,6 +489,7 @@ public class PlayerController : BaseController
             _isDown = false;
             _isDiveRoll = true;
 
+            // 넘어진 상태라면 취소시키기
             StopCoroutine(HitDown(null));
 
             State = Define.State.DiveRoll;
@@ -487,20 +509,15 @@ public class PlayerController : BaseController
     void GetUseItem()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            OnUseItem(1);
+            Managers.Game._playScene.UsingItem(1);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            OnUseItem(2);
+            Managers.Game._playScene.UsingItem(2);
     }
 
-    void OnUseItem(int key)
-    {
-        Managers.Game._playScene.UsingItem(key);
-    }
-
-    // 스킬 사용
+    // 스킬 사용 (Q, W, E, A, S, D, R)
     void GetSkill()
     {
-        // 스킬 사용 중이면
+        // 스킬 사용 중이면 x
         if (State == Define.State.Skill || _isDown == true)
             return;
 
@@ -544,6 +561,7 @@ public class PlayerController : BaseController
         if (skill.skillConsumMp > Managers.Game.Mp)
             return;
 
+        // 일반 공격 중지
         StopAttack();
 
         // 마우스 방향으로 회전
@@ -570,10 +588,12 @@ public class PlayerController : BaseController
         currentSkill.isCoolDown = true;
         Managers.Game.Mp -= currentSkill.skillConsumMp;
 
+        // 스킬 이펙트 활성화
         currentEffect.SetActive(true);
     }
 
-    // 스킬 끝날 때 [ Anim Event ]
+    // [ Anim Event ]
+    // 스킬 끝날 때 발동
     public void EventEndSkill()
     {
         EffectClose();
@@ -582,7 +602,7 @@ public class PlayerController : BaseController
 
 #endregion
 
-    // 마우스 Ray
+    // 마우스 Ray 위치 반환
     public Vector3 GetMousePoint()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -593,6 +613,7 @@ public class PlayerController : BaseController
         return hitPoint;
     }
 
+    // 스킬 이펙트 비활성화
     public void EffectClose()
     {
         if (currentEffect == null)
@@ -604,22 +625,24 @@ public class PlayerController : BaseController
             StartCoroutine(EffectDisableDelayTime());
     }
 
-    // 잠시 가만히 있어야할 이펙트가 있다면 사용
+    // 플레이어가 움직이더라도 스킬 이펙트가 활성화되야 한다면 사용
     IEnumerator EffectDisableDelayTime()
     {
-        GameObject effect = currentEffect;
-        Transform effectParent = effect.transform.parent;
-        Vector3 effectPos = effect.transform.localPosition;
+        Transform effectParent = currentEffect.transform.parent;   // 이펙트 부모
+        Vector3 effectPos = currentEffect.transform.localPosition; // 이펙트 위치
 
-        effect.transform.SetParent(null);
+        // 부모 빠져나오기
+        currentEffect.transform.SetParent(null);
     
-        yield return new WaitForSeconds(effect.GetComponent<EffectData>().disableDelayTime);
+        // 이펙트 비활성화 기다리기
+        yield return new WaitForSeconds(currentEffect.GetComponent<EffectData>().disableDelayTime);
 
-        effect.transform.SetParent(effectParent);
-        effect.transform.localPosition = effectPos;
-        effect.transform.localRotation = Quaternion.identity;
+        // 원위치 이동 후 비활성화
+        currentEffect.transform.SetParent(effectParent);
+        currentEffect.transform.localPosition = effectPos;
+        currentEffect.transform.localRotation = Quaternion.identity;
 
-        effect.SetActive(false);
+        currentEffect.SetActive(false);
     }
 
     // 전방 Block 체크하여 멈추기 (1.0f 거리에서 멈추기)
@@ -632,6 +655,7 @@ public class PlayerController : BaseController
     }
 
     Coroutine co;
+    // 레벨업 시 이펙트 발동
     public void LevelUpEffect()
     {
         if (co != null) StopCoroutine(co);
@@ -643,7 +667,7 @@ public class PlayerController : BaseController
         GameObject effect = Managers.Resource.Instantiate("Effect/LevelUpEffect", this.transform);
         effect.transform.localPosition = Vector3.zero;
 
-        yield return new WaitForSeconds(4.5f);
+        yield return new WaitForSeconds(4f);
 
         Managers.Resource.Destroy(effect);
     }

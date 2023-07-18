@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 기본 컨트롤러 스크립트 ]
+1. 모든 컨트롤러의 부모
+2. 상태에 따른 애니메이션 실행
+*/
+
 public abstract class BaseController : MonoBehaviour
 {
     protected Animator anim;
