@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 메뉴 Popup 스크립트 ]
+1. Esc를 눌렀을 때 활성화된 Popup창이 없다면 Menu Popup을 활성화한다.
+*/
+
 public class UI_MenuPopup : UI_Popup
 {
     enum Buttons

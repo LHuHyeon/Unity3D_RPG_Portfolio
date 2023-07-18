@@ -34,7 +34,7 @@ public class EffectAttackRange : MonoBehaviour
     {
         yield return new WaitForSeconds(_effectTime);
 
-        if (player != null)
+        if (player.IsNull() == false)
             Managers.Game.OnAttacked(_stat, (int)(_stat.Attack / 2));
 
         Managers.Resource.Destroy(_effect);

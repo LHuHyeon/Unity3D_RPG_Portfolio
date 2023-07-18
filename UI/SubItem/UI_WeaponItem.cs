@@ -14,7 +14,7 @@ public class UI_WeaponItem : UI_SlotItem
         Managers.Game._playScene._equipment.weaponSlot = this;
 
         // 해당 부위 장비가 장착되어 있다면
-        if (Managers.Game.CurrentWeapon != null)
+        if (Managers.Game.CurrentWeapon.IsNull() == false)
         {
             AddItem(Managers.Game.CurrentWeapon);
             Managers.Game.UpgradeMeshEffect(weaponItem);
@@ -29,7 +29,7 @@ public class UI_WeaponItem : UI_SlotItem
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item == null || UI_DragSlot.instance.dragSlotItem != null)
+            if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
                 return;
 
             // 장비 벗기
@@ -44,7 +44,7 @@ public class UI_WeaponItem : UI_SlotItem
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             // 아이템을 버린 위치가 UI가 아니라면
-            if (item != null && !EventSystem.current.IsPointerOverGameObject())
+            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
             {
                 // 아이템 인벤으로 이동
             }
@@ -59,7 +59,7 @@ public class UI_WeaponItem : UI_SlotItem
         {
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
-            if (dragSlot != null)
+            if (dragSlot.IsNull() == false)
             {
                 // 자기 자신이라면
                 if (dragSlot == this)
@@ -98,7 +98,7 @@ public class UI_WeaponItem : UI_SlotItem
 
         // 기존 장비 인벤 이동
         UI_InvenItem inven = itemSlot as UI_InvenItem;
-        if (_tempItem != null)
+        if (_tempItem.IsNull() == false)
             inven.AddItem(_tempItem);
         else
             inven.ClearSlot();
@@ -111,7 +111,7 @@ public class UI_WeaponItem : UI_SlotItem
         weaponItem = _item as WeaponItemData;
         
         // 장착 중인 무기가 있다면 비활성화
-        if (Managers.Game.CurrentWeapon != null)
+        if (Managers.Game.CurrentWeapon.IsNull() == false)
         {
             // 장비 파츠 확인
             GetPart(Managers.Game.CurrentWeapon);
@@ -128,7 +128,7 @@ public class UI_WeaponItem : UI_SlotItem
 
     void GetPart(WeaponItemData weapon)
     {
-        if (weapon.charEquipment == null)
+        if (weapon.charEquipment.IsNull() == true)
             weapon.charEquipment = (Managers.Data.Item[weapon.id] as WeaponItemData).charEquipment;
     }
 

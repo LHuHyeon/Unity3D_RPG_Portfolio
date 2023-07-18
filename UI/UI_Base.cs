@@ -42,7 +42,7 @@ public abstract class UI_Base : MonoBehaviour
             else
                 objects[i] = Util.FindChild<T>(gameObject, names[i], true);
 
-            if (objects[i] == null)
+            if (objects[i].IsNull() == true)
                 Debug.Log($"Failed to bind({names[i]})");
         }
     }

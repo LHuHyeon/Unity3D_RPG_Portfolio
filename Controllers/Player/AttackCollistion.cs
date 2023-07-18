@@ -56,7 +56,7 @@ public class AttackCollistion : MonoBehaviour
         BasicColliderSize();
 
         // 마지막 스킬 공격이라면 index 초기화 
-        if (player.currentSkill != null)
+        if (player.currentSkill.IsNull() == false)
         {
             if (skillIndex == player.currentSkill.powerList.Count - 1)
                 skillIndex = 0;

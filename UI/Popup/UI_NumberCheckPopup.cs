@@ -6,6 +6,12 @@ using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
 
+/*
+[ 개수 체크 Popup 스크립트 ]
+1. 아이템을 구매or판매할 때 사용된다.
+2. 자주 호출되는 함수 : RefreshUI()
+*/
+
 public class UI_NumberCheckPopup : UI_Popup
 {   
     enum Gameobjects
@@ -116,7 +122,7 @@ public class UI_NumberCheckPopup : UI_Popup
     {
         Managers.UI.ClosePopupUI(this);
 
-        if (_onClickYesButton != null)
+        if (_onClickYesButton.IsNull() == false)
             _onClickYesButton.Invoke(itemCount);
     }
 

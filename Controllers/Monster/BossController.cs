@@ -28,7 +28,7 @@ public class BossController : MonsterController
         monsterType = Define.MonsterType.Boss;
 
         exitPortal = GameObject.FindObjectOfType<Portal>();
-        if (exitPortal != null)
+        if (exitPortal.IsNull() == false)
             exitPortal.gameObject.SetActive(false);
     }
 
@@ -44,7 +44,7 @@ public class BossController : MonsterController
 
     void ThinkSkill()
     {
-        if (_lockTarget == null)
+        if (_lockTarget.IsNull() == true)
             return;
 
         State = Define.State.Skill;
@@ -247,7 +247,7 @@ public class BossController : MonsterController
     {
         base.UpdateDie();
 
-        if (exitPortal == null)
+        if (exitPortal.IsNull() == true)
             return;
 
         // 나가는 포탈 생성

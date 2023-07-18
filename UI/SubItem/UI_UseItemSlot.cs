@@ -33,10 +33,10 @@ public class UI_UseItemSlot : UI_SlotItem
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (UI_DragSlot.instance.dragSlotItem == null)
+            if (UI_DragSlot.instance.dragSlotItem.IsNull() == true)
                 return;
 
-            if (item != null && !EventSystem.current.IsPointerOverGameObject())
+            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
             {
                 Managers.Game._playScene._inventory.AcquireItem(item, itemCount);
                 ClearSlot();
@@ -52,7 +52,7 @@ public class UI_UseItemSlot : UI_SlotItem
         {
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
-            if (dragSlot != null)
+            if (dragSlot.IsNull() == false)
             {
                 // 자기 자신이라면
                 if (dragSlot == this)
@@ -73,7 +73,7 @@ public class UI_UseItemSlot : UI_SlotItem
             return;
 
         // 지금 슬롯에 아이템이 존재할 때
-        if (item != null)
+        if (item.IsNull() == false)
         {
             // 아이디가 다를 경우 인벤으로 보내기
             if (item.id != slot.item.id)

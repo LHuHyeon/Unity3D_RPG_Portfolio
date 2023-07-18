@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 
+
+// 플레이어의 모든 입력은 여기서 관리
 public class InputManager
 {
     // 키 입력 메소드들을 한번에 실행하기 위한 변수
@@ -23,14 +25,14 @@ public class InputManager
             return;
 
         // 키입력 메소드가 KeyAction안에 존재하는가?
-        if (Input.anyKey && KeyAction != null)
+        if (Input.anyKey && KeyAction.IsNull() == false)
             KeyAction.Invoke();
 
         // UI를 클릭했을 때
         if (EventSystem.current.IsPointerOverGameObject())
             return;
         
-        if (MouseAction != null){
+        if (MouseAction.IsNull() == false){
             if (Input.GetMouseButton(1)){
                 if (!_rightPressed){
                     MouseAction.Invoke(Define.MouseEvent.RightDown);

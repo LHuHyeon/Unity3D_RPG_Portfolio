@@ -3,6 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 소비 아이템 데이터 ]
+1. 모든 소비 아이템은 해당 클래스를 받음.
+2. 체력 or 마나를 회복한다.
+*/
+
 [Serializable]
 public class UseItemData : ItemData
 {

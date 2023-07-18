@@ -57,7 +57,7 @@ public class QuestNpcController : NpcController
             break;
         }
 
-        Invoke("DelayInit", 0.1f);
+        Invoke("DelayInit", 0.0001f);
     }
 
     void DelayInit()
@@ -87,7 +87,7 @@ public class QuestNpcController : NpcController
 
     void TalkCheck()
     {
-        if (currentTalk == null)
+        if (currentTalk.IsNull() == true)
             return;
 
         // 이미 퀘스트를 클리어 했는가?

@@ -14,7 +14,7 @@ public class UI_QuestNoticeSlot : UI_Base
 
     void Update()
     {
-        if (_quest == null)
+        if (_quest.IsNull() == true)
             return;
 
         string questText = targetName + " : " + _quest.currnetTargetCount + " / " + _quest.targetCount;

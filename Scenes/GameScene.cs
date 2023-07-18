@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 게임 씬
 public class GameScene : BaseScene
 {
     [SerializeField]
@@ -13,7 +14,7 @@ public class GameScene : BaseScene
         SceneType = Define.Scene.Game;  // 타입 설정
 
         // 플레이어 캐릭터 생성
-        if (Managers.Game.GetPlayer() == false)
+        if (Managers.Game.GetPlayer().IsNull() == true)
         {
             GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
             _player.transform.position = playerSpawn.position;
@@ -23,7 +24,7 @@ public class GameScene : BaseScene
             Managers.Game.StopPlayer();
 
         // UI 생성
-        if (Managers.Game._playScene == false)
+        if (Managers.Game._playScene.IsNull() == true)
         {
             Managers.Game.Init();
             Managers.Game._playScene = Managers.UI.ShowSceneUI<UI_PlayScene>();
@@ -35,7 +36,7 @@ public class GameScene : BaseScene
             Managers.Game.GetPlayer().transform.position = Managers.Game.CurrentPos;
 
         // 클릭 Effect 생성
-        if (Managers.Game.GetPlayer() != null)
+        if (Managers.Game.GetPlayer().IsNull() == false)
         {
             GameObject clickMoveEffect = Managers.Resource.Instantiate("Effect/ClickMoveEffect");
             clickMoveEffect.SetActive(false);

@@ -24,7 +24,7 @@ public class AttackRange : MonoBehaviour
     // 비활성화 될때 플레이어와 접촉 중이면 데미지 주기
     void OnDisable()
     {
-        if (player == null)
+        if (player.IsNull() == true)
             return;
 
         if (_isDown == true)

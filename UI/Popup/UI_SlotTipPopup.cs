@@ -55,7 +55,7 @@ public class UI_SlotTipPopup : UI_Popup
     // 아이템 정보 확인시 새로고침
     public void RefreshUI(ItemData item)
     {
-        if (item == null)
+        if (item.IsNull() == true)
         {
             Debug.Log("아이템 정보가 없습니다.");
             OnSlotTip(false);

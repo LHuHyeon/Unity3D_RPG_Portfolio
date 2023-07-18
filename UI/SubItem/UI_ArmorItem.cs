@@ -30,7 +30,7 @@ public class UI_ArmorItem : UI_SlotItem
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item == null || UI_DragSlot.instance.dragSlotItem != null)
+            if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
                 return;
 
             // 장비 벗기
@@ -45,7 +45,7 @@ public class UI_ArmorItem : UI_SlotItem
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             // 아이템을 버린 위치가 UI가 아니라면
-            if (item != null && !EventSystem.current.IsPointerOverGameObject())
+            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
             {
                 // 아이템 인벤으로 이동
             }
@@ -60,7 +60,7 @@ public class UI_ArmorItem : UI_SlotItem
         {
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
-            if (dragSlot != null)
+            if (dragSlot.IsNull() == false)
             {
                 // 자기 자신이라면
                 if (dragSlot == this)
@@ -98,7 +98,7 @@ public class UI_ArmorItem : UI_SlotItem
 
         // 기존 장비 인벤 이동
         UI_InvenItem inven = itemSlot as UI_InvenItem;
-        if (_tempItem != null)
+        if (_tempItem.IsNull() == false)
             inven.AddItem(_tempItem);
         else
             inven.ClearSlot();
@@ -147,7 +147,7 @@ public class UI_ArmorItem : UI_SlotItem
     void EquipmentActive(ArmorItemData armor, bool isActive)
     {
         // 아이템이 현재 입고 있는 장비를 알고 있다면
-        if (armor.charEquipment != null)
+        if (armor.charEquipment.IsNull() == false)
         {
             foreach(GameObject obj in armor.charEquipment)
                 obj.SetActive(isActive);

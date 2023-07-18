@@ -69,7 +69,7 @@ public class UI_SkillItem : UI_SkillSlot
         // 스킬이 흭득 상태라면 마우스로 들기 가능.
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillData.isLock == true || skillData == null)
+            if (skillData.isLock == true || skillData.IsNull() == true)
                 return;
 
             Debug.Log("skillItem BeginDrag");
@@ -83,14 +83,14 @@ public class UI_SkillItem : UI_SkillSlot
         // 마우스 드래그 방향으로 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillData.isLock == false && skillData != null)
+            if (skillData.isLock == false && skillData.IsNull() == false)
                 UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
 
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillData.isLock == true || skillData == null)
+            if (skillData.isLock == true || skillData.IsNull() == true)
                 return;
                 
             UI_DragSlot.instance.SetColor(0);

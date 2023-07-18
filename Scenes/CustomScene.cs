@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 캐릭터 커스텀 씬
 public class CustomScene : BaseScene
 {
     [SerializeField]

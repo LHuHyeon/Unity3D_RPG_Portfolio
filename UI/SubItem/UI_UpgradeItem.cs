@@ -18,7 +18,7 @@ public class UI_UpgradeItem : UI_SlotItem
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item == null || UI_DragSlot.instance.dragSlotItem != null)
+            if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
                 return;
 
             // 슬롯 우클릭
@@ -32,11 +32,11 @@ public class UI_UpgradeItem : UI_SlotItem
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (UI_DragSlot.instance.dragSlotItem == null)
+            if (UI_DragSlot.instance.dragSlotItem.IsNull() == true)
                 return;
 
             // 아이템을 버린 위치가 UI가 아니라면
-            if (item != null && !EventSystem.current.IsPointerOverGameObject())
+            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
             {
                 // 아이템 버리기
             }
@@ -50,7 +50,7 @@ public class UI_UpgradeItem : UI_SlotItem
         gameObject.BindEvent((PointerEventData eventData)=>
         {
             // 아이템을 버린 위치가 UI가 아니라면
-            if (item != null && !EventSystem.current.IsPointerOverGameObject())
+            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
             {
                 // 아이템 인벤으로 이동
             }
@@ -93,7 +93,7 @@ public class UI_UpgradeItem : UI_SlotItem
             return;
 
         // 강화 슬롯에 아이템이 있다면 인벤으로 돌려 보내기
-        if (item != null)
+        if (item.IsNull() == false)
             Managers.Game._playScene._inventory.AcquireItem(item);
 
         EquipmentData equipment = invenSlot.item as EquipmentData;

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Managers : MonoBehaviour
 {
-    private static Managers s_instance; // 유일성이 보장된다.
-    private static Managers Instance { get { Init(); return s_instance; } }  // 유일한 매니저를 갖고 온다.
+    private static Managers s_instance;
+    private static Managers Instance { get { Init(); return s_instance; } }
 
 #region Contents
 
@@ -39,28 +39,28 @@ public class Managers : MonoBehaviour
     {
         Application.targetFrameRate = 50;
 
-        Init();     // 싱글톤
+        Init();
     }
 
     void Update()
     {
-        Input.OnUpdate();   // 키입력 메소드 호출
+        Input.OnUpdate();
         Game.OnUpdate();
     }
 
     // 싱글톤 메소드
     static void Init()
     {
-        if (s_instance == null){
-            GameObject go = GameObject.Find("@Manager");// 오브젝트 찾기
+        if (s_instance.IsNull() == true){
+            GameObject go = GameObject.Find("@Manager");
 
-            if (go == null){
-                go = new GameObject{name = "@Manager"}; // 오브젝트 이름 설정
-                go.AddComponent<Managers>();            // 컴포넌트 추가
+            if (go.IsNull() == true){
+                go = new GameObject{name = "@Manager"};
+                go.AddComponent<Managers>();
                 Debug.Log("@Manager 생성.");
             }
 
-            DontDestroyOnLoad(go);                      // 씬변경될 때 삭제 안됨.
+            DontDestroyOnLoad(go);
             s_instance = go.GetComponent<Managers>();
             
             s_instance._data.Init();

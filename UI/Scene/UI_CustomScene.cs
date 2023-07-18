@@ -26,7 +26,7 @@ public class UI_CustomScene : UI_Scene
         BindObject(typeof(GameObjects));
         BindButton(typeof(Buttons));
 
-        if (custom == null)
+        if (custom.IsNull() == true)
             custom = GameObject.FindObjectOfType<CharacterCustom>();
 
         foreach(Transform child in GetObject((int)GameObjects.Grid).transform)

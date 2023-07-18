@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+// 던전 씬
 public class DungeonScene : BaseScene
 {
     [SerializeField]
@@ -17,7 +18,7 @@ public class DungeonScene : BaseScene
 
         Managers.Game.GetPlayer().transform.position = playerSpawn.position;
 
-        if (Managers.Game.GetPlayer() != null)
+        if (Managers.Game.GetPlayer().IsNull() == false)
         {
             GameObject clickMoveEffect = Managers.Resource.Instantiate("Effect/ClickMoveEffect");
             clickMoveEffect.SetActive(false);

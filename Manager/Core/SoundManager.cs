@@ -14,7 +14,7 @@ public class SoundManager
         GameObject root = GameObject.Find("@Sound");
 
         // 객체가 없으면 생성
-        if (root == null){
+        if (root.IsNull() == true){
             root = new GameObject{name = "@Sound"};
             Object.DontDestroyOnLoad(root);
 
@@ -44,7 +44,7 @@ public class SoundManager
     // Audio 재생 : AudioClip으로 받을 때
     public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
     {
-        if (audioClip == null)
+        if (audioClip.IsNull() == true)
             return;
 
         if (type == Define.Sound.Bgm){
@@ -83,7 +83,7 @@ public class SoundManager
             }
         }
         
-        if (audioClip == null)
+        if (audioClip.IsNull() == true)
             Debug.Log($"AudioClip Missing ! {path}");
 
         return audioClip;

@@ -177,7 +177,7 @@ public class UI_PlayScene : UI_Scene
         SetRatio(Get<Slider>((int)Sliders.ExpBar), (float)Managers.Game.Exp / Managers.Game.TotalExp);
 
         // 몬스터랑 전투 중일 때
-        if (Managers.Game.currentMonster != null)
+        if (Managers.Game.currentMonster.IsNull() == false)
         {
             GetText((int)Texts.MonsterNameBarText).text = Managers.Game.currentMonster.Name;
             GetText((int)Texts.MonsterHpBarText).text = Managers.Game.currentMonster.Hp + " / " + Managers.Game.currentMonster.MaxHp;

@@ -36,7 +36,7 @@ public class UI_InvenItem : UI_SlotItem
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item == null || UI_DragSlot.instance.dragSlotItem != null)
+            if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
                 return;
 
             // 슬롯 우클릭
@@ -70,11 +70,11 @@ public class UI_InvenItem : UI_SlotItem
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (UI_DragSlot.instance.dragSlotItem == null)
+            if (UI_DragSlot.instance.dragSlotItem.IsNull() == true)
                 return;
 
             // 아이템을 버린 위치가 UI가 아니라면
-            if (item != null && !EventSystem.current.IsPointerOverGameObject())
+            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
             {
                 // 아이템 버리기
             }
@@ -87,7 +87,7 @@ public class UI_InvenItem : UI_SlotItem
         // 이 슬롯에 마우스 클릭이 끝나면 아이템 받기
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (UI_DragSlot.instance.dragSlotItem == null)
+            if (UI_DragSlot.instance.dragSlotItem.IsNull() == true)
                 return;
                 
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
@@ -150,7 +150,7 @@ public class UI_InvenItem : UI_SlotItem
         AddItem(dragSlot.item, dragSlot.itemCount);
 
         // 현재 슬롯 아이템을 드래그된 슬롯에 Add
-        if (_tempItem != null)
+        if (_tempItem.IsNull() == false)
             UI_DragSlot.instance.dragSlotItem.AddItem(_tempItem, _tempItemCount);
         else
             UI_DragSlot.instance.dragSlotItem.ClearSlot();
@@ -160,7 +160,7 @@ public class UI_InvenItem : UI_SlotItem
     private void AddSlot<T>(T slot, int count = 1) where T : UI_SlotItem
     {
         // 아이템이 있다면 다른 슬롯 || 없다면 지금 슬롯에 넣기
-        if (item != null)
+        if (item.IsNull() == false)
             Managers.Game._playScene._inventory.AcquireItem(slot.item, count);
         else
             AddItem(slot.item, count);

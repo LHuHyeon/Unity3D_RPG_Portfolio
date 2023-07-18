@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 활용도
 public class Util
 {
     // 컴포넌트 찾은 후 추가하기
@@ -9,7 +10,7 @@ public class Util
     {
         T component = go.GetComponent<T>();
 
-        if (component == null)
+        if (component.IsNull() == true)
             component = go.AddComponent<T>();
 
         return component;
@@ -19,7 +20,7 @@ public class Util
     public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)
     {
         Transform transform = FindChild<Transform>(go, name, recursive);
-        if (transform == null)
+        if (transform.IsNull() == true)
             return null;
         
         return transform.gameObject;
@@ -28,7 +29,7 @@ public class Util
     // 자식 객체 컴포넌트 찾기
     public static T FindChild<T>(GameObject go, string name = null, bool recursive = false) where T : UnityEngine.Object
     {
-        if (go == null)
+        if (go.IsNull() == true)
             return null;
 
         // recursive : 자기 자신의 자식 객체를 가져올지 판단
@@ -42,7 +43,7 @@ public class Util
                 if (string.IsNullOrEmpty(name) || transform.name == name){
                     // 해당 T(Button, Text, ...) 컴포넌트 반환
                     T component = transform.GetComponent<T>();
-                    if (component != null)
+                    if (component.IsNull() == false)
                         return component;
                 }
             }

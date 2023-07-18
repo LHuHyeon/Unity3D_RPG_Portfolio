@@ -5,6 +5,12 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
+/*
+[ 로딩 팝업 스크립트 ]
+1. Scene을 이동할 때 오래 걸리는 경우 사용된다.
+2. 자주 호출되는 함수 : SetInfo()
+*/
+
 public class UI_LoadPopup : UI_Popup
 {
     [SerializeField]

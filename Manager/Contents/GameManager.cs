@@ -5,6 +5,12 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
+/*
+[ GameManager 스크립트 ]
+1. 모든 플레이어 정보를 GameManager에서 저장한다.
+2. 장비 강화, 퀘스트 갱신, 세이브 등 기능을 담당한다.
+*/
+
 [Serializable]
 public class DataDictionary<TKey,TValue>
 {
@@ -120,7 +126,7 @@ public class GameManager
 
     public void StopPlayer()
     {
-        if (_player == null)
+        if (_player.IsNull() == true)
             return;
             
         PlayerController player = _player.GetComponent<PlayerController>();
@@ -180,7 +186,7 @@ public class GameManager
 		get 
         {
             // 무기가 있으면 ( 무기 공격력 + 무기 추가 공격력 )
-            if (CurrentWeapon != null)
+            if (CurrentWeapon.IsNull() == false)
                 return (int)(STR * 0.5) + CurrentWeapon.attack + CurrentWeapon.addAttack;
             
             return (int)(STR * 0.5);
@@ -463,7 +469,7 @@ public class GameManager
     // 장비 스탯 적용
     public void RefreshArmor(ArmorItemData armorItem, bool isStat)
     {
-        if (armorItem != null)
+        if (armorItem.IsNull() == false)
         {
             if (isStat == true)
             {
@@ -488,7 +494,7 @@ public class GameManager
     public Action<UI_InvenItem> _getSlotInteract;
     public void GetSlotInteract(UI_InvenItem invenSlot)
     {
-        if (_getSlotInteract != null)
+        if (_getSlotInteract.IsNull() == false)
             _getSlotInteract.Invoke(invenSlot);
     }
 
@@ -560,7 +566,7 @@ public class GameManager
         _savePath = $"{Application.persistentDataPath}/SaveData.json";
 
         // 첫 시작일 경우
-        if (isSaveLoad == false && Managers.Data.Start != null)
+        if (isSaveLoad == false && Managers.Data.Start.IsNull() == false)
         {
             Debug.Log("GameManager Init : StartData True!");
             StartData data = Managers.Data.Start;
@@ -578,7 +584,7 @@ public class GameManager
             
             Gold = data.gold;
         }
-        else if (Managers.Data.Start == null)
+        else if (Managers.Data.Start.IsNull() == true)
             Name = "NoName";
 
         MoveSpeed = 5;
@@ -597,7 +603,7 @@ public class GameManager
         switch(type){
             case Define.WorldObject.Monster:
                 _monsters.Add(go);
-                if (OnSpawnEvent != null)
+                if (OnSpawnEvent.IsNull() == false)
                     OnSpawnEvent.Invoke(parent, 1);
                 break;
             case Define.WorldObject.Player:
@@ -619,7 +625,7 @@ public class GameManager
         switch(type){
             case Define.WorldObject.Monster:
                 _monsters.Add(go);
-                if (OnSpawnEvent != null)
+                if (OnSpawnEvent.IsNull() == false)
                     OnSpawnEvent.Invoke(parent, 1);
                 break;
             case Define.WorldObject.Player:
@@ -637,7 +643,7 @@ public class GameManager
     public Define.WorldObject GetWorldObjectType(GameObject go)
     {
         BaseController bc = go.GetComponent<BaseController>();
-        if (bc == null)
+        if (bc.IsNull() == true)
             return Define.WorldObject.Unknown;
 
         return bc.WorldObjectType;
@@ -651,7 +657,7 @@ public class GameManager
                 {
                     if (_monsters.Contains(go)){ // 존재 여부 확인
                         _monsters.Remove(go);
-                        if (OnSpawnEvent != null)
+                        if (OnSpawnEvent.IsNull() == false)
                         {
                             OnSpawnEvent.Invoke(go.transform.parent, -1);
                         }
@@ -708,7 +714,7 @@ public class GameManager
 
 		string fileStr = File.ReadAllText(_savePath);
 		GameData data = JsonUtility.FromJson<GameData>(fileStr);
-		if (data != null)
+		if (data.IsNull() == false)
 		{
             data.DefaultPart = FromDictionary<Define.DefaultPart, SkinnedData>(data.DefaultPartData);
             data.SkillBarList = FromDictionary<Define.KeySkill, SkillData>(data.SkillBarListData);

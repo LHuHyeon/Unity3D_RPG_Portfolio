@@ -40,7 +40,7 @@ public class UI_ShopBuyItem : UI_Base
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (_item != null)
+            if (_item.IsNull() == false)
             {
                 Managers.Game._playScene._slotTip.OnSlotTip(true);
                 Managers.Game._playScene._slotTip.background.position = GetImage((int)Images.BuyItemImage).transform.position;
@@ -50,7 +50,7 @@ public class UI_ShopBuyItem : UI_Base
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (_item != null)
+            if (_item.IsNull() == false)
                 Managers.Game._playScene._slotTip.OnSlotTip(false);
         }, Define.UIEvent.Exit);
 

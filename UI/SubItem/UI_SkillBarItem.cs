@@ -23,7 +23,7 @@ public class UI_SkillBarItem : UI_SkillSlot
         // 스킬이 등록된 상태라면 마우스로 들기 가능.
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillData == null)
+            if (skillData.IsNull() == true)
                 return;
 
             UI_DragSlot.instance.dragSlotItem = this;
@@ -35,14 +35,14 @@ public class UI_SkillBarItem : UI_SkillSlot
         // 마우스 드래그 방향으로 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillData != null)
+            if (skillData.IsNull() == false)
                 UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
 
         // 드래그가 끝났을 때
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (skillData != null && !EventSystem.current.IsPointerOverGameObject())
+            if (skillData.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
             {
                 ClearSlot();
             }
@@ -57,7 +57,7 @@ public class UI_SkillBarItem : UI_SkillSlot
         {
             UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
 
-            if (dragSlot != null)
+            if (dragSlot.IsNull() == false)
             {
                 // 자기 자신이라면
                 if (dragSlot == this)
@@ -114,7 +114,7 @@ public class UI_SkillBarItem : UI_SkillSlot
     void Update()
     {
         // 쿨타임
-        if (skillData == null)
+        if (skillData.IsNull() == true)
             return;
         
         if (skillData.isCoolDown == true)

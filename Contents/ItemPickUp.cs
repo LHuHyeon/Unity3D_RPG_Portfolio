@@ -31,7 +31,7 @@ public class ItemPickUp : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (nameBarUI != null)
+        if (nameBarUI.IsNull() == false)
         {
             float distance = (Managers.Game.GetPlayer().transform.position - transform.position).magnitude;
             if (distance <= scanRange)

@@ -39,7 +39,7 @@ public class UI_SlotItem : UI_Base
             
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item != null)
+            if (item.IsNull() == false)
             {
                 Managers.Game._playScene._slotTip.OnSlotTip(true);
                 Managers.Game._playScene._slotTip.background.position = icon.transform.position;
@@ -49,14 +49,14 @@ public class UI_SlotItem : UI_Base
 
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item != null)
+            if (item.IsNull() == false)
                 Managers.Game._playScene._slotTip.OnSlotTip(false);
         }, Define.UIEvent.Exit);
         
         // 아이템이 존재할 시 마우스로 들기 가능.
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item == null)
+            if (item.IsNull() == true)
                 return;
 
             // 인벤 이라면 Lock 확인
@@ -75,7 +75,7 @@ public class UI_SlotItem : UI_Base
         // 마우스 드래그 방향으로 아이템 이동
         gameObject.BindEvent((PointerEventData eventData)=>
         {
-            if (item != null && UI_DragSlot.instance.dragSlotItem != null)
+            if (item.IsNull() == false && UI_DragSlot.instance.dragSlotItem.IsNull() == false)
                 UI_DragSlot.instance.icon.transform.position = eventData.position;
         }, Define.UIEvent.Drag);
     }

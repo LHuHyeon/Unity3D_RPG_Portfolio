@@ -148,7 +148,7 @@ public class MonsterController : BaseController
     {
         nav.SetDestination(transform.position);
 
-        if (GetComponent<CapsuleCollider>() != null)
+        if (GetComponent<CapsuleCollider>().IsNull() == false)
             StartCoroutine(DelayDestroy());
     }
 
@@ -167,7 +167,7 @@ public class MonsterController : BaseController
 
     public void IsNavStop(bool isTrue)
     {
-        if (nav == null)
+        if (nav.IsNull() == true)
             nav = GetComponent<NavMeshAgent>();
             
         if (isTrue == true)

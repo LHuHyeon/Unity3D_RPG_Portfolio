@@ -90,7 +90,7 @@ public class PlayerController : BaseController
 
                 // 아이템 안에 장비 파츠 저장
                 ArmorItemData armor = Managers.Data.Item[id] as ArmorItemData;
-                if (armor.charEquipment == null)
+                if (armor.charEquipment.IsNull() == true)
                     armor.charEquipment = new List<GameObject>();
 
                 armor.charEquipment.Add(child.gameObject);
@@ -161,7 +161,7 @@ public class PlayerController : BaseController
     protected override void UpdateMoving()
     {
         // 이동한 곳에 타겟이 있으면 멈추기
-        if (_lockTarget != null)
+        if (_lockTarget.IsNull() == false)
         {
             float distance = (_lockTarget.transform.position - transform.position).magnitude;
             if (distance <= _scanRange)
@@ -337,7 +337,7 @@ public class PlayerController : BaseController
                         if (State == Define.State.Idle)
                             State = Define.State.Moving;
 
-                        if (_lockTarget != null)
+                        if (_lockTarget.IsNull() == false)
                             _destPos = _lockTarget.transform.position;
                         else if (raycastHit)
                             _destPos = hit.point;
@@ -348,7 +348,7 @@ public class PlayerController : BaseController
             case Define.MouseEvent.LeftDown:
                 {
                     // 무기가 있다면 공격 가능
-                    if (Managers.Game.CurrentWeapon != null)
+                    if (Managers.Game.CurrentWeapon.IsNull() == false)
                     {
                         _stopAttack = false;
                         _destPos = hit.point;
@@ -457,7 +457,7 @@ public class PlayerController : BaseController
             for(int i=0; i<colliders.Length; i++)
             {
                 ItemPickUp _item = colliders[i].GetComponent<ItemPickUp>();
-                if (_item != null)
+                if (_item.IsNull() == false)
                 {
                     // 인벤에 넣기
                     Managers.Game._playScene._inventory.AcquireItem(_item.item, _item.itemCount);
@@ -522,7 +522,7 @@ public class PlayerController : BaseController
             return;
 
         // 무기가 없으면 스킬 사용 불가
-        if (Managers.Game.CurrentWeapon == null)
+        if (Managers.Game.CurrentWeapon.IsNull() == true)
             return;
 
         // 스킬 진행
@@ -545,7 +545,7 @@ public class PlayerController : BaseController
     // 스킬 진행
     void OnSkill(SkillData skill)
     {
-        if (skill == null)
+        if (skill.IsNull() == true)
         {
             Debug.Log("등록된 스킬이 없습니다!");
             return;
@@ -616,7 +616,7 @@ public class PlayerController : BaseController
     // 스킬 이펙트 비활성화
     public void EffectClose()
     {
-        if (currentEffect == null)
+        if (currentEffect.IsNull() == true)
             return;
         
         if (currentEffect.GetComponent<EffectData>().disableDelayTime == 0)
@@ -658,7 +658,7 @@ public class PlayerController : BaseController
     // 레벨업 시 이펙트 발동
     public void LevelUpEffect()
     {
-        if (co != null) StopCoroutine(co);
+        if (co.IsNull() == false) StopCoroutine(co);
         co = StartCoroutine(LevelUpCoroutine());
     }
 

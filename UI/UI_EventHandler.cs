@@ -16,43 +16,43 @@ public class UI_EventHandler : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (OnEnterHandler != null)
+        if (OnEnterHandler.IsNull() == false)
             OnEnterHandler.Invoke(eventData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (OnExitHandler != null)
+        if (OnExitHandler.IsNull() == false)
             OnExitHandler.Invoke(eventData);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (OnClickHandler != null)
+        if (OnClickHandler.IsNull() == false)
             OnClickHandler.Invoke(eventData);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (OnBeginDragHandler != null)
+        if (OnBeginDragHandler.IsNull() == false)
             OnBeginDragHandler.Invoke(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (OnDragHandler != null)
+        if (OnDragHandler.IsNull() == false)
             OnDragHandler.Invoke(eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (OnEndDragHandler != null)
+        if (OnEndDragHandler.IsNull() == false)
             OnEndDragHandler.Invoke(eventData);
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (OnDropHandler != null)
+        if (OnDropHandler.IsNull() == false)
             OnDropHandler.Invoke(eventData);
     }
 }

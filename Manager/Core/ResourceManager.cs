@@ -16,7 +16,7 @@ public class ResourceManager
                 name.Substring(index + 1);      // name을 index+1 문자열 위치에서 반환
 
             GameObject go = Managers.Pool.GetOriginal(name);
-            if (go != null)
+            if (go.IsNull() == false)
                 return go as T;
                 // return go.GetComponent<T>();
         }
@@ -28,13 +28,13 @@ public class ResourceManager
 
     public GameObject Instantiate(GameObject obj, Transform parent = null)
     {
-        if (obj == null){
+        if (obj.IsNull() == true){
             Debug.Log("객체가 존재하지 않습니다.");
             return null;
         }
 
         // 풀링이 적용된 객체인지 확인
-        if (obj.GetComponent<Poolable>() != null)
+        if (obj.GetComponent<Poolable>().IsNull() == false)
             return Managers.Pool.Pop(obj, parent).gameObject;
 
         // 해당 original 프리팹을 parent의 자식 객체로 생성하기
@@ -50,16 +50,16 @@ public class ResourceManager
         // original 프리팹 객체 읽어오기.
         GameObject original = Load<GameObject>($"Prefabs/{path}");
 
-        if (original == null){
+        if (original.IsNull() == true){
             Debug.Log($"Failed to load prefab : {path}");
             return null;
         }
 
         // 풀링이 적용된 객체인지 확인
-        if (original.GetComponent<Poolable>() != null)
+        if (original.GetComponent<Poolable>().IsNull() == false)
         {
             // UI 팝업이면 하나만 생성
-            if (original.GetComponent<UI_Popup>() != null)
+            if (original.GetComponent<UI_Popup>().IsNull() == false)
                 Managers.Pool.CreatePool(original, 1); 
 
             return Managers.Pool.Pop(original, parent).gameObject;
@@ -75,12 +75,12 @@ public class ResourceManager
     // 오브젝트 삭제
     public void Destroy(GameObject go)
     {
-        if (go == null)
+        if (go.IsNull() == true)
             return;
         
         // 만약에 풀링이 필요한 아이라면 PoolManager한테 위탁
         Poolable poolable = go.GetComponent<Poolable>();
-        if (poolable != null){
+        if (poolable.IsNull() == false){
             Managers.Pool.Push(poolable);
             return;
         }

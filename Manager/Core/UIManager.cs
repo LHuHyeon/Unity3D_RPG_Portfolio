@@ -15,7 +15,7 @@ public class UIManager
         get{
             GameObject root = GameObject.Find("@UI_Root");// 오브젝트 찾기
 
-            if (root == null)
+            if (root.IsNull() == true)
                 root = new GameObject{name = "@UI_Root"}; // 오브젝트 이름 설정
 
             return root;
@@ -50,7 +50,7 @@ public class UIManager
 
         GameObject go = Managers.Resource.Instantiate($"UI/WorldSpace/{name}");
 
-        if (parent != null)
+        if (parent.IsNull() == false)
             go.transform.SetParent(parent);
 
         Canvas canvas = go.GetOrAddComponent<Canvas>(); // or -> go.GetComponent<Canvas>();
@@ -69,7 +69,7 @@ public class UIManager
 
         GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}");
 
-        if (parent != null)
+        if (parent.IsNull() == false)
             go.transform.SetParent(parent);
 
         return go.GetOrAddComponent<T>();
@@ -122,20 +122,20 @@ public class UIManager
     }
 
     // 리스트에 popup이 있나 확인 후 삭제
-    public void ClosePopupUI(UI_Popup _popup)
+    public void ClosePopupUI(UI_Popup popup)
     {
         if (_popupList.Count == 0)
             return;
         
-        if (_popupList.Contains(_popup) == false)
+        if (_popupList.Contains(popup) == false)
         {
             Debug.Log("Close Popup Failed!");
             return;
         }
 
-        Managers.Game.isPopups[_popup.popupType] = false;
-        _popupList.Remove(_popup);
-        Managers.Resource.Destroy(_popup.gameObject);
+        Managers.Game.isPopups[popup.popupType] = false;
+        _popupList.Remove(popup);
+        Managers.Resource.Destroy(popup.gameObject);
 
         _order--;
     }
@@ -147,16 +147,27 @@ public class UIManager
 
         foreach(UI_Popup popup in _popupList)
         {
-            if (popup != null)
+            if (popup.IsNull() == false)
             {
-                Managers.Game.isPopups[popup.popupType] = false;
-                _popupList.Remove(popup);
-                Managers.Resource.Destroy(popup.gameObject);
+                OnClosePopup(popup);
                 return true;
             }
         }
 
         return false;
+    }
+
+    void OnClosePopup(UI_Popup popup)
+    {
+        Managers.Game.isPopups[popup.popupType] = false;
+        _popupList.Remove(popup);
+
+        // fake null 체크
+        if (popup.IsFakeNull() == true)
+            popup = null;
+        else
+            Managers.Resource.Destroy(popup.gameObject);
+            
     }
 
     // List 전체 Close

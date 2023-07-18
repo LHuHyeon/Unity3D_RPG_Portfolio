@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 보스 씬
 public class BossScene : BaseScene
 {
     [SerializeField]
@@ -16,7 +17,7 @@ public class BossScene : BaseScene
 
         Managers.Game.GetPlayer().transform.position = playerSpawn.position;
 
-        if (Managers.Game.GetPlayer() != null)
+        if (Managers.Game.GetPlayer().IsNull() == false)
         {
             GameObject clickMoveEffect = Managers.Resource.Instantiate("Effect/ClickMoveEffect");
             clickMoveEffect.SetActive(false);

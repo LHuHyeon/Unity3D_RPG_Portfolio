@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/*
+[ 인벤토리 Popup 스크립트 ]
+1. 아이템을 저장할 수 있는 Popup이다.
+2. 자주 호출되는 함수 : AcquireItem(아이템, 개수)
+2-1. AcquireItem(아이템, 개수) : 인벤토리안에 아이템을 넣을 수 있다.
+*/
+
 public class UI_InvenPopup : UI_Popup
 {
     enum Gameobjects
@@ -44,8 +51,7 @@ public class UI_InvenPopup : UI_Popup
 
         return true;
     }
-    
-    void DelayInit() { Managers.UI.ClosePopupUI(this); }
+    void DelayInit() { RefreshUI(); Managers.UI.ClosePopupUI(this); }
 
     void Update()
     {
@@ -61,10 +67,7 @@ public class UI_InvenPopup : UI_Popup
             Managers.Game.isPopups[Define.Popup.Inventory] = !Managers.Game.isPopups[Define.Popup.Inventory];
 
             if (Managers.Game.isPopups[Define.Popup.Inventory])
-            {
-                RefreshUI();
                 Managers.UI.OnPopupUI(this);
-            }
             else
                 Exit();
         }
@@ -76,7 +79,7 @@ public class UI_InvenPopup : UI_Popup
         foreach(UI_InvenItem slot in invenSlots)
         {
             // 슬롯에 아이템이 없으면 넣기
-            if (slot.item == null)
+            if (slot.item.IsNull() == true)
             {
                 slot.AddItem(item, count);
                 break;

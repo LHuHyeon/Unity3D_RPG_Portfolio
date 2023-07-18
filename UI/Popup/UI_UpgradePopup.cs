@@ -80,7 +80,7 @@ public class UI_UpgradePopup : UI_Popup
 
     void OnClickUpgradeButton()
     {
-        if (_equipment == null)
+        if (_equipment.IsNull() == true)
             return;
 
         if (_equipment.upgradeCount >= maxUpgradeCount)
@@ -114,7 +114,7 @@ public class UI_UpgradePopup : UI_Popup
 
     public void ExitUpgrade()
     {
-        if (_equipment != null)
+        if (_equipment.IsNull() == false)
             Managers.Game._playScene._inventory.AcquireItem(_equipment);
 
         Clear();

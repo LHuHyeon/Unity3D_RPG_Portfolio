@@ -39,7 +39,7 @@ public class PoolManager
         // 객체 생성 메소드
         public void Push(Poolable poolable)
         {
-            if (poolable == null)
+            if (poolable.IsNull() == true)
                 return;
 
             poolable.transform.SetParent(Root);
@@ -62,7 +62,7 @@ public class PoolManager
             poolable.gameObject.SetActive(true);
 
             // DontDestroyOnLoad 해제 용도 (SceneManager 객체를 이용)
-            if (parent == null)
+            if (parent.IsNull() == true)
                 poolable.transform.SetParent(Managers.Scene.CurrentScene.transform);
             
             poolable.transform.SetParent(parent);
@@ -78,7 +78,7 @@ public class PoolManager
     public void Init()
     {
         // Pool Object를 담을 부모 객체(_root) 경로 설정
-        if (_root == null){
+        if (_root.IsNull() == true){
             _root = new GameObject { name = "@Pool_Root" }.transform;
             Object.DontDestroyOnLoad(_root);
         }

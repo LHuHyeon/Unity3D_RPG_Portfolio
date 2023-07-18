@@ -93,9 +93,9 @@ public class UI_TalkPopup : UI_Popup
     // 일반 대화 세팅
     public void SetInfo(string text, string npcName=null)
     {
-        if (text != null)
+        if (text.IsNull() == false)
         {
-            if (npcName != null)
+            if (npcName.IsNull() == false)
                 GetText((int)Texts.NameText).text = npcName;
 
             // 대화 진행 후 종료
@@ -108,13 +108,13 @@ public class UI_TalkPopup : UI_Popup
     // 퀘스트 대화 세팅
     public void SetInfo(TalkData talk, QuestData quest, string npcName=null)
     {
-        if (talk == null || quest == null)
+        if (talk.IsNull() == true || quest.IsNull() == true)
         {
             Debug.Log("talk or quest Data Null");
             return;
         }
 
-        if (npcName != null)
+        if (npcName.IsNull() == false)
             GetText((int)Texts.NameText).text = npcName;
 
         talkData = talk;

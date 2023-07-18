@@ -2,6 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 퀘스트 Popup 스크립트 ]
+1. 퀘스트를 확인할 수 있는 Popup이다.
+2. 자주 호출되는 함수 : SetQeust(), OnQuest(), SetQuestNotice(), CloseQuestNotice()
+2-1. SetQuest() : 새로운 퀘스트를 수락할 때 사용된다.
+2-2. OnQuest() : 퀘스트 목록에 퀘스트를 눌러 정보를 확인할 때 사용된다.
+2-3. SetQuestNotice() : 퀘스트 알림을 Scene에 추가할 때 사용된다.
+2-4. CloseQuestNotice() : 퀘스트 알림을 끄고 싶을 때 사용된다.
+*/
+
 public class UI_QuestPopup : UI_Popup
 {
     enum Gameobejcts
@@ -85,20 +95,6 @@ public class UI_QuestPopup : UI_Popup
         }
     }
 
-    void SetInfo()
-    {
-        GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this);});
-
-        // 미리보기 삭제
-        foreach(Transform child in GetObject((int)Gameobejcts.Content).transform)
-            Managers.Resource.Destroy(child.gameObject);
-
-        GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
-
-        for(int i=0; i<Managers.Game.CurrentQuest.Count; i++)
-            SetQuestNotice(Managers.Game.CurrentQuest[i]);
-    }
-
     // 새로운 퀘스트 받기
     public void SetQeust(QuestData quest)
     {
@@ -112,7 +108,7 @@ public class UI_QuestPopup : UI_Popup
     // 퀘스트 목록을 누르면
     public void OnQuest(QuestData quest)
     {
-        if (quest == null)
+        if (quest.IsNull() == true)
         {
             Debug.Log("OnQuest() : quest Null");
             return;
@@ -167,7 +163,21 @@ public class UI_QuestPopup : UI_Popup
         GetText((int)Texts.QuestNoticeCountText).text = questNoticeList.Count + " / " + maxquestNoticeCount;
     }
 
-    public void RefreshUI()
+    void SetInfo()
+    {
+        GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this);});
+
+        // 미리보기 삭제
+        foreach(Transform child in GetObject((int)Gameobejcts.Content).transform)
+            Managers.Resource.Destroy(child.gameObject);
+
+        GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
+
+        for(int i=0; i<Managers.Game.CurrentQuest.Count; i++)
+            SetQuestNotice(Managers.Game.CurrentQuest[i]);
+    }
+
+    void RefreshUI()
     {
         // 현재 퀘스트 확인
         Managers.Game.RefreshQuest();

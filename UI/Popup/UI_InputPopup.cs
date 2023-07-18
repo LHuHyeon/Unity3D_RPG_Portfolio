@@ -6,6 +6,13 @@ using TMPro;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
+/*
+[ 입력 Popup 스크립트 ]
+1. 입력이 필요한 상황에 띄울 수 있는 Popup이다.
+2. 자주 호출되는 함수 : SetInfo()
+3. 현재는 닉네임 입력 전용으로 사용하고 있다.
+*/
+
 public class UI_InputPopup : UI_Popup
 {
     enum Buttons
@@ -53,7 +60,7 @@ public class UI_InputPopup : UI_Popup
         if (regex.IsMatch(_inputField.text))
         {
             Managers.UI.ClosePopupUI(this);
-            if (_onClickYesButton != null)
+            if (_onClickYesButton.IsNull() == false)
                 _onClickYesButton.Invoke(_inputField.text);
         }
         else

@@ -5,6 +5,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 확인 Popup 스크립트 ]
+1. 확인이 필요한 상황에 띄울 수 있는 Popup이다.
+2. 자주 호출되는 함수 : SetInfo()
+*/
+
 public class UI_ConfirmPopup : UI_Popup
 {
     enum Gameobjects
@@ -53,7 +59,7 @@ public class UI_ConfirmPopup : UI_Popup
     void OnClickYesButton()
     {
         Managers.UI.ClosePopupUI(this);
-        if (_onClickYesButton != null)
+        if (_onClickYesButton.IsNull() == false)
             _onClickYesButton.Invoke();
     }
 
