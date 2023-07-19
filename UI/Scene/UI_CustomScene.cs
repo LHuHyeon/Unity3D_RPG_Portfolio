@@ -3,6 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 커스텀 Scene 스크립트 ]
+1. CustomScene이 로드되면 CustomScene.cs에 의해서 생성되어 사용된다.
+2. Init할 때 CharacterCustom.cs를 Find하여 커스텀한다.
+3. 커스텀 방법은 UI_CustomButton.cs으로 진행한다.
+*/
+
 public class UI_CustomScene : UI_Scene
 {
     enum GameObjects

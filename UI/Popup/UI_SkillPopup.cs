@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 스킬 Popup 스크립트 ]
+1. 레벨에 따른 스킬을 흭득할 수 Popup이다.
+2. 해당 클래스는 Popup만 활성화/비활성화 해주면 그 안의 슬롯들이 기능을 담당하고 있다.
+3. 슬롯 : UI_SkillItem.cs(스킬 슬롯), UI_SkillBarItem.cs(스킬 등록 슬롯)
+*/
+
 public class UI_SkillPopup : UI_Popup
 {
     enum Gameobjects
@@ -44,7 +51,7 @@ public class UI_SkillPopup : UI_Popup
         }
     }
 
-    public void SetInfo()
+    void SetInfo()
     {
         // Title 잡고 인벤토리 이동
         RectTransform skillPopupPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();

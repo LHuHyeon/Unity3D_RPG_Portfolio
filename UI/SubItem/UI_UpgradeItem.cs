@@ -46,20 +46,6 @@ public class UI_UpgradeItem : UI_SlotItem
 
         }, Define.UIEvent.EndDrag);
 
-        // 드래그가 끝났을 때
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            // 아이템을 버린 위치가 UI가 아니라면
-            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
-            {
-                // 아이템 인벤으로 이동
-            }
-
-            UI_DragSlot.instance.SetColor(0);
-            UI_DragSlot.instance.dragSlotItem = null;
-
-        }, Define.UIEvent.EndDrag);
-
         // 아이템 받기
         gameObject.BindEvent((PointerEventData eventData)=>
         {

@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 슬롯 정보 Popup 스크립트 ]
+1. 슬롯안에 들어있는 아이템의 정보를 확인할 수 있는 Popup이다.
+2. 자주 호출되는 함수 : OnSlotTip(활성화 여부), RefreshUI(아이템)
+2-1. OnSlotTip(활성화 여부) : 슬롯들이 호출하여 사용한다.
+*/
+
 public class UI_SlotTipPopup : UI_Popup
 {
     enum Gameobjects

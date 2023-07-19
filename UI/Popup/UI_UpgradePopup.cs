@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 업그레이드 Popup 스크립트 ]
+1. 무기or방어구를 강화할 수 있는 Popup이다.
+2. 사용 방법 : UI_UpgradeItem.cs(업그레이드 슬롯)에 장비를 넣어 강화할 수 있다.
+*/
+
 public class UI_UpgradePopup : UI_Popup
 {
     enum Gameobjects

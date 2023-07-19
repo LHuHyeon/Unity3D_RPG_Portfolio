@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 
-
 // 플레이어의 모든 입력은 여기서 관리
 public class InputManager
 {

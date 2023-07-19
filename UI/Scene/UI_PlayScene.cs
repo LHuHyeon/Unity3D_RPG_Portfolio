@@ -4,6 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+[ 플레이 Scene 스크립트 ]
+1. GameScene이 로드되면 GameScene.cs에 의해서 생성되어 사용된다.
+2. UI_PlayScene.cs은 모든 Popup을 생성하여 저장한다.
+3. 실시간으로 플레이어 정보, 미니맵, 스킬/소비아이템 슬롯바, 퀘스트 알림의 UI를 보여준다.
+*/
+
 public class UI_PlayScene : UI_Scene
 {
     enum Gameobjects

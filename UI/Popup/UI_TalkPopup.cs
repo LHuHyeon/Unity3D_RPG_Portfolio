@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ 대화 Popup 스크립트 ]
+1. 특정 NPC와 대화할 때 사용되는 Popup이다.
+2. 자주 호출되는 함수 : SetInfo()
+2-1. 일반 대화 SetInfo() : string text를 받아 대화를 진행한다.
+2-2. 퀘스트 대화 SetInfo() : QuestData를 받아 퀘스트 대화를 진행 후 수락/거절한다.
+*/
+
 public class UI_TalkPopup : UI_Popup
 {
     enum Gameobejcts
@@ -126,7 +134,7 @@ public class UI_TalkPopup : UI_Popup
         NextTalk();
     }
 
-    public void NextTalk()
+    void NextTalk()
     {
         // 할 대화가 없으면 종료
         if (nextIndex >= talkData.questStartTalk.Count)

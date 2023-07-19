@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+[ 시작 Scene 스크립트 ]
+1. TitleScene이 로드되면 TitleScene.cs에 의해서 생성되어 사용된다.
+2. 게임 시작, 이어 하기, 종료 하기 버튼을 가지고 있다.
+*/
+
 public class UI_TitleScene : UI_Scene
 {
     enum Buttons

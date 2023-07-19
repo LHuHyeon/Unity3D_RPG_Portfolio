@@ -4,9 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
-using System;
 
-[Serializable]
 public class UI_UseItemSlot : UI_SlotItem
 {
     public int key;

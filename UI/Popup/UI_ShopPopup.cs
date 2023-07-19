@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 상점 Popup 스크립트 ]
+1. 장비, 소비 등의 아이템을 구매/판매할 수 있는 Popup이다.
+2. 해당 클래스는 Popup만 활성화/비활성화 해주면 그 안의 슬롯들이 기능을 담당하고 있다.
+3. 슬롯 : UI_ShopSaleItem.cs(판매 슬롯), UI_ShopBuyItem.cs(구매 슬롯)
+*/
+
 public class UI_ShopPopup : UI_Popup
 {
     enum Gameobjects
