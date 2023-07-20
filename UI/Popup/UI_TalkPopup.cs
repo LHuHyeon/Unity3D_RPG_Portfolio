@@ -228,8 +228,9 @@ public class UI_TalkPopup : UI_Popup
 
         for(int i=0; i<questData.rewardItems.Count; i++)
         {
-            UI_RewardItem rewardItem = Managers.UI.MakeSubItem<UI_RewardItem>(parent: GetObject((int)Gameobejcts.QuestRewardGrid).transform);
-            rewardItem.SetInfo(Managers.Data.Item[questData.rewardItems[i].ItemId], questData.rewardItems[i].itemCount);
+            UI_ItemSlot rewardItem = Managers.UI.MakeSubItem<UI_ItemSlot>(parent: GetObject((int)Gameobejcts.QuestRewardGrid).transform);
+            rewardItem.SetInfo();
+            rewardItem.AddItem(Managers.Data.Item[questData.rewardItems[i].ItemId], questData.rewardItems[i].itemCount);
         }
     }
 

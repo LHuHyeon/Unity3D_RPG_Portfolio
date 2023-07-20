@@ -17,6 +17,7 @@ using UnityEngine.UI;
 
 public abstract class UI_Slot : UI_Base
 {
+    enum Images { ItemImage, }
     public Image icon;
 
     public override bool Init()
@@ -30,27 +31,32 @@ public abstract class UI_Slot : UI_Base
         return true;
     }
 
-    public virtual void SetInfo() {}
+    public virtual void SetInfo()
+    {
+        BindImage(typeof(Images));
+        icon = GetImage((int)Images.ItemImage);
+    }
+
     public virtual void RefreshUI() {}
 
     protected virtual void SetEventHandler()
     {
-        gameObject.BindEvent((PointerEventData eventData)=>{ OnEnterSlot(); }, Define.UIEvent.Enter);
-        gameObject.BindEvent((PointerEventData eventData)=>{ OnExitSlot(); }, Define.UIEvent.Exit);
-        gameObject.BindEvent((PointerEventData eventData)=>{ OnClickSlot(); }, Define.UIEvent.Click);
-        gameObject.BindEvent((PointerEventData eventData)=>{ OnBeginDragSlot(); }, Define.UIEvent.BeginDrag);
-        gameObject.BindEvent((PointerEventData eventData)=>{ OnDragSlot(); }, Define.UIEvent.Drag);
-        gameObject.BindEvent((PointerEventData eventData)=>{ OnEndDragSlot(); }, Define.UIEvent.EndDrag);
-        gameObject.BindEvent((PointerEventData eventData)=>{ OnDropSlot(); }, Define.UIEvent.Drop);
+        gameObject.BindEvent((PointerEventData eventData)=>{ OnEnterSlot(eventData); }, Define.UIEvent.Enter);
+        gameObject.BindEvent((PointerEventData eventData)=>{ OnExitSlot(eventData); }, Define.UIEvent.Exit);
+        gameObject.BindEvent((PointerEventData eventData)=>{ OnClickSlot(eventData); }, Define.UIEvent.Click);
+        gameObject.BindEvent((PointerEventData eventData)=>{ OnBeginDragSlot(eventData); }, Define.UIEvent.BeginDrag);
+        gameObject.BindEvent((PointerEventData eventData)=>{ OnDragSlot(eventData); }, Define.UIEvent.Drag);
+        gameObject.BindEvent((PointerEventData eventData)=>{ OnEndDragSlot(eventData); }, Define.UIEvent.EndDrag);
+        gameObject.BindEvent((PointerEventData eventData)=>{ OnDropSlot(eventData); }, Define.UIEvent.Drop);
     }
     
-    protected virtual void OnEnterSlot() {}
-    protected virtual void OnExitSlot() {}
-    protected virtual void OnClickSlot() {}
-    protected virtual void OnBeginDragSlot() {}
-    protected virtual void OnDragSlot() {}
-    protected virtual void OnEndDragSlot() {}
-    protected virtual void OnDropSlot() {}
+    protected virtual void OnEnterSlot(PointerEventData eventData) {}
+    protected virtual void OnExitSlot(PointerEventData eventData) {}
+    protected virtual void OnClickSlot(PointerEventData eventData) {}
+    protected virtual void OnBeginDragSlot(PointerEventData eventData) {}
+    protected virtual void OnDragSlot(PointerEventData eventData) {}
+    protected virtual void OnEndDragSlot(PointerEventData eventData) {}
+    protected virtual void OnDropSlot(PointerEventData eventData) {}
 
     // 투명도 설정 (0 ~ 255)
     protected virtual void SetColor(float _alpha)

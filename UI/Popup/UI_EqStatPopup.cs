@@ -92,7 +92,7 @@ public class UI_EqStatPopup : UI_Popup
     }
 
     // 장비 장착
-    public void SetEquipment(UI_SlotItem itemSlot)
+    public void SetEquipment(UI_ItemSlot itemSlot)
     {
         // 무기, 장비 확인
         if (itemSlot.item.itemType == Define.ItemType.Armor)

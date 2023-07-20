@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/*
+[ 퀘스트 알림 Slot 스크립트 ]
+1. PlayScene에서 우측 가운데에 진행 중인 퀘스트를 띄울 때 사용한다.
+*/
+
 public class UI_QuestNoticeSlot : UI_Base
 {
     public TextMeshProUGUI questNameText;

@@ -127,8 +127,9 @@ public class UI_QuestPopup : UI_Popup
 
         for(int i=0; i<quest.rewardItems.Count; i++)
         {
-            UI_RewardItem rewardItem = Managers.UI.MakeSubItem<UI_RewardItem>(parent: GetObject((int)Gameobejcts.QuestRewardGrid).transform);
-            rewardItem.SetInfo(Managers.Data.Item[quest.rewardItems[i].ItemId], quest.rewardItems[i].itemCount);
+            UI_ItemSlot rewardItem = Managers.UI.MakeSubItem<UI_ItemSlot>(parent: GetObject((int)Gameobejcts.QuestRewardGrid).transform);
+            rewardItem.SetInfo();
+            rewardItem.AddItem(Managers.Data.Item[quest.rewardItems[i].ItemId], quest.rewardItems[i].itemCount);
         }
 
         GetObject((int)Gameobejcts.QuestJournal).SetActive(true);

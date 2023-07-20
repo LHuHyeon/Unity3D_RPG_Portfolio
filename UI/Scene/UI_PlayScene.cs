@@ -148,8 +148,6 @@ public class UI_PlayScene : UI_Scene
         {
             UI_UseItemSlot slot = Managers.UI.MakeSubItem<UI_UseItemSlot>(GetObject((int)Gameobjects.ItemBar).transform);
             slot.key = i;
-            slot.keyText.text = i.ToString();
-            slot.itemCountText.text = "";
 
             UseItemBarList.Add(slot);
         }

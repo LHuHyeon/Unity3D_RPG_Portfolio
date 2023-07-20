@@ -18,60 +18,33 @@ public class UI_SkillBarItem : UI_SkillSlot
             SetSkill(skillData);
     }
 
-    protected override void SetEventHandler()
+    protected override void OnEndDragSlot(PointerEventData eventData)
     {
-        // 스킬이 등록된 상태라면 마우스로 들기 가능.
-        gameObject.BindEvent((PointerEventData eventData)=>
+        if (skillData.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
         {
-            if (skillData.IsNull() == true)
+            ClearSlot();
+        }
+
+        base.OnEndDragSlot(eventData);
+    }
+
+    protected override void OnDropSlot(PointerEventData eventData)
+    {
+        UI_Slot dragSlot = UI_DragSlot.instance.dragSlotItem;
+
+        if (dragSlot.IsNull() == false)
+        {
+            // 자기 자신이라면
+            if (dragSlot == this)
                 return;
 
-            UI_DragSlot.instance.dragSlotItem = this;
-            UI_DragSlot.instance.DragSetImage(icon);
+            // 스킬 슬롯 확인
+            if ((dragSlot is UI_SkillSlot) == false)
+                return;
 
-            UI_DragSlot.instance.icon.transform.position = eventData.position;
-        }, Define.UIEvent.BeginDrag);
-
-        // 마우스 드래그 방향으로 이동
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (skillData.IsNull() == false)
-                UI_DragSlot.instance.icon.transform.position = eventData.position;
-        }, Define.UIEvent.Drag);
-
-        // 드래그가 끝났을 때
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (skillData.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
-            {
-                ClearSlot();
-            }
-
-            UI_DragSlot.instance.SetColor(0);
-            UI_DragSlot.instance.dragSlotItem = null;
-
-        }, Define.UIEvent.EndDrag);
-
-        // 이 슬롯에 마우스 클릭이 끝나면 스킬받기
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
-
-            if (dragSlot.IsNull() == false)
-            {
-                // 자기 자신이라면
-                if (dragSlot == this)
-                    return;
-
-                // 스킬 슬롯 확인
-                if ((dragSlot is UI_SkillSlot) == false)
-                    return;
-
-                // 스킬 장착
-                ChangeSkill(dragSlot as UI_SkillSlot);
-            }
-
-        }, Define.UIEvent.Drop);
+            // 스킬 장착
+            ChangeSkill(dragSlot as UI_SkillSlot);
+        }
     }
 
     void ChangeSkill(UI_SkillSlot skillSlot)

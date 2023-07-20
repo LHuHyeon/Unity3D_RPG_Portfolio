@@ -45,58 +45,38 @@ public class UI_SkillItem : UI_SkillSlot
         base.SetInfo();
     }
 
-    protected override void SetEventHandler()
+    protected override void OnClickSlot(PointerEventData eventData)
     {
-        // 스킬슬롯을 우클릭할 시 레벨체크 후 Lock 해제
-        gameObject.BindEvent((PointerEventData eventData)=>
+        if (Input.GetMouseButtonUp(1) && skillData.isLock == true)
         {
-            if (Input.GetMouseButtonUp(1) && skillData.isLock == true)
+            if (LevelCheck() == true)
             {
-                if (LevelCheck() == true)
+                Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
                 {
-                    Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
-                    {
-                        skillData.isLock = false;
-                        Managers.Game.CurrentSkill.Add(this.skillData);
-                        Managers.Resource.Destroy(GetObject((int)Gameobjects.LevelBlock));
-                    }, Define.SkillOpenMessage);
-                }
-                else
-                    Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
+                    skillData.isLock = false;
+                    Managers.Game.CurrentSkill.Add(this.skillData);
+                    Managers.Resource.Destroy(GetObject((int)Gameobjects.LevelBlock));
+                }, Define.SkillOpenMessage);
             }
-        }, Define.UIEvent.Click);
+            else
+                Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
+        }
+    }
 
-        // 스킬이 흭득 상태라면 마우스로 들기 가능.
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (skillData.isLock == true || skillData.IsNull() == true)
-                return;
+    protected override void OnBeginDragSlot(PointerEventData eventData)
+    {
+        if (skillData.isLock == false) base.OnBeginDragSlot(eventData);
+    }
 
-            Debug.Log("skillItem BeginDrag");
+    protected override void OnDragSlot(PointerEventData eventData)
+    {
+        if (skillData.isLock == false) base.OnDragSlot(eventData);
+    }
 
-            UI_DragSlot.instance.dragSlotItem = this;
-            UI_DragSlot.instance.DragSetImage(icon);
-
-            UI_DragSlot.instance.icon.transform.position = eventData.position;
-        }, Define.UIEvent.BeginDrag);
-
-        // 마우스 드래그 방향으로 이동
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (skillData.isLock == false && skillData.IsNull() == false)
-                UI_DragSlot.instance.icon.transform.position = eventData.position;
-        }, Define.UIEvent.Drag);
-
-        // 드래그가 끝났을 때
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (skillData.isLock == true || skillData.IsNull() == true)
-                return;
-                
-            UI_DragSlot.instance.SetColor(0);
-            UI_DragSlot.instance.dragSlotItem = null;
-
-        }, Define.UIEvent.EndDrag);
+    protected override void OnEndDragSlot(PointerEventData eventData)
+    {
+        if (skillData.isLock == false && skillData.IsNull() == false)
+            base.OnEndDragSlot(eventData);
     }
 
     // 스킬 레벨 체크

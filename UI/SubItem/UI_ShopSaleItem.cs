@@ -60,7 +60,14 @@ public class UI_ShopSaleItem : UI_Base
     // 판매 진행
     public void GetSale()
     {
-        Managers.Game.Gold += _invenItem.item.itemPrice * _saleItemCount;
+        if ((_invenItem.item is EquipmentData) == true)
+        {
+            EquipmentData equipment = _invenItem.item as EquipmentData;
+            Managers.Game.Gold += _invenItem.item.itemPrice + (int)((equipment.itemPrice / 4) * (equipment.upgradeCount));
+        }
+        else
+            Managers.Game.Gold += _invenItem.item.itemPrice * _saleItemCount;
+
         _invenItem.SetCount(-_saleItemCount);
 
         Clear();

@@ -143,7 +143,7 @@ public class UI_ShopPopup : UI_Popup
         // 판매할 아이템 받기
         GetObject((int)Gameobjects.SaleList).BindEvent((PointerEventData eventData)=>
         {
-            UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
+            UI_Slot dragSlot = UI_DragSlot.instance.dragSlotItem;
 
             // 인벤토리 슬롯 확인
             if (dragSlot is UI_InvenItem == true)

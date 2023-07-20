@@ -5,118 +5,115 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_InvenItem : UI_SlotItem
+/*
+[ 인벤토리 Slot 스크립트 ]
+1. 인벤토리 안에서 아이템을 받는 Slot이다.
+2. 장비, 상점, 소비 등의 Slot들과 자주 드나드는 곳이다.
+*/
+
+public class UI_InvenItem : UI_ItemDragSlot
 {
-    public int invenNumber; // 인벤 자리 번호
-    public TextMeshProUGUI itemCountText;
-    public int itemCount;
+    enum GameObjects { Lock, }
 
-    // 아이템을 팔때 사용 변수
-    public GameObject _lock;    // 판매 등록될 시 인벤 Lock
+    public int invenNumber;     // 인벤 자리 번호
 
+    // 상점 판매 등록될 시 인벤 Lock
     private bool isLock = false;
     public bool IsLock
     {
         get { return isLock; }
-        set {
+        set
+        {
             isLock = value;
-            _lock.SetActive(isLock);
+            GetObject((int)GameObjects.Lock).SetActive(isLock);
         }
     }
 
     public override void SetInfo()
     {
-        slotType = Define.SlotType.Inven;
         base.SetInfo();
+
+        BindObject(typeof(GameObjects));
+
+        GetObject((int)GameObjects.Lock).SetActive(false);
     }
 
-    protected override void SetEventHandler()
+    // 슬롯 우클릭
+    protected override void OnClickSlot(PointerEventData eventData)
     {
-        base.SetEventHandler();
+        if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
+            return;
 
-        gameObject.BindEvent((PointerEventData eventData)=>
+        // 슬롯 우클릭
+        if (Input.GetMouseButtonUp(1))
         {
-            if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
-                return;
-
-            // 슬롯 우클릭
-            if (Input.GetMouseButtonUp(1))
+            // 상호작용 중이라면
+            if (Managers.Game.IsInteract == true)
             {
-                // 상호작용 중이라면
-                if (Managers.Game.IsInteract == true)
-                {
-                    Managers.Game.GetSlotInteract(this);
-                    return;
-                }
-
-                // 장비 or 소비 아이템이라면
-                if ((item is EquipmentData) == true)
-                {
-                    // 장착 레벨 확인
-                    if (Managers.Game.Level >= (item as EquipmentData).minLevel)
-                        Managers.Game._playScene._equipment.SetEquipment(this);
-                    else
-                        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
-                }
-                else if ((item is UseItemData) == true)
-                {
-                    // 아이템 사용이 성공적으로 됐다면 -1 차감
-                    if ((item as UseItemData).UseItem(this.item) == true)
-                        SetCount(-1);
-                }
+                Managers.Game.GetSlotInteract(this);
+                return;
             }
-        }, Define.UIEvent.Click);
 
-        // 드래그가 끝났을 때
-        gameObject.BindEvent((PointerEventData eventData)=>
+            // 장비 or 소비 아이템이라면
+            if ((item is EquipmentData) == true)
+            {
+                // 장착 레벨 확인
+                if (Managers.Game.Level >= (item as EquipmentData).minLevel)
+                    Managers.Game._playScene._equipment.SetEquipment(this);
+                else
+                    Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
+            }
+            else if ((item is UseItemData) == true)
+            {
+                // 아이템 사용이 성공적으로 됐다면 -1 차감
+                if ((item as UseItemData).UseItem(this.item) == true)
+                    SetCount(-1);
+            }
+        }
+    }
+
+    protected override void OnBeginDragSlot(PointerEventData eventData)
+    {
+        // Lock 확인
+        if (IsLock == true)
+            return;
+
+        base.OnBeginDragSlot(eventData);
+    }
+
+    // 슬롯 받기
+    protected override void OnDropSlot(PointerEventData eventData)
+    {
+        if (UI_DragSlot.instance.dragSlotItem.IsNull() == true)
+            return;
+            
+        UI_Slot dragSlot = UI_DragSlot.instance.dragSlotItem;
+
+        // 어떤 슬롯에서 왔는지 체크
+        switch (dragSlot)
         {
-            if (UI_DragSlot.instance.dragSlotItem.IsNull() == true)
-                return;
-
-            // 아이템을 버린 위치가 UI가 아니라면
-            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
+            case UI_UpgradeItem upgradeSlot:            // 업그레이드 Slot
             {
-                // 아이템 버리기
+                AddSlot<UI_UpgradeItem>(upgradeSlot);
             }
-
-            UI_DragSlot.instance.SetColor(0);
-            UI_DragSlot.instance.dragSlotItem = null;
-
-        }, Define.UIEvent.EndDrag);
-
-        // 이 슬롯에 마우스 클릭이 끝나면 아이템 받기
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            if (UI_DragSlot.instance.dragSlotItem.IsNull() == true)
-                return;
-                
-            UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
-
-            // 강화창에서 온거면
-            if (dragSlot is UI_UpgradeItem)
-                AddSlot<UI_UpgradeItem>(dragSlot as UI_UpgradeItem);
-
-            // 장비창에서 온거면
-            if (dragSlot is UI_ArmorItem || dragSlot is UI_WeaponItem)
+            break;
+            case UI_ArmorItem armorSlot:                // 방어구 Slot
             {
-                if (dragSlot is UI_ArmorItem)
-                    AddSlot<UI_ArmorItem>(dragSlot as UI_ArmorItem);
-                else if (dragSlot is UI_WeaponItem)
-                    AddSlot<UI_WeaponItem>(dragSlot as UI_WeaponItem);
+                AddSlot<UI_ArmorItem>(armorSlot);
             }
-
-            // 소비 아이템 슬롯에서 온거면 (Scene 슬롯)
-            if (dragSlot is UI_UseItemSlot)
+            break;
+            case UI_WeaponItem weaponSlot:              // 무기 Slot
             {
-                UI_UseItemSlot useItemSlot = dragSlot as UI_UseItemSlot;
-                AddSlot<UI_UseItemSlot>(useItemSlot, useItemSlot.itemCount);
+                AddSlot<UI_WeaponItem>(weaponSlot);
             }
-
-            // 인벤토리에서 온거면
-            if (dragSlot is UI_InvenItem)
+            break;
+            case UI_UseItemSlot useSlot:                // 소비 Slot
             {
-                UI_InvenItem invenSlot = dragSlot as UI_InvenItem;
-
+                AddSlot<UI_UseItemSlot>(useSlot, useSlot.itemCount);
+            }
+            break;
+            case UI_InvenItem invenSlot:                // 인벤 Slot
+            {
                 // 두 슬롯의 아이템이 같은 아이템일 경우 개수 체크
                 if (item == invenSlot.item && (invenSlot.item is UseItemData))
                 {
@@ -133,31 +130,30 @@ public class UI_InvenItem : UI_SlotItem
                     }
                 }
                 else
-                    ChangeSlot();
+                    ChangeSlot(invenSlot);
             }
-
-        }, Define.UIEvent.Drop);
+            break;
+        }
     }
 
-    // 현재 슬롯을 다른 슬롯과 바꿀 때 사용하는 메소드
-    private void ChangeSlot()
+    protected override void ChangeSlot(UI_ItemSlot itemSlot)
     {
         ItemData _tempItem = item;
         int _tempItemCount = itemCount;
 
-        // 드래그된 슬롯을 현재 슬롯에 Add
-        UI_InvenItem dragSlot = UI_DragSlot.instance.dragSlotItem as UI_InvenItem;
-        AddItem(dragSlot.item, dragSlot.itemCount);
+        UI_InvenItem invenSlot = itemSlot as UI_InvenItem;
+
+        AddItem(invenSlot.item, invenSlot.itemCount);
 
         // 현재 슬롯 아이템을 드래그된 슬롯에 Add
         if (_tempItem.IsNull() == false)
-            UI_DragSlot.instance.dragSlotItem.AddItem(_tempItem, _tempItemCount);
+            invenSlot.AddItem(_tempItem, _tempItemCount);
         else
-            UI_DragSlot.instance.dragSlotItem.ClearSlot();
+            invenSlot.ClearSlot();
     }
 
     // 슬롯 받기
-    private void AddSlot<T>(T slot, int count = 1) where T : UI_SlotItem
+    private void AddSlot<T>(T slot, int count = 1) where T : UI_ItemDragSlot
     {
         // 아이템이 있다면 다른 슬롯 || 없다면 지금 슬롯에 넣기
         if (item.IsNull() == false)
@@ -168,31 +164,10 @@ public class UI_InvenItem : UI_SlotItem
         slot.ClearSlot();
     }
 
-    // 투명도 설정 (0 ~ 255)
-    protected override void SetColor(float _alpha)
-    {
-        base.SetColor(_alpha);
-
-        itemCountText.color = icon.color;
-    }
-
     // 아이템 등록
     public override void AddItem(ItemData _item, int count = 1)
     {
         base.AddItem(_item, count);
-
-        // 장비가 아니라면 개수 설정
-        if ((item is UseItemData) == true)
-        {
-            (item as UseItemData).itemCount = count;
-            itemCount = count;
-            itemCountText.text = itemCount.ToString();
-        }
-        else
-        {
-            itemCount = 0;
-            itemCountText.text = "";
-        }
 
         // 매니저에 저장
         if (Managers.Game.InvenItem.ContainsKey(invenNumber) == false)
@@ -201,39 +176,15 @@ public class UI_InvenItem : UI_SlotItem
             Managers.Game.InvenItem[invenNumber] = _item;
     }
 
-    // 아이템 개수 업데이트
-    public void SetCount(int count = 1)
-    {
-        itemCount += count;
-        itemCountText.text = itemCount.ToString();
-        
-        if (item is UseItemData)
-            (item as UseItemData).itemCount += count;
-
-        // 개수가 없다면
-        if (itemCount <= 0)
-            ClearSlot();
-    }
-
     // 슬롯 초기화
     public override void ClearSlot()
     {
         base.ClearSlot();
 
         IsLock = false;
-        itemCount = 0;
-        itemCountText.text = "0";
-        Managers.Game._playScene._slotTip.OnSlotTip(false);
 
         // 매니저에 저장
         if (Managers.Game.InvenItem.ContainsKey(invenNumber) == true)
             Managers.Game.InvenItem[invenNumber] = null;
-        
-        SetColor(0);
-    }
-
-    void RefreshUI()
-    {
-
     }
 }

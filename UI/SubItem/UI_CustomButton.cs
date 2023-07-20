@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+[ Custom 버튼 스크립트 ]
+1. CustomScene에서 사용되며 커스텀 부위를 변경할 때 사용된다.
+*/
+
 public class UI_CustomButton : UI_Base
 {
     enum Buttons

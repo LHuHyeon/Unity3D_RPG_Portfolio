@@ -4,17 +4,22 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_ArmorItem : UI_SlotItem
+/*
+[ 방어구 Slot 스크립트 ]
+1. EqStatPopup안에 있는 방어구 Slot으로 장비를 장착/해제할 수 있다.
+2. 드래그 드랍 or 우클릭으로 장비 장착이 가능하다.
+*/
+
+public class UI_ArmorItem : UI_ItemDragSlot
 {
     public Define.ArmorType armorType = Define.ArmorType.Unknown;
     public ArmorItemData armorItem;
 
     public override void SetInfo()
     {
-        slotType = Define.SlotType.Equipment;
         Managers.Game._playScene._equipment.armorSlots.Add(this);
 
-        // 해당 부위 장비가 장착되어 있다면
+        // 해당 부위 장비가 이미 장착되어 있다면 장착 (Save Load 했을때)
         if (Managers.Game.CurrentArmor.TryGetValue(armorType, out armorItem) == true)
         {
             base.AddItem(armorItem);
@@ -24,56 +29,53 @@ public class UI_ArmorItem : UI_SlotItem
         base.SetInfo();
     }
 
-    protected override void SetEventHandler()
+    // 우클릭하여 장비 벗기
+    protected override void OnClickSlot(PointerEventData eventData)
     {
-        base.SetEventHandler();
+        if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
+            return;
 
-        gameObject.BindEvent((PointerEventData eventData)=>
+        if (Input.GetMouseButtonUp(1))
         {
-            if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
-                return;
-
-            // 장비 벗기
-            if (Input.GetMouseButtonUp(1))
-            {
-                Managers.Game._playScene._inventory.AcquireItem(armorItem);
-                ClearSlot();
-            }
-        }, Define.UIEvent.Click);
-
-        // 드래그가 끝났을 때
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            // 아이템을 버린 위치가 UI가 아니라면
-            if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
-            {
-                // 아이템 인벤으로 이동
-            }
-
-            UI_DragSlot.instance.SetColor(0);
-            UI_DragSlot.instance.dragSlotItem = null;
-
-        }, Define.UIEvent.EndDrag);
-
-        // 이 슬롯에 마우스 클릭이 끝나면 장비 받기
-        gameObject.BindEvent((PointerEventData eventData)=>
-        {
-            UI_SlotItem dragSlot = UI_DragSlot.instance.dragSlotItem;
-
-            if (dragSlot.IsNull() == false)
-            {
-                // 자기 자신이라면
-                if (dragSlot == this)
-                    return;
-
-                // 장비 장착 (or 교체)
-                ChangeArmor(dragSlot);
-            }
-
-        }, Define.UIEvent.Drop);
+            // 인벤으로 보내고 초기화
+            Managers.Game._playScene._inventory.AcquireItem(armorItem);
+            ClearSlot();
+        }
     }
 
-    public void ChangeArmor(UI_SlotItem itemSlot)
+    // 드래그 끝날 때
+    protected override void OnEndDragSlot(PointerEventData eventData)
+    {
+        // 아이템을 버린 위치가 UI가 아니라면
+        if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
+        {
+            // 인벤으로 보내고 초기화
+            Managers.Game._playScene._inventory.AcquireItem(armorItem);
+            ClearSlot();
+        }
+        
+        base.OnEndDragSlot(eventData);
+    }
+
+    // Slot을 Drop 받을 때
+    protected override void OnDropSlot(PointerEventData eventData)
+    {
+        UI_Slot dragSlot = UI_DragSlot.instance.dragSlotItem;
+
+        if (dragSlot.IsNull() == false)
+        {
+            // 자기 자신이라면 취소
+            if (dragSlot == this)
+                return;
+
+            // 장비 장착 (or 교체)
+            ChangeSlot(dragSlot as UI_ItemSlot);
+        }
+    }
+
+    public void ChangeArmor(UI_ItemSlot itemSlot) { ChangeSlot(itemSlot); }
+
+    protected override void ChangeSlot(UI_ItemSlot itemSlot)
     {
         // 장비 확인
         if ((itemSlot.item is ArmorItemData) == false)
@@ -180,7 +182,5 @@ public class UI_ArmorItem : UI_SlotItem
         Managers.Game.RefreshArmor(armorItem, false);   // 장비 스탯 해제
         armorItem = null;
         Managers.Game.CurrentArmor.Remove(armorType);
-
-        Managers.Game._playScene._slotTip.OnSlotTip(false);
     }
 }

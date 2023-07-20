@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 아이템을 드래그하여 이동시킬 때 사용될 클래스
+/*
+[ 이동 Slot 스크립트 ]
+1. Slot을 마우스로 잡고 드래그할 때 이동을 표현한다.
+*/
+
 public class UI_DragSlot : MonoBehaviour
 {
     public static UI_DragSlot instance;
 
-    public UI_SlotItem dragSlotItem;
+    public UI_Slot dragSlotItem;
 
     // 아이템 이미지
     public Image icon;

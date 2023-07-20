@@ -5,6 +5,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
 
+/*
+[ 퀘스트 Slot 스크립트 ]
+1. 퀘스트 Popup에서 사용되는 퀘스트 목록의 Slot이다.
+2. 클릭하면 퀘스트 정보가 활성화된다.
+*/
+
 public class UI_QuestSlot : UI_Base
 {
     public QuestData _quest;

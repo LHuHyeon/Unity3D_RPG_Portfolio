@@ -22,11 +22,6 @@ public class UI_UpgradePopup : UI_Popup
         ExitButton,
     }
 
-    enum Images
-    {
-        ItemIcon,
-    }
-
     enum Texts
     {
         ItemNameText,
@@ -45,7 +40,6 @@ public class UI_UpgradePopup : UI_Popup
 
         BindObject(typeof(Gameobjects));
         BindButton(typeof(Buttons));
-        BindImage(typeof(Images));
         BindText(typeof(Texts));
 
         SetInfo();

@@ -34,7 +34,8 @@ public abstract class UI_Base : MonoBehaviour
         
         // enum의 개수만큼 배열 생성 후 _objects에 추가
         UnityEngine.Object[] objects = new UnityEngine.Object[names.Length];
-        _objects.Add(typeof(T), objects);
+        if (_objects.ContainsKey(typeof(T)) == false)
+            _objects.Add(typeof(T), objects);
 
         for(int i = 0; i < names.Length; i++){
             if (typeof(T) == typeof(GameObject))
