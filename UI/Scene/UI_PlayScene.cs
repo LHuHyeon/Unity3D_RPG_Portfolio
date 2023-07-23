@@ -48,7 +48,6 @@ public class UI_PlayScene : UI_Scene
 
     enum Buttons
     {
-        SpawnButton,
         LevelUpButton,
         AddGoldButton,
     }
@@ -116,12 +115,6 @@ public class UI_PlayScene : UI_Scene
         GetText((int)Texts.NameBarText).text = Managers.Game.Name;
 
         // -- TODO : Test 용 코드 나중에 삭제하기
-        GetButton((int)Buttons.SpawnButton).onClick.AddListener(()=>
-        {
-            GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, "Monster/Skeleton1");
-            obj.transform.position += new Vector3(0, 0, 5f);
-        });
-
         GetButton((int)Buttons.LevelUpButton).onClick.AddListener(()=>
         {
             // 다음 레벨 확인
@@ -132,8 +125,6 @@ public class UI_PlayScene : UI_Scene
             }
 
             Managers.Game.RefreshStat(++Managers.Game.Level);
-            Managers.Game.GetPlayer().GetComponent<PlayerController>().LevelUpEffect();
-            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($"({Managers.Game.Level})\n레벨이 올랐습니다!! \n\n\n\n\n\n\n\n\n", Color.yellow);
         });
 
         GetButton((int)Buttons.AddGoldButton).onClick.AddListener(()=>{ Managers.Game.Gold += 100; });
@@ -163,8 +154,8 @@ public class UI_PlayScene : UI_Scene
 
     public void RefreshUI()
     {
-        // 레벨 10 이상이면 궁극기 슬롯 오픈
-        if (Managers.Game.Level >= 10)
+        // 레벨 7 이상이면 궁극기 슬롯 오픈
+        if (Managers.Game.Level >= 7)
             GetObject((int)Gameobjects.ultSkillSlot).SetActive(true);
 
         RefreshStat();

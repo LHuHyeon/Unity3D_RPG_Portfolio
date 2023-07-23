@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public abstract class UI_Base : MonoBehaviour
 {
-    // 컴포넌트 타입 별로 담아줄 딕셔너리(자료구조)
+    // 컴포넌트 타입 별로 담기
     protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 
     protected bool _init = false;
@@ -26,16 +26,17 @@ public abstract class UI_Base : MonoBehaviour
 		Init();
 	}
 
-    // where T : 부모 클래스의 자식 클래스만 가능
     protected void Bind<T>(Type type) where T : UnityEngine.Object
     {
         // C++과 다르게 C#은 enum안에 있는 내용을 읽을 수 있다!
         string[] names = Enum.GetNames(type);
+
+        if (_objects.ContainsKey(typeof(T)) == true)
+            return;
         
         // enum의 개수만큼 배열 생성 후 _objects에 추가
         UnityEngine.Object[] objects = new UnityEngine.Object[names.Length];
-        if (_objects.ContainsKey(typeof(T)) == false)
-            _objects.Add(typeof(T), objects);
+        _objects.Add(typeof(T), objects);
 
         for(int i = 0; i < names.Length; i++){
             if (typeof(T) == typeof(GameObject))

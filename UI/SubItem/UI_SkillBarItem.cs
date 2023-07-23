@@ -58,10 +58,10 @@ public class UI_SkillBarItem : UI_SkillSlot
 
     void SetSkill(SkillData skill)
     {
-        // 궁극기 경우 10렙 이상 스킬만 가능
+        // 궁극기 경우 7렙 이상 스킬만 가능
         if (keySkill == Define.KeySkill.R)
         {
-            if (skill.minLevel < 10)
+            if (skill.minLevel < 7)
                 return;
         }
 

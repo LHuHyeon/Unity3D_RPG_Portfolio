@@ -30,4 +30,10 @@ public class UI_SkillSlot : UI_Slot
         if (skillData.IsNull() == false)
             UI_DragSlot.instance.icon.transform.position = eventData.position;
     }
+
+    protected override void OnEndDragSlot(PointerEventData eventData)
+    {
+        UI_DragSlot.instance.SetColor(0);
+        UI_DragSlot.instance.dragSlotItem = null;
+    }
 }

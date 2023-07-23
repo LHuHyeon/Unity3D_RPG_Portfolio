@@ -147,7 +147,7 @@ public class UI_ShopPopup : UI_Popup
 
             // 인벤토리 슬롯 확인
             if (dragSlot is UI_InvenItem == true)
-                SaleItemRegister(dragSlot as UI_InvenItem);
+                SetSaleItemRegister(dragSlot as UI_InvenItem);
 
         }, Define.UIEvent.Drop);
 

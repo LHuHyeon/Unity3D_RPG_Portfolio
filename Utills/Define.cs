@@ -63,15 +63,6 @@ public class Define : MonoBehaviour
         Accessory,
     }
 
-    public enum StatType
-    {
-        Hp,
-        Mp,
-        Attack,
-        Defence,
-        MoveSpeed,
-    }
-
     public enum WeaponType
     {
         Unknown,
@@ -113,17 +104,6 @@ public class Define : MonoBehaviour
         Armor,
         Weapon,
         ETC,
-    }
-
-    public enum SlotType
-    {
-        Unknown,
-        Inven,      // 인벤토리 슬롯
-        Quest,      // 퀘스트 보상 슬롯
-        Equipment,  // 장비 아이템 슬롯
-        Skill,      // 스킬 슬롯 (Scene, Popup 둘다)
-        UseItem,    // 사용 아이템 슬롯 (Scene)
-        Upgrade,    // 강화 아이템 슬롯
     }
 
     // 캐릭터 상태

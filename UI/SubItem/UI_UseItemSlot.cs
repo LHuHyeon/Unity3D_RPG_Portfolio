@@ -7,21 +7,20 @@ using UnityEngine.EventSystems;
 
 public class UI_UseItemSlot : UI_ItemDragSlot
 {
-    enum Texts { KeyText, }
-
     public int key;
-    string keyText;
+    public TextMeshProUGUI keyText;
 
     public override void SetInfo()
     {
-        keyText = key.ToString();
-
-        if (Managers.Game.UseItemBarList.ContainsKey(key) == true)
-            AddItem(Managers.Game.UseItemBarList[key]);
-
         base.SetInfo();
 
-        GetText((int)Texts.KeyText).text = keyText;
+        keyText.text = key.ToString();
+
+        if (Managers.Game.UseItemBarList.ContainsKey(key) == true)
+        {
+            UseItemData useItem = Managers.Game.UseItemBarList[key];
+            AddItem(useItem, useItem.itemCount);
+        }
     }
 
     protected override void OnEndDragSlot(PointerEventData eventData)
@@ -45,16 +44,14 @@ public class UI_UseItemSlot : UI_ItemDragSlot
             if (dragSlot == this)
                 return;
 
-            ChangeSlot(dragSlot as UI_ItemSlot);
+            // 같은 종류의 슬롯이거나 인벤 슬롯일 때 통과
+            if ((dragSlot is UI_UseItemSlot) == true || (dragSlot is UI_InvenItem) == true)
+                ChangeSlot(dragSlot as UI_ItemSlot);
         }
     }
 
     protected override void ChangeSlot(UI_ItemSlot itemSlot)
     {
-        // 같은 종류의 슬롯이거나 인벤 슬롯일 때 통과
-        if ((itemSlot is UI_UseItemSlot) == false || (itemSlot is UI_InvenItem) == false)
-            return;
-
         // 소비 아이템 확인
         if ((itemSlot.item is UseItemData) == false)
             return;

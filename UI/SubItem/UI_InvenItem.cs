@@ -89,6 +89,9 @@ public class UI_InvenItem : UI_ItemDragSlot
             
         UI_Slot dragSlot = UI_DragSlot.instance.dragSlotItem;
 
+        if (dragSlot == this)
+            return;
+
         // 어떤 슬롯에서 왔는지 체크
         switch (dragSlot)
         {

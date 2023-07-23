@@ -79,6 +79,7 @@ public abstract class BaseController : MonoBehaviour
     void Start()
     {
         Init();
+        _lockTarget = null;
     }
 
     // Playe, NPC 전용 ( 키 입력이 필요한 경우 )

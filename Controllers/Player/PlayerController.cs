@@ -47,6 +47,7 @@ public class PlayerController : BaseController
         charEquipment = new Dictionary<int, List<GameObject>>();
 
         anim = GetComponent<Animator>();
+        currentEffect = null;
 
         Managers.Input.KeyAction -= OnKeyEvent;
         Managers.Input.KeyAction += OnKeyEvent;

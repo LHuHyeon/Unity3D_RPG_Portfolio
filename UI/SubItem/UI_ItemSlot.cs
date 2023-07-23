@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,16 +15,16 @@ public class UI_ItemSlot : UI_Slot
 
     public ItemData item;
     public int itemCount;
-    string itemCountText;
 
     public override void SetInfo()
     {
         base.SetInfo();
 
-        BindText(typeof(Texts));
+        itemCount = 0;
 
+        BindText(typeof(Texts));
         if (GetText((int)Texts.ItemCountText).IsNull() == false)
-            GetText((int)Texts.ItemCountText).text = itemCountText;
+            GetText((int)Texts.ItemCountText).text = "";
     }
 
     // 마우스가 슬롯에 닿았다면 정보 활성화
@@ -56,12 +55,14 @@ public class UI_ItemSlot : UI_Slot
         {
             (item as UseItemData).itemCount = count;
             itemCount = count;
-            itemCountText = itemCount.ToString();
+            GetText((int)Texts.ItemCountText).text = itemCount.ToString();
         }
         else
         {
             itemCount = 1;
-            itemCountText = "";
+
+            if (GetText((int)Texts.ItemCountText).IsNull() == false)
+                GetText((int)Texts.ItemCountText).text = "";
         }
 
         // Spirte 넣기
@@ -106,8 +107,10 @@ public class UI_ItemSlot : UI_Slot
     {
         base.ClearSlot();
         item = null;
-        itemCountText = "";
         itemCount = 0;
+
+        if (GetText((int)Texts.ItemCountText).IsNull() == false)
+            GetText((int)Texts.ItemCountText).text = "";
 
         Managers.Game._playScene._slotTip.OnSlotTip(false);
     }

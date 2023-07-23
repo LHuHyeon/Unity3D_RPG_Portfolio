@@ -125,6 +125,7 @@ public class UI_InvenPopup : UI_Popup
 
             if (Managers.Game.InvenItem.TryGetValue(i, out ItemData item) == true)
             {
+                invenItem.SetInfo();
                 // 소비 아이템이라면 개수 반영
                 if (item is UseItemData)
                 {

@@ -16,7 +16,6 @@ public class UI_WeaponItem : UI_ItemDragSlot
         if (Managers.Game.CurrentWeapon.IsNull() == false)
         {
             AddItem(Managers.Game.CurrentWeapon);
-            Managers.Game.UpgradeMeshEffect(weaponItem);
         }
 
         base.SetInfo();
@@ -115,6 +114,8 @@ public class UI_WeaponItem : UI_ItemDragSlot
         // 장비 파츠 확인
         GetPart(weaponItem);
         Managers.Game.CurrentWeapon = weaponItem;
+
+        Managers.Game.UpgradeMeshEffect(weaponItem);
 
         weaponItem.charEquipment.SetActive(true);
     }

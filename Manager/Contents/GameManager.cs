@@ -401,7 +401,6 @@ public class GameManager
     public void EquipmentUpgrade(EquipmentData equipment)
     {
         equipment.upgradeCount += 1;
-        UpgradeMeshEffect(equipment);
 
         // 장비 종류 확인 후 적용
         if (equipment is WeaponItemData)
@@ -423,13 +422,18 @@ public class GameManager
     // 업그레이드 일정 수치 넘으면 Mesh 적용
     public void UpgradeMeshEffect(EquipmentData equipment)
     {
-        if (equipment.upgradeCount < 6)
-            return;
+        // 해당 무기 오브젝트 찾기
+        GameObject weaponObj = (equipment as WeaponItemData).charEquipment;
+        if (weaponObj.IsFakeNull() == true)
+            weaponObj = (Managers.Data.Item[equipment.id] as WeaponItemData).charEquipment;
 
         // 객체 안에 자식들 삭제
-        GameObject weaponObj = (equipment as WeaponItemData).charEquipment;
         foreach(Transform child in weaponObj.transform)
-            Managers.Resource.Destroy(child.gameObject);
+                Managers.Resource.Destroy(child.gameObject);
+
+        // 레벨 충족이 안되면 종료 
+        if (equipment.upgradeCount < 6)
+            return;
 
         // 무기 객체 자식으로 이펙트 배치
         string path = "Effect/Upgrade/UpgradeEffect_" + equipment.upgradeCount;

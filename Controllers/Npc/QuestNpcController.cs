@@ -42,6 +42,11 @@ public class QuestNpcController : NpcController
         currentQuest = questDataList[nextQuest];
         currentTalk = talkDataList[nextQuest];
 
+        Invoke("DelayInit", 0.0001f);
+    }
+
+    void DelayInit()
+    {
         // 현재 클리어한 퀘스트가 있는지
         while (true)
         {
@@ -56,12 +61,7 @@ public class QuestNpcController : NpcController
 
             break;
         }
-
-        Invoke("DelayInit", 0.0001f);
-    }
-
-    void DelayInit()
-    {
+        
         // 퀘스트 중이 아니라면 ! 띄우기
         if (currentQuest.isAccept == false)
         {
@@ -163,6 +163,9 @@ public class QuestNpcController : NpcController
 
         // 레벨 체크
         if (currentQuest.minLevel <= Managers.Game.Level)
-            Managers.Game._playScene._quest.noticeObject.SetInfo("!", transform.position);
+        {
+            if (Managers.Game._playScene._quest.noticeObject.IsNull() == false)
+                Managers.Game._playScene._quest.noticeObject.SetInfo("!", transform.position);
+        }
     }
 }
