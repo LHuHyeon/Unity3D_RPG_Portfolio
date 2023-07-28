@@ -433,6 +433,9 @@ public class PlayerController : BaseController
     // 키보드 클릭
     void OnKeyEvent()
     {
+        if (State == Define.State.Die)
+            return;
+
         // 구르지 않을 때 가능
         if (_isDiveRoll == false)
         {

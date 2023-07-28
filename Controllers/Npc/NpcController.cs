@@ -23,6 +23,9 @@ public abstract class NpcController : BaseController
 
     protected override void UpdateIdle()
     {
+        if (Managers.Game.GetPlayer().IsNull() == true)
+            return;
+            
         Vector3 dir = Managers.Game.GetPlayer().transform.position - transform.position;
 
         if (dir.magnitude <= scanRange)

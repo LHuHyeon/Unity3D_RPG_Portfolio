@@ -13,6 +13,8 @@ public class GameScene : BaseScene
         base.Init();
         SceneType = Define.Scene.Game;  // 타입 설정
 
+        Managers.Game.defualtSpawn = playerSpawn.position;
+
         // 플레이어 캐릭터 생성
         if (Managers.Game.GetPlayer().IsNull() == true)
         {

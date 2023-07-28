@@ -100,6 +100,7 @@ public class GameManager
     public GameObject GetPlayer() { return _player; }
 
     public MonsterStat currentMonster;   // 전투 중인 몬스터
+    public Vector3 defualtSpawn;        // 기본 스폰 장소
 
     public UI_PlayScene _playScene;
 
@@ -528,9 +529,24 @@ public class GameManager
         }
     }
 
+    GameObject tempPlayer;
     public void OnDead()
     {
-        // TODO : 재시작
+        _player.GetComponent<PlayerController>().State = Define.State.Die;
+        tempPlayer = _player;
+        _player = null;
+
+        Managers.UI.ShowPopupUI<UI_DiePopup>();
+    }
+
+    // 플레이어 부활
+    public void OnResurrection(float health)
+    {
+        _player = tempPlayer;
+        _player.GetComponent<PlayerController>().State = Define.State.Idle;
+
+        Hp = (int)(MaxHp * health);
+        Mp = (int)(MaxMp * health);
     }
 
     public void OnUpdate()
@@ -671,7 +687,10 @@ public class GameManager
             case Define.WorldObject.Player:
                 {
                     if (_player == go)
+                    {
                         _player = null;
+                        return;
+                    }
                 }
                 break;
         }
