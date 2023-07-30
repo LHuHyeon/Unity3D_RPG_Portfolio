@@ -378,9 +378,8 @@ public class GameManager
                 if (questData.targetId == go.GetComponent<MonsterStat>().Id)
                 {
                     questData.currnetTargetCount = Mathf.Clamp(++questData.currnetTargetCount, 0, questData.targetCount);
-
-                    if (questData.currnetTargetCount >= questData.targetCount)
-                        Managers.Game._playScene._quest.noticeObject.SetInfo("?");
+                    if (questData.currnetTargetCount == questData.targetCount)
+                        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($@"퀘스트 완료!\n<color=yellow>[{questData.titleName}]</color>", Color.green);
                         
                     return;
                 }

@@ -29,8 +29,8 @@ public class UI_WeaponItem : UI_ItemDragSlot
         // 장비 벗기
         if (Input.GetMouseButtonUp(1))
         {
-            Managers.Game._playScene._inventory.AcquireItem(weaponItem);
-            ClearSlot();
+            if (Managers.Game._playScene._inventory.AcquireItem(weaponItem) == true)
+                ClearSlot();
         }
     }
 
@@ -40,8 +40,8 @@ public class UI_WeaponItem : UI_ItemDragSlot
         if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
         {
             // 아이템 인벤으로 이동
-            Managers.Game._playScene._inventory.AcquireItem(weaponItem);
-            ClearSlot();
+            if (Managers.Game._playScene._inventory.AcquireItem(weaponItem) == true)
+                ClearSlot();
         }
         
         base.OnEndDragSlot(eventData);

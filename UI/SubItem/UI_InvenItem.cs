@@ -41,6 +41,9 @@ public class UI_InvenItem : UI_ItemDragSlot
     // 슬롯 우클릭
     protected override void OnClickSlot(PointerEventData eventData)
     {
+        if (isLock == true)
+            return;
+
         if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
             return;
 
@@ -102,11 +105,28 @@ public class UI_InvenItem : UI_ItemDragSlot
             break;
             case UI_ArmorItem armorSlot:                // 방어구 Slot
             {
+                // 현재 아이템이 같은 종류의 방어구라면 교체
+                if (ItemTypeCheck<ArmorItemData>() == true)
+                {
+                    if ((armorSlot.armorType == (item as ArmorItemData).armorType))
+                    {
+                        armorSlot.ChangeArmor(this);
+                        return;
+                    }
+                }
+
                 AddSlot<UI_ArmorItem>(armorSlot);
             }
             break;
             case UI_WeaponItem weaponSlot:              // 무기 Slot
             {
+                // 현재 아이템이 무기라면 교체
+                if (ItemTypeCheck<WeaponItemData>() == true)
+                {
+                    weaponSlot.ChangeWeapon(this);
+                    return;
+                }
+
                 AddSlot<UI_WeaponItem>(weaponSlot);
             }
             break;
@@ -139,6 +159,17 @@ public class UI_InvenItem : UI_ItemDragSlot
         }
     }
 
+    private bool ItemTypeCheck<T>() where T : EquipmentData
+    {
+        if (item.IsNull() == false)
+        {
+            if ((item is T) == true)
+                return true;
+        }
+
+        return false;
+    }
+
     protected override void ChangeSlot(UI_ItemSlot itemSlot)
     {
         ItemData _tempItem = item;
@@ -158,6 +189,10 @@ public class UI_InvenItem : UI_ItemDragSlot
     // 슬롯 받기
     private void AddSlot<T>(T slot, int count = 1) where T : UI_ItemDragSlot
     {
+        // 인벤 크기 체크
+        if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
+            return;
+
         // 아이템이 있다면 다른 슬롯 || 없다면 지금 슬롯에 넣기
         if (item.IsNull() == false)
             Managers.Game._playScene._inventory.AcquireItem(slot.item, count);
@@ -185,6 +220,8 @@ public class UI_InvenItem : UI_ItemDragSlot
         base.ClearSlot();
 
         IsLock = false;
+        
+        Managers.Game._playScene._inventory.currentInvenSize--;
 
         // 매니저에 저장
         if (Managers.Game.InvenItem.ContainsKey(invenNumber) == true)

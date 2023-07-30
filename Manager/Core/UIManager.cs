@@ -53,7 +53,7 @@ public class UIManager
         if (parent.IsNull() == false)
             go.transform.SetParent(parent);
 
-        Canvas canvas = go.GetOrAddComponent<Canvas>(); // or -> go.GetComponent<Canvas>();
+        Canvas canvas = go.GetOrAddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
         canvas.worldCamera = Camera.main;
 
@@ -95,6 +95,10 @@ public class UIManager
         if (string.IsNullOrEmpty(name)){
             name = typeof(T).Name;
         }
+
+        // 이미 생성된 Popup이면 종료
+        if (_popupList.Contains(Managers.Resource.Load<T>($"UI/Popup/{name}")) == true)
+            return null;
 
         GameObject go = Managers.Resource.Instantiate($"UI/Popup/{name}");
         T popup = Util.GetOrAddComponent<T>(go);

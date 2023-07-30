@@ -20,7 +20,7 @@ public class UI_LoadPopup : UI_Popup
     TextMeshProUGUI tipText;
 
     int currentMessageNumber = 0;
-    string[] loadMessges = new string[]{Define.LoadMessage1, Define.LoadMessage2, Define.LoadMessage3, Define.LoadMessage4};
+    string[] loadMessges = new string[]{Define.LoadMessage1, Define.LoadMessage2, Define.LoadMessage3};
 
     public override bool Init() { return base.Init(); }
 

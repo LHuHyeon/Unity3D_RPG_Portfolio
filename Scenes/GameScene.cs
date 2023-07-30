@@ -32,6 +32,8 @@ public class GameScene : BaseScene
             Managers.Game._playScene = Managers.UI.ShowSceneUI<UI_PlayScene>();
             DontDestroyOnLoad(Managers.Game._playScene.gameObject);
         }
+        else
+            Managers.Game._playScene.IsMiniMap(true);
 
         // 플레이어 세이브 위치 이동
         if (Managers.Game.CurrentPos != Vector3.zero)

@@ -27,8 +27,8 @@ public class UI_UseItemSlot : UI_ItemDragSlot
     {
         if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
         {
-            Managers.Game._playScene._inventory.AcquireItem(item, itemCount);
-            ClearSlot();
+            if (Managers.Game._playScene._inventory.AcquireItem(item, itemCount) == true)
+                ClearSlot();
         }
         
         base.OnEndDragSlot(eventData);
@@ -59,19 +59,22 @@ public class UI_UseItemSlot : UI_ItemDragSlot
         // 지금 슬롯에 아이템이 존재할 때
         if (item.IsNull() == false)
         {
-            // 아이디가 다를 경우 인벤으로 보내기
-            if (item.id != itemSlot.item.id)
-                Managers.Game._playScene._inventory.AcquireItem(item, itemCount);
+            // 아이디 확인 후 개수 증가 or 체인지
+            if (item.id == itemSlot.item.id)
+                SetCount((itemSlot.item as UseItemData).itemCount);
+            else
+            {
+                if (Managers.Game._playScene._inventory.AcquireItem(item, itemCount) == false)
+                    return;
+                
+                AddItem(itemSlot.item, (itemSlot.item as UseItemData).itemCount);
+            }
         }
-
-        AddItem(itemSlot.item, (itemSlot.item as UseItemData).itemCount);
+        else AddItem(itemSlot.item, (itemSlot.item as UseItemData).itemCount);
 
         // 기존에 온 슬롯 삭제시키기 
-        if (itemSlot is UI_UseItemSlot)
-            (itemSlot as UI_UseItemSlot).ClearSlot();
-
-        if (itemSlot is UI_InvenItem)
-            (itemSlot as UI_InvenItem).ClearSlot();
+        if (itemSlot is UI_UseItemSlot) (itemSlot as UI_UseItemSlot).ClearSlot();
+        if (itemSlot is UI_InvenItem) (itemSlot as UI_InvenItem).ClearSlot();
     }
 
     public override void AddItem(ItemData _item, int count = 1)

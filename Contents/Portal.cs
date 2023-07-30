@@ -39,7 +39,10 @@ public class Portal : MonoBehaviour
 
                 if (Managers.Scene.CurrentScene.SceneType == Define.Scene.Game)
                 {
-                    Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
+                    UI_ConfirmPopup confirmPopup = Managers.UI.ShowPopupUI<UI_ConfirmPopup>();
+                    if (confirmPopup.IsNull() == true) return;
+                    
+                    confirmPopup.SetInfo(()=>
                     {
                         Managers.Game.SaveGame();
 

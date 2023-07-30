@@ -72,7 +72,7 @@ public class MonsterStat : MonoBehaviour
 
         // 퀘스트 대상 몬스터면 반영
         Managers.Game.QuestTargetCount(gameObject);
-        Managers.Game._playScene.ClostMonsterBar();
+        Managers.Game._playScene.CloseMonsterBar();
 
         OnDropItem();
         _monster.BattleClose();

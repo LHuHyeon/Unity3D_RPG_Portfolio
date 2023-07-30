@@ -80,7 +80,7 @@ public class UI_ShopSaleItem : UI_Base
         Clear();
     }
 
-    void Clear()
+    public void Clear()
     {
         _invenItem.IsLock = false;
 

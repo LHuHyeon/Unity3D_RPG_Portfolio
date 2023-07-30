@@ -51,7 +51,10 @@ public class UI_SkillItem : UI_SkillSlot
         {
             if (LevelCheck() == true)
             {
-                Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
+                UI_ConfirmPopup confirmPopup = Managers.UI.ShowPopupUI<UI_ConfirmPopup>();
+                if (confirmPopup.IsNull() == true) return;
+                
+                confirmPopup.SetInfo(()=>
                 {
                     skillData.isLock = false;
                     Managers.Game.CurrentSkill.Add(this.skillData);

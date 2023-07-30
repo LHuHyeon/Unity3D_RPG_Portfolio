@@ -38,8 +38,8 @@ public class UI_ArmorItem : UI_ItemDragSlot
         if (Input.GetMouseButtonUp(1))
         {
             // 인벤으로 보내고 초기화
-            Managers.Game._playScene._inventory.AcquireItem(armorItem);
-            ClearSlot();
+            if (Managers.Game._playScene._inventory.AcquireItem(armorItem) == true)
+                ClearSlot();
         }
     }
 
@@ -50,8 +50,8 @@ public class UI_ArmorItem : UI_ItemDragSlot
         if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
         {
             // 인벤으로 보내고 초기화
-            Managers.Game._playScene._inventory.AcquireItem(armorItem);
-            ClearSlot();
+            if (Managers.Game._playScene._inventory.AcquireItem(armorItem) == true)
+                ClearSlot();
         }
         
         base.OnEndDragSlot(eventData);

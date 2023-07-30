@@ -49,11 +49,11 @@ public class UI_SkillBarItem : UI_SkillSlot
 
     void ChangeSkill(UI_SkillSlot skillSlot)
     {
+        SetSkill(skillSlot.skillData);
+
         // 스킬바에서 온거면 기존 슬롯 삭제
         if (skillSlot is UI_SkillBarItem)
-            skillSlot.ClearSlot();
-
-        SetSkill(skillSlot.skillData);
+            (skillSlot as UI_SkillBarItem).ClearSlot();
     }
 
     void SetSkill(SkillData skill)
@@ -109,6 +109,11 @@ public class UI_SkillBarItem : UI_SkillSlot
     public override void ClearSlot()
     {
         base.ClearSlot();
+
+        // 쿨타임 이미지 초기화
+        skillData.isCoolDown = false;
+        coolDownImage.fillAmount = 1;
+        coolDownImage.gameObject.SetActive(false);
 
         Managers.Game.SkillBarList.Remove(keySkill);
         skillData = null;

@@ -17,10 +17,13 @@ public class UI_QuestNoticeSlot : UI_Base
 
     string targetName;
 
-    void Update()
+    void FixedUpdate()
     {
         if (_quest.IsNull() == true)
             return;
+
+        if (_quest.currnetTargetCount == _quest.targetCount)
+            questNameText.text = _quest.titleName + $@"<color=yellow> [완료]</color>";
 
         string questText = targetName + " : " + _quest.currnetTargetCount + " / " + _quest.targetCount;
         questDescText.text = questText;

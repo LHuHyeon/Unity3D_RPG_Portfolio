@@ -20,6 +20,7 @@ public class UI_PlayScene : UI_Scene
         ultSkillSlot,
         QuestListBar,
         MonsterBar,
+        MiniMap,
     }
 
     enum Images
@@ -63,6 +64,9 @@ public class UI_PlayScene : UI_Scene
     public UI_MenuPopup _menu;              // 일시정시 메뉴
 
     public List<UI_UseItemSlot> UseItemBarList;
+
+    // 미니맵 활성화 여부 (던전에선 끄기)
+    public void IsMiniMap(bool isActive) { GetObject((int)Gameobjects.MiniMap).SetActive(isActive); }
 
     public override bool Init()
 	{
@@ -144,7 +148,7 @@ public class UI_PlayScene : UI_Scene
         }
 
         GetObject((int)Gameobjects.ultSkillSlot).SetActive(false);
-        ClostMonsterBar();
+        CloseMonsterBar();
 
         foreach(Transform child in GetObject((int)Gameobjects.QuestListBar).transform)
             Managers.Resource.Destroy(child.gameObject);
@@ -225,7 +229,7 @@ public class UI_PlayScene : UI_Scene
         Managers.Game.currentMonster = monsterStat;
     }
 
-    public void ClostMonsterBar() 
+    public void CloseMonsterBar() 
     { 
         Managers.Game.currentMonster = null;
         GetObject((int)Gameobjects.MonsterBar).SetActive(false); 

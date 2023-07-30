@@ -76,7 +76,8 @@ public class UI_TalkPopup : UI_Popup
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.Space))
+        // 상호작용 키, 스페이스 바, 마우스를 좌클릭하면 대화속도가 빨라지고 대화를 넘김.
+        if (Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             // 말이 다 안 끝났다면
             if (isNext == false)
@@ -202,7 +203,6 @@ public class UI_TalkPopup : UI_Popup
     void OnClickAcceptButton()
     {
         Managers.Game._playScene._quest.SetQeust(questData);
-        Managers.Game._playScene._quest.noticeObject.SetInfo("");
 
         IsQuestActive(false);
         SetInfo(talkData.acceptTalk);

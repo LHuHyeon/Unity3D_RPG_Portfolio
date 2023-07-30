@@ -213,7 +213,8 @@ public class BossController : MonsterController
         {
             Managers.Game._playScene.OnMonsterBar(_stat);
 
-            Managers.Game.GetPlayer().GetComponent<PlayerController>().OnHitDown(_stat, addDamge);
+            if (Managers.Game.GetPlayer().IsNull() == false)
+                Managers.Game.GetPlayer().GetComponent<PlayerController>().OnHitDown(_stat, addDamge);
         }
     }
 

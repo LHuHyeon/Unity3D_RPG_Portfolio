@@ -222,6 +222,9 @@ $@"<color=white>{Managers.Game.Name}</color>
 
     void Exit()
     {
+        isClickStatButton = false;
+        GetObject((int)Gameobjects.StatBackground).SetActive(isClickStatButton);
+
         Managers.Game._playScene._slotTip.OnSlotTip(false);
         Managers.UI.ClosePopupUI(this);
     }

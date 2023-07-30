@@ -210,6 +210,8 @@ public class UI_ShopPopup : UI_Popup
         {
             // 판매 개수 선택
             UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
+            if (numberCheckPopup.IsNull() == true) return;
+
             numberCheckPopup.RefreshUI(invenSlot, (int subItemCount)=>
             {
                 // 판매 슬롯 생성
@@ -232,6 +234,11 @@ public class UI_ShopPopup : UI_Popup
         GetObject((int)Gameobjects.BuyList).SetActive(true);
         GetObject((int)Gameobjects.SaleList).SetActive(false);
         GetObject((int)Gameobjects.GoSaleButton).SetActive(false);
+
+        for(int i=0; i<saleList.Count; i++)
+            saleList[i].Clear();
+
+        saleList.Clear();
 
         Managers.Game.IsInteract = false;
 

@@ -168,6 +168,9 @@ public class PlayerController : BaseController
             if (distance <= _scanRange)
             {
                 State = Define.State.Idle;
+                if (_lockTarget.GetComponent<NpcController>().IsNull() == false)
+                    _lockTarget.GetComponent<NpcController>().GetInteract();
+
                 return;
             }
         }
@@ -464,8 +467,8 @@ public class PlayerController : BaseController
                 if (_item.IsNull() == false)
                 {
                     // 인벤에 넣기
-                    Managers.Game._playScene._inventory.AcquireItem(_item.item, _item.itemCount);
-                    Destroy(colliders[i].gameObject);
+                    if (Managers.Game._playScene._inventory.AcquireItem(_item.item, _item.itemCount) == true)
+                        Destroy(colliders[i].gameObject);
 
                     return;
                 }
@@ -505,7 +508,11 @@ public class PlayerController : BaseController
             
             Managers.Game.MoveSpeed = 8;
 
-            EffectClose();
+            if (currentEffect.IsNull() == false)
+            {
+                if (currentEffect.GetComponent<EffectData>().disableDelayTime == 0)
+                    EffectClose();
+            }
         }
     }
 
@@ -623,30 +630,7 @@ public class PlayerController : BaseController
         if (currentEffect.IsNull() == true)
             return;
         
-        if (currentEffect.GetComponent<EffectData>().disableDelayTime == 0)
-            currentEffect.SetActive(false);
-        else
-            StartCoroutine(EffectDisableDelayTime());
-    }
-
-    // 플레이어가 움직이더라도 스킬 이펙트가 활성화되야 한다면 사용
-    IEnumerator EffectDisableDelayTime()
-    {
-        Transform effectParent = currentEffect.transform.parent;   // 이펙트 부모
-        Vector3 effectPos = currentEffect.transform.localPosition; // 이펙트 위치
-
-        // 부모 빠져나오기
-        currentEffect.transform.SetParent(null);
-    
-        // 이펙트 비활성화 기다리기
-        yield return new WaitForSeconds(currentEffect.GetComponent<EffectData>().disableDelayTime);
-
-        // 원위치 이동 후 비활성화
-        currentEffect.transform.SetParent(effectParent);
-        currentEffect.transform.localPosition = effectPos;
-        currentEffect.transform.localRotation = Quaternion.identity;
-
-        currentEffect.SetActive(false);
+        currentEffect.GetComponent<EffectData>().EffectDisableDelay();
     }
 
     // 전방 Block 체크하여 멈추기 (1.0f 거리에서 멈추기)

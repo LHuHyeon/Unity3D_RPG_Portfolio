@@ -193,14 +193,13 @@ public class Define : MonoBehaviour
     public const string TalkNumber = "575190900";
     public const string QuestNumber = "1248160009";
 
-    public const string SkillOpenMessage = "스킬을 해방하겠습니까?";
-    public const string ShopSaleMessage = "구매 하겠습니까?";
-    public const string DungeonMessage = "던전에 입장하겠습니까?";
+    public const string SkillOpenMessage = "스킬 활성화";
+    public const string ShopSaleMessage = "구매 하시겠습니까?";
+    public const string DungeonMessage = "던전에 입장하시겠습니까?";
 
-    public const string LoadMessage1 = "무엇을 할지 모르겠다면 엘리아에게 찾아가세요!";
-    public const string LoadMessage2 = "장비는 최대 10강까지 강화할 수 있습니다!";
-    public const string LoadMessage3 = "7레벨이 되면 강력한 스킬을 사용할 수 있습니다!";
-    public const string LoadMessage4 = "무기는 6강부터 특별한 이펙트가 부여됩니다!";
+    public const string LoadMessage1 = "장비는 최대 10강까지 강화할 수 있습니다.";
+    public const string LoadMessage2 = "7레벨이 되면 강력한 스킬을 사용할 수 있습니다.";
+    public const string LoadMessage3 = "무기는 6강부터 특별한 이펙트가 부여됩니다.";
 
     public const string NameRegex = @"^[0-9a-zA-Z가-힣]{2,8}$";
 }

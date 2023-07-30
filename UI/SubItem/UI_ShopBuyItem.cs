@@ -66,9 +66,15 @@ public class UI_ShopBuyItem : UI_Base
         itemPriceText = item.itemPrice.ToString();
     }
 
-    bool isBuyCheckPopup = false;
     void OnClickBuyButton(PointerEventData eventData)
     {
+        // 인벤 크기 체크
+        if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
+        {
+            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
+            return;
+        }
+
         Managers.Game._playScene._slotTip.OnSlotTip(false);
         
         if (Managers.Game.Gold < _item.itemPrice)
@@ -76,31 +82,28 @@ public class UI_ShopBuyItem : UI_Base
             Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("금액이 부족합니다.", Color.yellow);
             return;
         }
-
-        // 구매 팝업창이 띄어져 있는지 확인
-        if (isBuyCheckPopup == true)
-            return;
-            
-        isBuyCheckPopup = true;
         
         // 사용 아이템이면 개수 선택
         if (_item.itemType == Define.ItemType.Use)
         {
             UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
+            if (numberCheckPopup.IsNull() == true) return;
+
             numberCheckPopup.RefreshUI(_item, (int itemCount)=>
             {
                 Managers.Game.Gold -= _item.itemPrice * itemCount;
                 Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone(), itemCount);
-                isBuyCheckPopup = false;
             });
         }
         else
         {
-            Managers.UI.ShowPopupUI<UI_ConfirmPopup>().SetInfo(()=>
+            UI_ConfirmPopup confirmPopup = Managers.UI.ShowPopupUI<UI_ConfirmPopup>();
+            if (confirmPopup.IsNull() == true) return;
+            
+            confirmPopup.SetInfo(()=>
             {
                 Managers.Game.Gold -= _item.itemPrice;
                 Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone());
-                isBuyCheckPopup = false;
             }, Define.ShopSaleMessage);
         }
     }

@@ -24,6 +24,8 @@ public class QuestNpcController : NpcController
     QuestData currentQuest;
     TalkData currentTalk;
 
+    UI_QuestNotice noticeObject;
+
     public override void Init()
     {
         base.Init();
@@ -62,14 +64,34 @@ public class QuestNpcController : NpcController
             break;
         }
         
-        // 퀘스트 중이 아니라면 ! 띄우기
-        if (currentQuest.isAccept == false)
+        noticeObject = Managers.UI.MakeWorldSpaceUI<UI_QuestNotice>();
+    }
+
+    void FixedUpdate()
+    {
+        if (noticeObject.IsNull() == true)
+            return;
+
+        // 실시간 npc 위의 퀘스트 상태 표시
+        if (currentQuest.minLevel > Managers.Game.Level)
+            return;
+
+        if (currentQuest.isClear == true)
         {
-            if (currentQuest.minLevel <= Managers.Game.Level)
-                Managers.Game._playScene._quest.noticeObject.SetInfo("!", transform.position);
+            noticeObject.SetInfo("", transform.position);
+            return;
         }
+
+        if (currentQuest.currnetTargetCount >= currentQuest.targetCount)
+        {
+            noticeObject.SetInfo("?");
+            return;
+        }
+        
+        if (currentQuest.isAccept == true)
+            noticeObject.SetInfo("", transform.position);
         else
-            Managers.Game._playScene._quest.noticeObject.SetInfo("", transform.position);
+            noticeObject.SetInfo("!", transform.position);
     }
 
     public override void Interact()
@@ -103,6 +125,13 @@ public class QuestNpcController : NpcController
             // 퀘스트 목표 개수 충족 되면
             if (currentQuest.currnetTargetCount >= currentQuest.targetCount)
             {
+                // 인벤 크기 체크
+                if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
+                {
+                    Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
+                    return;
+                }
+
                 Talk(currentTalk.clearTalk);
                 currentQuest.QuestClear();
 
@@ -153,19 +182,9 @@ public class QuestNpcController : NpcController
 
         // 퀘스트 개수 확인
         if (nextQuest == questDataList.Count)
-        {
-            Managers.Game._playScene._quest.noticeObject.SetInfo("", transform.position);
             return;
-        }
 
         currentQuest = questDataList[nextQuest];
         currentTalk = talkDataList[nextQuest];
-
-        // 레벨 체크
-        if (currentQuest.minLevel <= Managers.Game.Level)
-        {
-            if (Managers.Game._playScene._quest.noticeObject.IsNull() == false)
-                Managers.Game._playScene._quest.noticeObject.SetInfo("!", transform.position);
-        }
     }
 }

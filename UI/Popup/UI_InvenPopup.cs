@@ -31,6 +31,10 @@ public class UI_InvenPopup : UI_Popup
     [SerializeField]
     int invenCount = 42;    // 인벤 슬롯 개수
 
+    public int currentInvenSize = 0;
+
+    public bool InvenSizeCheck() { return currentInvenSize == invenCount; }
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -74,14 +78,21 @@ public class UI_InvenPopup : UI_Popup
     }
 
     // 인벤 슬롯 아이템 넣기
-    public void AcquireItem(ItemData item, int count = 1)
+    public bool AcquireItem(ItemData item, int count = 1)
     {
+        if (InvenSizeCheck() == true)
+        {
+            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
+            return false;
+        }
+
         foreach(UI_InvenItem slot in invenSlots)
         {
             // 슬롯에 아이템이 없으면 넣기
             if (slot.item.IsNull() == true)
             {
                 slot.AddItem(item, count);
+                currentInvenSize++;
                 break;
             }
 
@@ -96,6 +107,8 @@ public class UI_InvenPopup : UI_Popup
                 }
             }
         }
+
+        return true;
     }
 
     public void ResetPos()

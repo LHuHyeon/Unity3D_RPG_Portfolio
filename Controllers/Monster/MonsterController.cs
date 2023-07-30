@@ -82,6 +82,12 @@ public class MonsterController : BaseController
         
         if (distance <= scanRange)
         {
+            if (_lockTarget.IsNull() == true)
+            {
+                StartCoroutine(SpawnMoving());
+                return;
+            }
+
             nav.SetDestination(_lockTarget.transform.position);
 
             if (distance <= attackRange)
@@ -108,10 +114,10 @@ public class MonsterController : BaseController
         while (true)
         {
             float spawnDistance = (spawnPos - transform.position).magnitude;
-            if (spawnDistance <= 0.5f)
+            if (spawnDistance <= 0.7f)
                 break;
 
-            yield return new WaitForSeconds(0.1f);
+            yield return null;
         }
 
         State = Define.State.Idle;
@@ -170,6 +176,7 @@ public class MonsterController : BaseController
     IEnumerator DelayDestroy()
     {
         GetComponent<CapsuleCollider>().enabled = false;
+        Managers.Game._playScene.CloseMonsterBar();
 
         yield return new WaitForSeconds(3f);
 
@@ -210,7 +217,7 @@ public class MonsterController : BaseController
     public void BattleClose()
     {
         _lockTarget = null;
-        Managers.Game._playScene.ClostMonsterBar();
+        Managers.Game._playScene.CloseMonsterBar();
 
         nav.SetDestination(transform.position);
         hpBarUI.SetActive(false);

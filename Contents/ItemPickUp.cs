@@ -26,13 +26,16 @@ public class ItemPickUp : MonoBehaviour
         else
             nameBarUI.nameText = item.itemName;
 
-        nameBarUI.objectType = Define.WorldObject.Item;
+        nameBarUI.nameText += " [F]";
     }
 
     void FixedUpdate()
     {
         if (nameBarUI.IsNull() == false)
         {
+            if (Managers.Game.GetPlayer().IsNull() == true)
+                return;
+                
             float distance = (Managers.Game.GetPlayer().transform.position - transform.position).magnitude;
             if (distance <= scanRange)
                 nameBarUI.gameObject.SetActive(true);

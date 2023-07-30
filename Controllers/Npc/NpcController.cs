@@ -18,7 +18,7 @@ public abstract class NpcController : BaseController
     public override void Init()
     {
         nameBarUI = Managers.UI.MakeWorldSpaceUI<UI_NameBar>(transform);
-        nameBarUI.nameText = npcName;
+        nameBarUI.nameText = npcName + " [G]";
     }
 
     protected override void UpdateIdle()
@@ -45,15 +45,17 @@ public abstract class NpcController : BaseController
         }
     }
 
+    public void GetInteract()
+    {
+        Managers.Game.IsInteract = !Managers.Game.IsInteract;
+        Interact();
+    }
+
     // 플레이어가 가까이 있다면 상호작용 가능
     void OnInteract()
     {
         if (Input.GetKeyDown(KeyCode.G))
-        {
-            Managers.Game.IsInteract = !Managers.Game.IsInteract;
-
-            Interact();
-        }
+            GetInteract();
 
         if (Managers.Game.IsInteract == true)
         {

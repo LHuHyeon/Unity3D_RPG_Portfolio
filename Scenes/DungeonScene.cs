@@ -25,6 +25,8 @@ public class DungeonScene : BaseScene
 
             Managers.Game.GetPlayer().GetComponent<PlayerController>().clickMoveEffect = clickMoveEffect;
         }
+
+        Managers.Game._playScene.IsMiniMap(false);
     }
 
     public override void Clear()
