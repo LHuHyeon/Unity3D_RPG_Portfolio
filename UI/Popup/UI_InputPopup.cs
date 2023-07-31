@@ -65,7 +65,7 @@ public class UI_InputPopup : UI_Popup
         }
         else
         {
-            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("한글|영어|숫자 2글자 이상 8글자 이하", Color.red);
+            Managers.UI.MakeSubItem<UI_Guide>().SetInfo("한글|영어|숫자 2글자 이상 8글자 이하", Color.red);
         }
     }
 

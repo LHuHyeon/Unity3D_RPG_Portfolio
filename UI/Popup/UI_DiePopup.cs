@@ -26,7 +26,7 @@ public class UI_DiePopup : UI_Popup
             // 제자리 부활 + 체력/마나 50% 회복 + 100골드 차감
             if (Managers.Game.Gold < 100)
             {
-                Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("골드가 부족합니다!", Color.yellow);
+                Managers.UI.MakeSubItem<UI_Guide>().SetInfo("골드가 부족합니다!", Color.yellow);
                 return;
             }
 

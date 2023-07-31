@@ -128,7 +128,7 @@ public class QuestNpcController : NpcController
                 // 인벤 크기 체크
                 if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
                 {
-                    Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
+                    Managers.UI.MakeSubItem<UI_Guide>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
                     return;
                 }
 

@@ -61,7 +61,7 @@ public class UI_TitleScene : UI_Scene
         if(Application.internetReachability == NetworkReachability.NotReachable)
         {
             // 인터넷 연결이 안되었을 때 행동
-            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("네트워크 연결이 필요합니다.", Color.red);
+            Managers.UI.MakeSubItem<UI_Guide>().SetInfo("네트워크 연결이 필요합니다.", Color.red);
         }
         else if(Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
         {

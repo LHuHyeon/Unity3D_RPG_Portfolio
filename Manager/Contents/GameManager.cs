@@ -329,7 +329,7 @@ public class GameManager
         // 레벨 업
         RefreshStat(++Level);
         _player.GetComponent<PlayerController>().LevelUpEffect();
-        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($"Level Up!! \n({Level}) \n\n\n\n\n\n\n\n\n", Color.yellow);
+        Managers.UI.MakeSubItem<UI_Guide>().SetInfo($"Level Up!! \n({Level}) \n\n\n\n\n\n\n\n\n", Color.yellow);
         Debug.Log("Level UP!!");
 	}
 
@@ -381,7 +381,7 @@ public class GameManager
                     if (questData.currnetTargetCount == questData.targetCount)
                     {
                         string message = $"퀘스트 완료!\n<color=yellow>[{questData.titleName}]</color>\n\n\n\n\n\n\n\n\n";
-                        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo(message, Color.green);
+                        Managers.UI.MakeSubItem<UI_Guide>().SetInfo(message, Color.green);
                     }
                         
                     return;

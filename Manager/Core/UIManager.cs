@@ -60,7 +60,6 @@ public class UIManager
         return go.GetOrAddComponent<T>();
     }
 
-    // 인벤토리의 슬롯 및 아이템 생성
     public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base
     {
         if (string.IsNullOrEmpty(name)){

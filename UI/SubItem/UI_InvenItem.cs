@@ -64,7 +64,7 @@ public class UI_InvenItem : UI_ItemDragSlot
                 if (Managers.Game.Level >= (item as EquipmentData).minLevel)
                     Managers.Game._playScene._equipment.SetEquipment(this);
                 else
-                    Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
+                    Managers.UI.MakeSubItem<UI_Guide>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
             }
             else if ((item is UseItemData) == true)
             {

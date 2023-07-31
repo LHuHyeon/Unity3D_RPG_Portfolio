@@ -71,7 +71,7 @@ public class UI_ShopBuyItem : UI_Base
         // 인벤 크기 체크
         if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
         {
-            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
+            Managers.UI.MakeSubItem<UI_Guide>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
             return;
         }
 
@@ -79,7 +79,7 @@ public class UI_ShopBuyItem : UI_Base
         
         if (Managers.Game.Gold < _item.itemPrice)
         {
-            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("금액이 부족합니다.", Color.yellow);
+            Managers.UI.MakeSubItem<UI_Guide>().SetInfo("금액이 부족합니다.", Color.yellow);
             return;
         }
         

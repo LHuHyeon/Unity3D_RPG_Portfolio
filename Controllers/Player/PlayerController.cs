@@ -566,7 +566,10 @@ public class PlayerController : BaseController
 
         // 마나 체크
         if (skill.skillConsumMp > Managers.Game.Mp)
+        {
+            Managers.UI.MakeSubItem<UI_Guide>().SetInfo("마나가 부족합니다.", Color.blue);
             return;
+        }
 
         // 일반 공격 중지
         StopAttack();

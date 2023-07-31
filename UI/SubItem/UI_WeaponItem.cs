@@ -79,7 +79,7 @@ public class UI_WeaponItem : UI_ItemDragSlot
         // 레벨 체크
         if (Managers.Game.Level < weapon.minLevel)
         {
-            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
+            Managers.UI.MakeSubItem<UI_Guide>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));
             return;
         }
 

@@ -255,7 +255,7 @@ public class BossController : MonsterController
         if (exitPortal.gameObject.activeSelf == false)
         {
             string message = $"<size=170%>Clear!!</size> \n<color=yellow>Gold: 100</color> <color=green>Exp: 200</color>";
-            Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo(message, new Color(1f, 0.5f, 0f));
+            Managers.UI.MakeSubItem<UI_Guide>().SetInfo(message, new Color(1f, 0.5f, 0f));
             
             exitPortal.gameObject.SetActive(true);
         }

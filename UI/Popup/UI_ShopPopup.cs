@@ -185,7 +185,7 @@ public class UI_ShopPopup : UI_Popup
             saleList[i].GetSale();
 
         int afterGold = Managers.Game.Gold - beforeGold;
-        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($"Gold {afterGold}+", Color.yellow);
+        Managers.UI.MakeSubItem<UI_Guide>().SetInfo($"Gold {afterGold}+", Color.yellow);
 
         saleList.Clear();
     }
