@@ -34,7 +34,7 @@ public class UI_LoadPopup : UI_Popup
         loadSlider.minValue = 0;
         loadSlider.maxValue = plusTime;
 
-        currentMessageNumber = Random.Range(0,4);
+        currentMessageNumber = Random.Range(0,3);
         tipText.text = $"Tip : {loadMessges[currentMessageNumber]}";
 
         Managers.Game.StopPlayer();

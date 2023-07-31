@@ -52,7 +52,6 @@ public class MonsterStat : MonoBehaviour
             damage = Mathf.Max(0, Managers.Game.Attack);
             
         Hp -= damage;
-        Debug.Log("Hit Damage : " + damage + "\nSTR : " + Managers.Game.STR);
 
         HitEffect(damage);
 

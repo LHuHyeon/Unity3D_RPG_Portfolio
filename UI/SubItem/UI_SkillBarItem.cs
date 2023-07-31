@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -8,10 +9,13 @@ public class UI_SkillBarItem : UI_SkillSlot
 {
     public Define.KeySkill keySkill;
     public Image coolDownImage;
+    public TextMeshProUGUI mpText;
 
     public override void SetInfo()
     {
         base.SetInfo();
+
+        mpText.text = "";
 
         // 시작할 때 스킬이 현재 키에 장착 중이라면
         if (Managers.Game.SkillBarList.TryGetValue(keySkill, out skillData) == true)
@@ -66,6 +70,8 @@ public class UI_SkillBarItem : UI_SkillSlot
         }
 
         skillData = skill;
+
+        mpText.text = skillData.skillConsumMp.ToString();
 
         if (Managers.Game.SkillBarList.ContainsKey(keySkill) == false)
             Managers.Game.SkillBarList.Add(keySkill, skillData);

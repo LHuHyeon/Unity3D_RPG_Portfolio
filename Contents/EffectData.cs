@@ -11,7 +11,7 @@ public class EffectData : MonoBehaviour
     public int id=0;
     public float disableDelayTime=0;    // effect 전용 비활성화 딜레이
 
-    Coroutine co;
+    bool isEffect = false;
 
     public void EffectDisableDelay()
     {
@@ -21,13 +21,18 @@ public class EffectData : MonoBehaviour
             return;
         }
 
-        if (co != null) StopCoroutine(co);
-        co = StartCoroutine(EffectDisableDelayTime());
+        if (isEffect == false)
+        {
+            StopCoroutine(EffectDisableDelayTime());
+            StartCoroutine(EffectDisableDelayTime());
+        }
     }
 
     // 플레이어가 움직이더라도 스킬 이펙트가 활성화되야 한다면 사용
     IEnumerator EffectDisableDelayTime()
     {
+        isEffect = true;
+
         Transform effectParent = transform.parent;   // 이펙트 부모
         Vector3 effectPos = transform.localPosition; // 이펙트 위치
 
@@ -41,6 +46,8 @@ public class EffectData : MonoBehaviour
         transform.SetParent(effectParent);
         transform.localPosition = effectPos;
         transform.localRotation = Quaternion.identity;
+
+        isEffect = false;
 
         gameObject.SetActive(false);
     }

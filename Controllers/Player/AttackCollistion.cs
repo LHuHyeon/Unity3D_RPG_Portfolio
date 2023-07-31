@@ -30,8 +30,6 @@ public class AttackCollistion : MonoBehaviour
     {
         if (other.CompareTag("Monster"))
         {
-            Debug.Log("Monster Hit!");
-
             if (player.State == Define.State.Skill)
             {
                 if (player.currentSkill.powerList.Contains(skillIndex) == false)

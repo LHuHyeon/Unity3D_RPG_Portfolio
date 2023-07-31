@@ -379,7 +379,10 @@ public class GameManager
                 {
                     questData.currnetTargetCount = Mathf.Clamp(++questData.currnetTargetCount, 0, questData.targetCount);
                     if (questData.currnetTargetCount == questData.targetCount)
-                        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo($@"퀘스트 완료!\n<color=yellow>[{questData.titleName}]</color>", Color.green);
+                    {
+                        string message = $"퀘스트 완료!\n<color=yellow>[{questData.titleName}]</color>\n\n\n\n\n\n\n\n\n";
+                        Managers.UI.ShowPopupUI<UI_GuidePopup>().SetInfo(message, Color.green);
+                    }
                         
                     return;
                 }

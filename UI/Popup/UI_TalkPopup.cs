@@ -206,6 +206,8 @@ public class UI_TalkPopup : UI_Popup
 
         IsQuestActive(false);
         SetInfo(talkData.acceptTalk);
+
+        Managers.UI.MakeWorldSpaceUI<UI_Navigation>().SetInfo(questData.targetPos);
     }
 
     void IsQuestActive(bool isTrue)

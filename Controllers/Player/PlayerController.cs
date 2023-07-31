@@ -508,11 +508,7 @@ public class PlayerController : BaseController
             
             Managers.Game.MoveSpeed = 8;
 
-            if (currentEffect.IsNull() == false)
-            {
-                if (currentEffect.GetComponent<EffectData>().disableDelayTime == 0)
-                    EffectClose();
-            }
+            EffectClose();
         }
     }
 

@@ -25,6 +25,7 @@ public class QuestData
     public List<RewardItem> rewardItems;
     public string description;
     public string targetDescription;
+    public Vector3 targetPos;
 
     public bool isAccept = false;   // 수락 상태
     public bool isClear = false;    // 클리어 상태

@@ -396,6 +396,9 @@ public class DataManager
                 i++;
             }
 
+            string[] targetPos = row[12].Split("|");
+            questData.targetPos = new Vector3(float.Parse(targetPos[0]), float.Parse(targetPos[1]), float.Parse(targetPos[2]));
+
             Quest.Add(questData.id, questData);
         }
     }
