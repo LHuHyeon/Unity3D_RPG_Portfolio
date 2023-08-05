@@ -189,10 +189,6 @@ public class UI_InvenItem : UI_ItemDragSlot
     // 슬롯 받기
     private void AddSlot<T>(T slot, int count = 1) where T : UI_ItemDragSlot
     {
-        // 인벤 크기 체크
-        if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
-            return;
-
         // 아이템이 있다면 다른 슬롯 || 없다면 지금 슬롯에 넣기
         if (item.IsNull() == false)
             Managers.Game._playScene._inventory.AcquireItem(slot.item, count);
@@ -220,8 +216,6 @@ public class UI_InvenItem : UI_ItemDragSlot
         base.ClearSlot();
 
         IsLock = false;
-        
-        Managers.Game._playScene._inventory.currentInvenSize--;
 
         // 매니저에 저장
         if (Managers.Game.InvenItem.ContainsKey(invenNumber) == true)

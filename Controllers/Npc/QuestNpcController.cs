@@ -18,6 +18,8 @@ public class QuestNpcController : NpcController
 
     int nextQuest = 0;
 
+    bool isQuest;
+
     List<QuestData> questDataList;
     List<TalkData> talkDataList;
 
@@ -43,6 +45,7 @@ public class QuestNpcController : NpcController
 
         currentQuest = questDataList[nextQuest];
         currentTalk = talkDataList[nextQuest];
+        isQuest = true;
 
         Invoke("DelayInit", 0.0001f);
     }
@@ -76,7 +79,7 @@ public class QuestNpcController : NpcController
         if (currentQuest.minLevel > Managers.Game.Level)
             return;
 
-        if (currentQuest.isClear == true)
+        if (currentQuest.isClear == true || isQuest == false)
         {
             noticeObject.SetInfo("", transform.position);
             return;
@@ -112,8 +115,8 @@ public class QuestNpcController : NpcController
         if (currentTalk.IsNull() == true)
             return;
 
-        // 이미 퀘스트를 클리어 했는가?
-        if (currentQuest.isClear == true)
+        // 이미 퀘스트를 클리어 했는가? or 퀘스트가 없거나
+        if (currentQuest.isClear == true || isQuest == false)
         {
             Talk(currentTalk.basicsTalk);
             return;
@@ -126,7 +129,7 @@ public class QuestNpcController : NpcController
             if (currentQuest.currnetTargetCount >= currentQuest.targetCount)
             {
                 // 인벤 크기 체크
-                if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
+                if (Managers.Game._playScene._inventory.IsInvenMaxSize() == true)
                 {
                     Managers.UI.MakeSubItem<UI_Guide>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
                     return;
@@ -182,9 +185,14 @@ public class QuestNpcController : NpcController
 
         // 퀘스트 개수 확인
         if (nextQuest == questDataList.Count)
+        {
+            isQuest = false;
             return;
+        }
 
         currentQuest = questDataList[nextQuest];
         currentTalk = talkDataList[nextQuest];
+
+        isQuest = true;
     }
 }

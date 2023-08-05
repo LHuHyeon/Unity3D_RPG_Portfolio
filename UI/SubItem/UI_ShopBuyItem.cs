@@ -69,7 +69,7 @@ public class UI_ShopBuyItem : UI_Base
     void OnClickBuyButton(PointerEventData eventData)
     {
         // 인벤 크기 체크
-        if (Managers.Game._playScene._inventory.InvenSizeCheck() == true)
+        if (Managers.Game._playScene._inventory.IsInvenMaxSize() == true)
         {
             Managers.UI.MakeSubItem<UI_Guide>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
             return;

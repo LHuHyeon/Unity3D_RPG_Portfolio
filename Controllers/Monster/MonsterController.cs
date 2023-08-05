@@ -45,10 +45,9 @@ public class MonsterController : BaseController
 
     protected override void UpdateIdle()
     {
-        // Player와 거리 체크
-        if (Managers.Game.GetPlayer().IsNull() == true)
+        if (Managers.Game.GetPlayer().GetComponent<PlayerController>().State == Define.State.Die)
             return;
-            
+
         distance = TargetDistance(Managers.Game.GetPlayer());
         if (distance <= scanRange)
         {
@@ -60,7 +59,7 @@ public class MonsterController : BaseController
 
     protected override void UpdateMoving()
     {
-        if (Managers.Game.GetPlayer().IsNull() == true)
+        if (Managers.Game.GetPlayer().GetComponent<PlayerController>().State == Define.State.Die)
         {
             StartCoroutine(SpawnMoving());
             return;
@@ -126,7 +125,7 @@ public class MonsterController : BaseController
 
     protected override void UpdateAttack()
     {
-        if (Managers.Game.GetPlayer().IsNull() == true)
+        if (Managers.Game.GetPlayer().GetComponent<PlayerController>().State == Define.State.Die)
         {
             State = Define.State.Moving;
             return;

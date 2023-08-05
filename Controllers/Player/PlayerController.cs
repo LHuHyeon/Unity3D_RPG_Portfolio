@@ -48,6 +48,7 @@ public class PlayerController : BaseController
 
         anim = GetComponent<Animator>();
         currentEffect = null;
+        State = Define.State.Idle;
 
         Managers.Input.KeyAction -= OnKeyEvent;
         Managers.Input.KeyAction += OnKeyEvent;
@@ -444,10 +445,19 @@ public class PlayerController : BaseController
         {
             GetDiveRoll();  // 구르기
             GetSkill();     // 스킬
+            GetReturn();    // 귀환
         }
 
         GetUseItem();       // 아이템 사용
         GetPickUp();        // 아이템 줍기
+    }
+
+    // 마을로 귀환
+    void GetReturn()
+    {
+        // TODO
+        // 3초 뒤 마을 위치로 이동.
+        // 던전에 있으면 씬 이동
     }
 
     // F Key로 아이템 줍기
@@ -582,11 +592,11 @@ public class PlayerController : BaseController
         currentSkill = skill;
         
         // 스킬 이펙트 찾기
-        foreach(EffectData value in effects)
+        foreach(EffectData effect in effects)
         {
-            if (currentSkill.skillId == value.id)
+            if (currentSkill.skillId == effect.id)
             {
-                currentEffect = value.gameObject;
+                currentEffect = effect.gameObject;
                 break;
             }
         }

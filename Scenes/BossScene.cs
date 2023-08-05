@@ -26,6 +26,8 @@ public class BossScene : BaseScene
         }
 
         Managers.Game._playScene.IsMiniMap(false);
+
+        Managers.Game.StopPlayer();
     }
 
     public override void Clear()

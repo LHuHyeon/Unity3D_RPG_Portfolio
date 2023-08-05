@@ -24,6 +24,8 @@ public class Define : MonoBehaviour
         Talk,
         Quest,
         Menu,
+        Shop,
+        Upgrade,
         Max,
     }
 

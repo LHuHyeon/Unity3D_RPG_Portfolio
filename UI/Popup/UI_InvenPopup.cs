@@ -31,10 +31,6 @@ public class UI_InvenPopup : UI_Popup
     [SerializeField]
     int invenCount = 42;    // 인벤 슬롯 개수
 
-    public int currentInvenSize = 0;
-
-    public bool InvenSizeCheck() { return currentInvenSize == invenCount; }
-
     public override bool Init()
     {
         if (base.Init() == false)
@@ -77,23 +73,27 @@ public class UI_InvenPopup : UI_Popup
         }
     }
 
+    public bool IsInvenMaxSize()
+    {
+        foreach(UI_InvenItem slot in invenSlots)
+        {
+            if (slot.item.IsNull() == true)
+                return false;
+        }
+
+        return true;
+    }
+
     // 인벤 슬롯 아이템 넣기
     public bool AcquireItem(ItemData item, int count = 1)
     {
-        if (InvenSizeCheck() == true)
-        {
-            Managers.UI.MakeSubItem<UI_Guide>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
-            return false;
-        }
-
         foreach(UI_InvenItem slot in invenSlots)
         {
             // 슬롯에 아이템이 없으면 넣기
             if (slot.item.IsNull() == true)
             {
                 slot.AddItem(item, count);
-                currentInvenSize++;
-                break;
+                return true;
             }
 
             // 사용 아이템이라면 (기타 아이템은 필요 시 추가)
@@ -103,12 +103,13 @@ public class UI_InvenPopup : UI_Popup
                 if (item.id == slot.item.id)
                 {
                     slot.SetCount(count);
-                    break;
+                    return true;
                 }
             }
         }
-
-        return true;
+        
+        Managers.UI.MakeSubItem<UI_Guide>().SetInfo("인벤토리가 가득 찼습니다.", Color.red);
+        return false;
     }
 
     public void ResetPos()
@@ -131,6 +132,7 @@ public class UI_InvenPopup : UI_Popup
         foreach(Transform child in grid.transform)
             Managers.Resource.Destroy(child.gameObject);
 
+        // Save 데이터 가져오기
         for(int i=0; i<invenCount; i++)
         {
             UI_InvenItem invenItem = Managers.UI.MakeSubItem<UI_InvenItem>(parent: grid.transform);
@@ -143,7 +145,7 @@ public class UI_InvenPopup : UI_Popup
                 if (item is UseItemData)
                 {
                     UseItemData useItem = item as UseItemData;
-                    invenItem.AddItem(item, useItem.itemCount);
+                    invenItem.AddItem(useItem, useItem.itemCount);
                 }
                 else
                     invenItem.AddItem(item);

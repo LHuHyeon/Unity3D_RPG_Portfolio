@@ -20,11 +20,7 @@ public class UI_ItemSlot : UI_Slot
     {
         base.SetInfo();
 
-        itemCount = 0;
-
         BindText(typeof(Texts));
-        if (GetText((int)Texts.ItemCountText).IsNull() == false)
-            GetText((int)Texts.ItemCountText).text = "";
     }
 
     // 마우스가 슬롯에 닿았다면 정보 활성화

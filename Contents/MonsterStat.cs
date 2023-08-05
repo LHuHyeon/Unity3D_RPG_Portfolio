@@ -33,6 +33,20 @@ public class MonsterStat : MonoBehaviour
     void Start()
     {
         _monster = GetComponent<MonsterController>();
+
+        GameObject go;
+        if (Managers.Data.Monster.TryGetValue(Id, out go) == true)
+        {
+            MonsterStat stat = go.GetComponent<MonsterStat>();
+            _name = stat.Name;
+            _hp = stat.Hp;
+            _maxHp = stat.MaxHp;
+            _attack = stat.Attack;
+            _dropExp = stat.DropExp;
+            _dropGold = stat.DropGold;
+            _dropItemId = stat.DropItemId;
+            _movespeed = stat.MoveSpeed;
+        }
     }
 
     // 공격을 받았을 때

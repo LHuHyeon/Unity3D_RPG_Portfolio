@@ -44,7 +44,7 @@ public class BossController : MonsterController
 
     void ThinkSkill()
     {
-        if (_lockTarget.IsNull() == true)
+        if (Managers.Game.GetPlayer().GetComponent<PlayerController>().State == Define.State.Die)
             return;
 
         State = Define.State.Skill;
@@ -123,7 +123,7 @@ public class BossController : MonsterController
 
         IsNavStop(false);
         nav.speed = 3.5f;
-        nav.SetDestination(Managers.Game.GetPlayer().transform.position);
+        nav.SetDestination(_lockTarget.transform.position);
 
         State = Define.State.Moving;
     }
@@ -155,7 +155,7 @@ public class BossController : MonsterController
         yield return new WaitForSeconds(4f);
 
         IsNavStop(false);
-        nav.SetDestination(Managers.Game.GetPlayer().transform.position);
+        nav.SetDestination(_lockTarget.transform.position);
         State = Define.State.Moving;
     }
 
@@ -195,7 +195,7 @@ public class BossController : MonsterController
 
         // 움직이기
         IsNavStop(false);
-        nav.SetDestination(Managers.Game.GetPlayer().transform.position);
+        nav.SetDestination(_lockTarget.transform.position);
         State = Define.State.Moving;
     }
 
@@ -207,14 +207,14 @@ public class BossController : MonsterController
     // 넘어지도록 공격
     protected void OnAttackDown(int addDamge = 0)
     {
-        distance = TargetDistance(Managers.Game.GetPlayer());
+        distance = TargetDistance(_lockTarget);
 
         if (distance <= attackRange)
         {
             Managers.Game._playScene.OnMonsterBar(_stat);
 
-            if (Managers.Game.GetPlayer().IsNull() == false)
-                Managers.Game.GetPlayer().GetComponent<PlayerController>().OnHitDown(_stat, addDamge);
+            if (_lockTarget.IsNull() == false)
+                _lockTarget.GetComponent<PlayerController>().OnHitDown(_stat, addDamge);
         }
     }
 

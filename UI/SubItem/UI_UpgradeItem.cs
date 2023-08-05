@@ -71,7 +71,7 @@ public class UI_UpgradeItem : UI_ItemDragSlot
     // 우클릭 아이템 받기
     void GetSlotInteract(UI_InvenItem invenSlot)
     {
-        if (this.gameObject.activeSelf == true)
+        if (Managers.Game._playScene._upgrade.gameObject.activeSelf == true)
             ChangeSlot(invenSlot);
     }
 

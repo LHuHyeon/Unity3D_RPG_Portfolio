@@ -68,8 +68,6 @@ public class UI_SlotTipPopup : UI_Popup
             OnSlotTip(false);
             return;
         }
-        
-        Managers.UI.SetCanvas(gameObject);
 
         // 위치 설정
         RectTransform tipRect = background;

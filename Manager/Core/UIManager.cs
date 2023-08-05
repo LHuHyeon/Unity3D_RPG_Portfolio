@@ -136,11 +136,11 @@ public class UIManager
             return;
         }
 
+        _order--;
+
         Managers.Game.isPopups[popup.popupType] = false;
         _popupList.Remove(popup);
         Managers.Resource.Destroy(popup.gameObject);
-
-        _order--;
     }
 
     public bool ClosePopupUI()
@@ -171,6 +171,7 @@ public class UIManager
         else
             Managers.Resource.Destroy(popup.gameObject);
             
+        _order--;
     }
 
     // List 전체 Close

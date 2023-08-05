@@ -16,17 +16,15 @@ public class GameScene : BaseScene
         Managers.Game.defualtSpawn = playerSpawn.position;
 
         // 플레이어 캐릭터 생성
-        if (Managers.Game.GetPlayer().IsNull() == true)
+        if (Managers.Game.GetPlayer().IsFakeNull() == true)
         {
             GameObject _player = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
             _player.transform.position = playerSpawn.position;
             DontDestroyOnLoad(_player);
         }
-        else
-            Managers.Game.StopPlayer();
 
         // UI 생성
-        if (Managers.Game._playScene.IsNull() == true)
+        if (Managers.Game._playScene.IsFakeNull() == true)
         {
             Managers.Game.Init();
             Managers.Game._playScene = Managers.UI.ShowSceneUI<UI_PlayScene>();
@@ -40,7 +38,7 @@ public class GameScene : BaseScene
             Managers.Game.GetPlayer().transform.position = Managers.Game.CurrentPos;
 
         // 클릭 Effect 생성
-        if (Managers.Game.GetPlayer().IsNull() == false)
+        if (Managers.Game.GetPlayer().IsFakeNull() == false)
         {
             GameObject clickMoveEffect = Managers.Resource.Instantiate("Effect/ClickMoveEffect");
             clickMoveEffect.SetActive(false);

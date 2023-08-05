@@ -195,7 +195,7 @@ public class UI_ShopPopup : UI_Popup
     {
         // 판매 리스트가 현재 활성화 중이라면
         if (GetObject((int)Gameobjects.SaleList).activeSelf == true)
-            SaleItemRegister(invenSlot);
+            SetSaleItemRegister(invenSlot);
     }
 
     // 판매 아이템 등록
@@ -214,18 +214,15 @@ public class UI_ShopPopup : UI_Popup
 
             numberCheckPopup.RefreshUI(invenSlot, (int subItemCount)=>
             {
-                // 판매 슬롯 생성
-                UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
-                saleItem.SetInfo(invenSlot, subItemCount);
-                saleList.Add(saleItem);
+                SaleItemRegister(invenSlot, subItemCount);
             });
         }
     }
 
-    void SaleItemRegister(UI_InvenItem invenItem)
+    void SaleItemRegister(UI_InvenItem invenItem, int count = 1)
     {
         UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
-        saleItem.SetInfo(invenItem);
+        saleItem.SetInfo(invenItem, count);
         saleList.Add(saleItem);
     }
 

@@ -377,7 +377,7 @@ public class GameManager
             {
                 if (questData.targetId == go.GetComponent<MonsterStat>().Id)
                 {
-                    questData.currnetTargetCount = Mathf.Clamp(++questData.currnetTargetCount, 0, questData.targetCount);
+                    questData.currnetTargetCount++;
                     if (questData.currnetTargetCount == questData.targetCount)
                     {
                         string message = $"퀘스트 완료!\n<color=yellow>[{questData.titleName}]</color>\n\n\n\n\n\n\n\n\n";
@@ -531,20 +531,15 @@ public class GameManager
         }
     }
 
-    GameObject tempPlayer;
     public void OnDead()
     {
         _player.GetComponent<PlayerController>().State = Define.State.Die;
-        tempPlayer = _player;
-        _player = null;
-
         Managers.UI.ShowPopupUI<UI_DiePopup>();
     }
 
     // 플레이어 부활
     public void OnResurrection(float health)
     {
-        _player = tempPlayer;
         _player.GetComponent<PlayerController>().State = Define.State.Idle;
 
         Hp = (int)(MaxHp * health);
@@ -802,6 +797,9 @@ public class GameManager
         DataDictionary<TKey, TValue> dictionaryData;
         foreach (TKey key in dicData.Keys)
         {
+            if (dicData[key].IsNull() == true)
+                continue;
+                
             dictionaryData = new DataDictionary<TKey, TValue>();
             dictionaryData.Key = key;
             dictionaryData.Value = dicData[key];

@@ -20,6 +20,7 @@ public class UI_Guide : UI_Base
 
     public void SetInfo(string messageText, Color color)
     {
+        _messageText.text = messageText;
         _messageText.transform.localPosition = Vector3.zero;
         _color = color;
         _messageText.color = _color;
