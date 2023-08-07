@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// 이름 띄우는 바
+// 이름 띄우는 바 (아이템)
 public class UI_NameBar : UI_Base
 {
     enum Gameobjects

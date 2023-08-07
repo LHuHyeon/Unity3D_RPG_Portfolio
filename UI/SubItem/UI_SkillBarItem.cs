@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+/*
+[ 스킬바 Slot 스크립트 ]
+1. PlayScene 하단에 있는 스킬 Slot이다.
+2. 각 담당 key가 있고 스킬이 등록되면 player는 해당 key의 스킬을 사용할 수 있다.
+*/
+
 public class UI_SkillBarItem : UI_SkillSlot
 {
     public Define.KeySkill keySkill;

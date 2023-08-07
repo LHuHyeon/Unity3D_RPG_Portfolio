@@ -5,6 +5,12 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
+/*
+[ 소비아이템 Slot 스크립트 ]
+1. PlayScene 하단에 있는 소비아이템 slot이다.
+2. 각 담당 key가 있고 아이템이 등록되면 player는 해당 key의 아이템을 사용할 수 있다.
+*/
+
 public class UI_UseItemSlot : UI_ItemDragSlot
 {
     public int key;

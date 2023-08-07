@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 퀘스트 장소 알려주는 네비게이션
 public class UI_Navigation : UI_Base
 {
     Vector3 targetPos;

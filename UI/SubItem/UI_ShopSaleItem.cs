@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+[ 상점 판매 Slot 스크립트 ]
+1. 상점 Popup의 판매 Slot이다.
+2. 인벤으로 부터 판매 아이템을 받는다.
+*/
+
 public class UI_ShopSaleItem : UI_Base
 {
     enum Buttons

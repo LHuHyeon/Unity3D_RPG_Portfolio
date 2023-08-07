@@ -4,6 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 스킬 Slot 스크립트 ]
+1. 스킬 Popup의 slot이다.
+2. 레벨이 충족되면 스킬을 활성화할 수 있고, SkillBar에 드래그드랍하여 등록이 가능하다.
+*/
+
 public class UI_SkillItem : UI_SkillSlot
 {
     enum Gameobjects

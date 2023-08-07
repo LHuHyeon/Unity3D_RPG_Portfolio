@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+/*
+[ 업그레이드 Slot 스크립트 ]
+1. 업그레이드 Popup의 slot이다.
+2. 인벤으로 부터 장비를 받을 수 있고, 강화를 할 수 있다.
+*/
+
 public class UI_UpgradeItem : UI_ItemDragSlot
 {
     public override void SetInfo()

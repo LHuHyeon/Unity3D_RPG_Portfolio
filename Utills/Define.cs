@@ -203,5 +203,5 @@ public class Define : MonoBehaviour
     public const string LoadMessage2 = "7레벨이 되면 강력한 스킬을 사용할 수 있습니다.";
     public const string LoadMessage3 = "무기는 6강부터 특별한 이펙트가 부여됩니다.";
 
-    public const string NameRegex = @"^[0-9a-zA-Z가-힣]{2,8}$";
+    public const string NameRegex = @"^[0-9a-zA-Z가-힣]{2,9}$";
 }

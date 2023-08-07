@@ -9,12 +9,6 @@ using UnityEngine.UI;
 1. 모든 Slot의 부모이다.
 */
 
-/*
-1. 아이템 관련 슬롯 (아이템 정보 활성화, 옮기기)
-2. 스킬 관련 슬롯 (옮기기)
-3. 정보만 표시될 슬롯 (아이템 정보 활성화)
-*/
-
 public abstract class UI_Slot : UI_Base
 {
     enum Images { ItemImage, }

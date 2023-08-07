@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+/*
+[ 상점 구매 Slot 스크립트 ]
+1. 상점 Popup의 구매 Slot이다.
+2. 슬롯을 클릭하면 골드, 개수를 확인하여 구매를 진행한다.
+*/
+
 public class UI_ShopBuyItem : UI_Base
 {
     public enum Images

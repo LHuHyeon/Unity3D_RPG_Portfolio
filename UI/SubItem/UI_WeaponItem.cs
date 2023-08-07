@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 무기 Slot 스크립트 ]
+1. EqStatPopup안에 있는 무기 Slot으로 장비를 장착/해제할 수 있다.
+2. 드래그 드랍 or 우클릭으로 장비 장착이 가능하다.
+*/
+
 public class UI_WeaponItem : UI_ItemDragSlot
 {
     public Define.WeaponType weaponType = Define.WeaponType.Unknown;

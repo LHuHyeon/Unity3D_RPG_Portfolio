@@ -533,8 +533,11 @@ public class GameManager
 
     public void OnDead()
     {
-        _player.GetComponent<PlayerController>().State = Define.State.Die;
-        Managers.UI.ShowPopupUI<UI_DiePopup>();
+        if (_player.GetComponent<PlayerController>().State != Define.State.Die)
+        {
+            _player.GetComponent<PlayerController>().State = Define.State.Die;
+            Managers.UI.ShowPopupUI<UI_DiePopup>();
+        }
     }
 
     // 플레이어 부활

@@ -173,7 +173,7 @@ public class BossController : MonsterController
         OnAttackDown((int)(_stat.Attack * 0.5f));
 
         // 원형 공격 범위 생성
-        CircleAttackRange(new Vector3(5f, 0.001f, 5f));
+        CircleAttackRange(new Vector3(5.5f, 0.001f, 5.5f));
 
         yield return new WaitForSeconds(1f);
 

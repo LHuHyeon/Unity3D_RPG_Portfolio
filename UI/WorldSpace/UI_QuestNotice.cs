@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// 퀘스트 NPC에 !, ?를 띄운다.
 public class UI_QuestNotice : UI_Base
 {
     [SerializeField]

@@ -13,6 +13,11 @@ public class EffectData : MonoBehaviour
 
     bool isEffect = false;
 
+    void OnEnable()
+    {
+        GetComponent<ParticleSystem>().Play();
+    }
+
     public void EffectDisableDelay()
     {
         if (disableDelayTime == 0)

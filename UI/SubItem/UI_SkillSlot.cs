@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/*
+[ 스킬 Slot 스크립트 ]
+1. 스킬 Slot의 부모 스크립트다.
+*/
+
 public class UI_SkillSlot : UI_Slot
 {
     public SkillData skillData;

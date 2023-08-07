@@ -203,8 +203,17 @@ public class PlayerController : BaseController
     }
 
     // 구르기 상태
+    float diveTime = 0.8f;
+    float currentDiveTime = 0f;
     protected override void UpdateDiveRoll()
     {
+        currentDiveTime += Time.deltaTime;
+        if (currentDiveTime >= diveTime)
+        {
+            ClearDiveRoll();
+            return;
+        }
+
         StopAttack();
 
         _destPos = GetMousePoint();
@@ -490,8 +499,14 @@ public class PlayerController : BaseController
     // 구르기가 끝나면 발동.
     public void EventDiveRoll()
     {
+        ClearDiveRoll();
+    }
+
+    void ClearDiveRoll()
+    {
         _isDiveRoll = false;
         Managers.Game.MoveSpeed = 5;
+        currentDiveTime = 0f;
         State = Define.State.Idle;
     }
 
@@ -667,5 +682,13 @@ public class PlayerController : BaseController
         yield return new WaitForSeconds(4f);
 
         Managers.Resource.Destroy(effect);
+    }
+
+    public void Clear()
+    {
+        EffectClose();
+        StopAttack();
+        _isDiveRoll = false;
+        Managers.Game.MoveSpeed = 5;
     }
 }

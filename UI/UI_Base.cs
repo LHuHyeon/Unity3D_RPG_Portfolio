@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// 모든 UI의 부모
 public abstract class UI_Base : MonoBehaviour
 {
     // 컴포넌트 타입 별로 담기
