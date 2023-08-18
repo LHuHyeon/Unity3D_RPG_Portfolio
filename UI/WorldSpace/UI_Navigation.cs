@@ -14,7 +14,7 @@ public class UI_Navigation : UI_Base
         gameObject.SetActive(true);
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (Managers.Game.GetPlayer().IsNull() == true || gameObject.activeSelf == false)
             return;

@@ -53,18 +53,20 @@ public class QuestNpcController : NpcController
     void DelayInit()
     {
         // 현재 클리어한 퀘스트가 있는지
-        while (true)
+        for(int i=0; i<Managers.Game.ClearQuest.Count; i++)
         {
-            for(int i=0; i<Managers.Game.ClearQuest.Count; i++)
+            if (questDataList[nextQuest].id == Managers.Game.ClearQuest[i].id)
             {
-                if (questDataList[nextQuest].id == Managers.Game.ClearQuest[i].id)
-                {
-                    NextQuest();
-                    continue;
-                }
+                NextQuest();
+                continue;
             }
+        }
 
-            break;
+        // 수락 확인
+        for(int i=0; i<Managers.Game.CurrentQuest.Count; i++)
+        {
+            if (currentQuest.id == Managers.Game.CurrentQuest[i].id)
+                currentQuest = Managers.Game.CurrentQuest[i];
         }
         
         noticeObject = Managers.UI.MakeWorldSpaceUI<UI_QuestNotice>();

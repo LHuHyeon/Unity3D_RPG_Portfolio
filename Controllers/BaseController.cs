@@ -25,7 +25,7 @@ public abstract class BaseController : MonoBehaviour
     [SerializeField]
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
 
-    int number = 1;
+    protected int attackNumber = 1;
 
     // 캐릭터 상태에 따라 애니메이션이 작동하는 _state의 프로퍼티
     public virtual Define.State State
@@ -47,15 +47,7 @@ public abstract class BaseController : MonoBehaviour
                     anim.CrossFade("DIVEROLL", 0.1f, -1, 0);
                     break;
                 case Define.State.Attack:
-                    if (WorldObjectType == Define.WorldObject.Monster)
-                    {
-                        anim.CrossFade("ATTACK"+number, 0.1f, -1, 0);
-
-                        if (number == 1)
-                            number = 2;
-                        else if (number == 2)
-                            number = 1;
-                    }
+                    AnimAttack();
                     break;
                 case Define.State.Hit:
                     {
@@ -74,6 +66,17 @@ public abstract class BaseController : MonoBehaviour
                     break;
             }
         }
+    }
+
+    // 기본 공격 애니메이션
+    protected virtual void AnimAttack()
+    {
+        anim.CrossFade("ATTACK"+attackNumber, 0.1f, -1, 0);
+
+        if (attackNumber == 1)
+            attackNumber = 2;
+        else if (attackNumber == 2)
+            attackNumber = 1;
     }
 
     void Start()

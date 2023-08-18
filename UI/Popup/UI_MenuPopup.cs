@@ -78,7 +78,6 @@ public class UI_MenuPopup : UI_Popup
 
     void OnClickAppExitButton()
     {
-        Managers.Game.SaveGame();
         Exit();
         Application.Quit();
     }

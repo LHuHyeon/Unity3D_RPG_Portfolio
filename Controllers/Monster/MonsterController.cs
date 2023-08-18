@@ -59,7 +59,8 @@ public class MonsterController : BaseController
 
     protected override void UpdateMoving()
     {
-        if (Managers.Game.GetPlayer().GetComponent<PlayerController>().State == Define.State.Die)
+        if (Managers.Game.GetPlayer().GetComponent<PlayerController>().State == Define.State.Die ||
+            _lockTarget.IsNull() == true)
         {
             StartCoroutine(SpawnMoving());
             return;
@@ -76,7 +77,7 @@ public class MonsterController : BaseController
             return;
         }
 
-        distance = TargetDistance(Managers.Game.GetPlayer());
+        distance = TargetDistance(_lockTarget);
         Managers.Game._playScene.OnMonsterBar(_stat);
         
         if (distance <= scanRange)
@@ -102,7 +103,7 @@ public class MonsterController : BaseController
     }
 
     // 일정 거리 벗어나면 스폰 지점으로 이동하기
-    IEnumerator SpawnMoving()
+    protected IEnumerator SpawnMoving()
     {
         isOverSpawn = true;
 

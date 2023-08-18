@@ -231,25 +231,23 @@ public class PlayerController : BaseController
         }
     }
 
+    [SerializeField]
     float _attackCloseTime = 0;
     // 공격 상태
     protected override void UpdateAttack()
     {
         _attackCloseTime += Time.deltaTime;
 
-        // 공격이 시간이 끝나면 종료 || 공격이 끝났는데 다른 애니메이션에 있다면 종료
+        // 공격이 시간이 끝나면 종료 || 공격 했는데 가만히 있다면
         if ((anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == true &&
             _attackCloseTime > 0.94f && _onComboAttack == false) || 
-            (anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false &&
-            _attackCloseTime > 0.99f && _onComboAttack == false))
+            (anim.GetCurrentAnimatorStateInfo(0).IsName("WAIT") == true &&
+             anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f))
         {
             StopAttack();
             State = Define.State.Idle;
             return;
         }
-
-        dir = _destPos - transform.position;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
     }
 
     // 피격 받기 (넘어지는 공격에 호출됨)
@@ -391,8 +389,6 @@ public class PlayerController : BaseController
 
     bool _onAttack = false;         // 공격 여부 체크
     bool _onComboAttack = false;    // 콤보 공격 여부 체크
-    int attackClipNumber = 0;       // 애니메이션 number
-    string[] _attackClipList = new string[] {"ATTACK1", "ATTACK2"};
     void OnAttack()
     {
         // 콤보 체크 (공격 중에 다음 공격을 할 것인지?)
@@ -406,10 +402,11 @@ public class PlayerController : BaseController
         // 공격!
         if (!_onAttack)
         {
-            anim.CrossFade(_attackClipList[attackClipNumber], 0.1f, -1, 0);
             State = Define.State.Attack;
-
             _onAttack = true;
+
+            dir = _destPos - transform.position;
+            transform.rotation = Quaternion.LookRotation(GetMousePoint() - transform.position);
         }
     }
 
@@ -419,13 +416,11 @@ public class PlayerController : BaseController
     {
         if (_onComboAttack == true)
         {
-            if (attackClipNumber == 1)
-                attackClipNumber = 0;
-            else if (attackClipNumber == 0)
-                attackClipNumber = 1;
-
-            anim.CrossFade(_attackClipList[attackClipNumber], 0.1f, -1, 0);
+            State = Define.State.Attack;
             _onComboAttack = false;
+
+            dir = _destPos - transform.position;
+            transform.rotation = Quaternion.LookRotation(GetMousePoint() - transform.position);
         }
     }
 
@@ -436,7 +431,7 @@ public class PlayerController : BaseController
         _onComboAttack = false;
         _stopAttack = true;
         _attackCloseTime = 0;
-        attackClipNumber = 0;
+        attackNumber = 1;
     }
 
 #endregion
@@ -454,19 +449,10 @@ public class PlayerController : BaseController
         {
             GetDiveRoll();  // 구르기
             GetSkill();     // 스킬
-            GetReturn();    // 귀환
         }
 
         GetUseItem();       // 아이템 사용
         GetPickUp();        // 아이템 줍기
-    }
-
-    // 마을로 귀환
-    void GetReturn()
-    {
-        // TODO
-        // 3초 뒤 마을 위치로 이동.
-        // 던전에 있으면 씬 이동
     }
 
     // F Key로 아이템 줍기
@@ -632,6 +618,7 @@ public class PlayerController : BaseController
     public void EventEndSkill()
     {
         EffectClose();
+        ClearDiveRoll();
         State = Define.State.Idle;
     }
 
@@ -651,7 +638,7 @@ public class PlayerController : BaseController
     // 스킬 이펙트 비활성화
     public void EffectClose()
     {
-        if (currentEffect.IsNull() == true)
+        if (currentEffect.IsFakeNull() == true)
             return;
         
         currentEffect.GetComponent<EffectData>().EffectDisableDelay();

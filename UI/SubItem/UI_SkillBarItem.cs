@@ -25,7 +25,10 @@ public class UI_SkillBarItem : UI_SkillSlot
 
         // 시작할 때 스킬이 현재 키에 장착 중이라면
         if (Managers.Game.SkillBarList.TryGetValue(keySkill, out skillData) == true)
+        {
+            skillData.skillSprite = Managers.Data.Skill[skillData.skillId].skillSprite;
             SetSkill(skillData);
+        }
     }
 
     protected override void OnEndDragSlot(PointerEventData eventData)
@@ -68,11 +71,22 @@ public class UI_SkillBarItem : UI_SkillSlot
 
     void SetSkill(SkillData skill)
     {
-        // 궁극기 경우 7렙 이상 스킬만 가능
+        // 궁극기 경우 5렙 이상 스킬만 가능
         if (keySkill == Define.KeySkill.R)
         {
-            if (skill.minLevel < 7)
+            if (skill.minLevel < 5)
                 return;
+        }
+
+        // 현재 스킬이 쿨타임 중이라면 새로 교체될 스킬도 쿨타임 걸기
+        if (skillData.IsNull() == false)
+        {
+            if (skillData.isCoolDown == true)
+            {
+                skillData.isCoolDown = false;
+                skill.isCoolDown = true;
+                coolDownImage.fillAmount = 1;
+            }
         }
 
         skillData = skill;

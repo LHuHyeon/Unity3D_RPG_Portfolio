@@ -212,8 +212,8 @@ public class GameManager
 
     public int MoveSpeed
 	{
-		get { return _gameData.MoveSpeed; }
-		set { _gameData.MoveSpeed = value + addMoveSpeed; }
+		get { return _gameData.MoveSpeed + addMoveSpeed; }
+		set { _gameData.MoveSpeed = value; }
 	}
 
     public int LUK
@@ -443,7 +443,6 @@ public class GameManager
         GameObject effectObj = Managers.Resource.Instantiate(path, weaponObj.transform);
 
         PSMeshRendererUpdater meshRenderer = effectObj.GetComponent<PSMeshRendererUpdater>();
-        meshRenderer.MeshObject = weaponObj;
         meshRenderer.UpdateMeshEffect(weaponObj);
     }
 

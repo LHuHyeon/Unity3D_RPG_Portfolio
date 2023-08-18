@@ -61,6 +61,9 @@ public class UI_ItemSlot : UI_Slot
                 GetText((int)Texts.ItemCountText).text = "";
         }
 
+        if (item.itemIcon.IsFakeNull() == true)
+            item.itemIcon = Managers.Data.Item[item.id].itemIcon;
+
         // Spirte 넣기
         // try는 null체크 시 없는 객체면 item Data에서 빼옴.
         try
