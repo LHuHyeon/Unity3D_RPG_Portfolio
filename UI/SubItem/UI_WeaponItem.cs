@@ -121,9 +121,33 @@ public class UI_WeaponItem : UI_ItemDragSlot
         GetPart(weaponItem);
         Managers.Game.CurrentWeapon = weaponItem;
 
-        Managers.Game.UpgradeMeshEffect(weaponItem);
+        UpgradeMeshEffect(weaponItem);
 
         weaponItem.charEquipment.SetActive(true);
+    }
+
+    // 업그레이드 일정 수치 넘으면 Mesh 적용
+    public void UpgradeMeshEffect(EquipmentData equipment)
+    {
+        // 해당 무기 오브젝트 찾기
+        GameObject weaponObj = (equipment as WeaponItemData).charEquipment;
+        if (weaponObj.IsFakeNull() == true)
+            weaponObj = (Managers.Data.Item[equipment.id] as WeaponItemData).charEquipment;
+
+        // 객체 안에 자식들 삭제
+        foreach(Transform child in weaponObj.transform)
+                Managers.Resource.Destroy(child.gameObject);
+
+        // 레벨 충족이 안되면 종료 
+        if (equipment.upgradeCount < 6)
+            return;
+
+        // 무기 객체 자식으로 이펙트 배치
+        string path = "Effect/Upgrade/UpgradeEffect_" + equipment.upgradeCount;
+        GameObject effectObj = Managers.Resource.Instantiate(path, weaponObj.transform);
+
+        PSMeshRendererUpdater meshRenderer = effectObj.GetComponent<PSMeshRendererUpdater>();
+        meshRenderer.UpdateMeshEffect(weaponObj);
     }
 
     void GetPart(WeaponItemData weapon)

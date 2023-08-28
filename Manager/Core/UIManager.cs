@@ -44,9 +44,8 @@ public class UIManager
     // 3D 안에 있는 WorldSpace에서 UI 생성 (캐릭터 체력 UI ...)
     public T MakeWorldSpaceUI<T>(Transform parent = null, string name = null) where T : UI_Base
     {
-        if (string.IsNullOrEmpty(name)){
+        if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
-        }
 
         GameObject go = Managers.Resource.Instantiate($"UI/WorldSpace/{name}");
 
@@ -62,9 +61,8 @@ public class UIManager
 
     public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base
     {
-        if (string.IsNullOrEmpty(name)){
+        if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
-        }
 
         GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}");
 
@@ -77,9 +75,8 @@ public class UIManager
     public T ShowSceneUI<T>(string name = null) where T : UI_Scene
     {
         // name = null 경우
-        if (string.IsNullOrEmpty(name)){
+        if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
-        }
 
         GameObject go = Managers.Resource.Instantiate($"UI/Scene/{name}");
         T sceneUI = Util.GetOrAddComponent<T>(go);
@@ -91,9 +88,8 @@ public class UIManager
     // UI에 만들어질 프리팹을 stack에 넣어 order을 관리
     public T ShowPopupUI<T>(string name = null) where T : UI_Popup
     {
-        if (string.IsNullOrEmpty(name)){
+        if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
-        }
 
         // 이미 생성된 Popup이면 종료
         if (_popupList.Contains(Managers.Resource.Load<T>($"UI/Popup/{name}")) == true)

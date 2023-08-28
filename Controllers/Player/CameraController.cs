@@ -24,16 +24,19 @@ public class CameraController : MonoBehaviour
     // 카메라 위치 이동을 마지막 업데이트에 실행함으로 써 떨림현상 완화
     void LateUpdate()
     {
-        if (_mode == Define.CameraMode.QuarterView){
+        if (_mode == Define.CameraMode.QuarterView)
+        {
             if (_player.isValid() == false)
                 return;
 
             // 플레이어가 오브젝트에 가려져있다면 가깝게 이동
-            if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, 1 << 10)){ // 10 : Block
+            if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, 1 << 10)) // 10 : Block
+            {
                 float dist = (hit.point - _player.transform.position).magnitude * 0.8f;
                 transform.position = (_player.transform.position + Vector3.up) + _delta.normalized * dist;
             }
-            else{
+            else
+            {
                 transform.position = _player.transform.position + _delta;
                 transform.LookAt(_player.transform);
             }

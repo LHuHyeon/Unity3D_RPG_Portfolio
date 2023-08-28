@@ -4,37 +4,48 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /*
-[ 몬스터 자동 생성 ]
-1. 스폰 위치에서 일정 범위를 정하여 몬스터를 소환한다.
-*/
+ * File :   SpawningPool.cs
+ * Desc :   몬스터 생성
+ *
+ & Functions
+ &  [Public]
+ &  : AddMonsterCount()     - 몬스터 수 증가
+ &  : SetKeepMonsterCount() - 최대 몬스터 지정
+ &
+ &  [Private]
+ &  : ReserveSpawn()  - 몬스터 스폰 코루틴
+ *
+ */
 
 public class SpawningPool : MonoBehaviour
 {
-    public GameObject _spawnMonsterNumber;
+    public GameObject   _spawnMonsterNumber;    // 몬스터 Prefab
 
     [SerializeField]
-    private int _monsterCount = 0;      // 현재 몬스터 수
-    int _reserveCount = 0;      // 임시 변수 (에러 방지)
+    private Vector3     _spawnPos;              // 스폰 위치
 
     [SerializeField]
-    private int _keepMonsterCount = 0;  // 최대 몬스터 수
+    private float       _spawnRedius = 5f;      // 스폰 최대 거리
 
     [SerializeField]
-    Vector3 _spawnPos;          // 스폰 위치
+    private float       _spawnTime = 5f;        // 스폰 최대 시간
 
     [SerializeField]
-    float _spawnRedius = 5f;   // 스폰 최대 거리
+    private int         _monsterCount = 0;      // 현재 몬스터 수
+    private int         _reserveCount = 0;      // 임시 변수 (에러 방지)
 
     [SerializeField]
-    float _spawnTime = 5f;      // 스폰 최대 시간
+    private int         _keepMonsterCount = 0;  // 최대 몬스터 수
 
-    // 외부에서 값 접근을 위한 메소드
+    // 몬스터 수 증가
     public void AddMonsterCount(Transform parent, int value)
     {
+        // 스포너 부모 체크
         if (transform == parent) 
-            this._monsterCount += value;      // 몬스터 수 증가
+            this._monsterCount += value;
     }
-    public void SetKeepMonsterCount(int count) { this._keepMonsterCount = count; }   // 최대 몬스터 지정
+    // 최대 몬스터 지정
+    public void SetKeepMonsterCount(int count) { this._keepMonsterCount = count; }
 
     void Start()
     {
@@ -45,26 +56,28 @@ public class SpawningPool : MonoBehaviour
     void Update()
     {
         // 최대 몬스터 수 만큼 생성
-        while((_reserveCount + _monsterCount) < _keepMonsterCount){
+        while((_reserveCount + _monsterCount) < _keepMonsterCount)
             StartCoroutine("ReserveSpawn");
-        }
     }
 
     // 몬스터 스폰 설정
-    IEnumerator ReserveSpawn()
+    private IEnumerator ReserveSpawn()
     {
         // 코루틴이 시작하자마자 시간을 기다리므로 _monsterCount가 증가하지 못해 Update의 while에서 Error가 발생할 수 있다.
         // 그러므로 _reserveCount를 사용해 while을 끝내도록 한다.
         _reserveCount++;
+
         yield return new WaitForSeconds(Random.Range(1, _spawnTime));
 
+        // 몬스터 생성
         GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, _spawnMonsterNumber, transform);
         NavMeshAgent nav = obj.GetOrAddComponent<NavMeshAgent>();
 
         Vector3 randPos;
 
         // 소환 가능한 위치를 찾을 때까지 루프
-        while(true){
+        while(true)
+        {
             Vector3 randDir = Random.insideUnitSphere * _spawnRedius;   // 원 형태 랜덤 벡터 지정
             randDir.y = 0;
             randPos = _spawnPos + randDir;
@@ -77,16 +90,11 @@ public class SpawningPool : MonoBehaviour
             }
         }
 
+        // 위치 설정
         nav.nextPosition = randPos;
-
         obj.GetComponent<MonsterController>().spawnPos = randPos;
 
         // while의 에러 예방 목적인 변수이므로 코루틴이 끝날땐 --를 해준다.
         _reserveCount--;
-    }
-
-    void SetMonster()
-    {
-        
     }
 }

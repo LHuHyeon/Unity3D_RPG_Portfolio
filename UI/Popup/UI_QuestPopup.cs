@@ -75,6 +75,32 @@ public class UI_QuestPopup : UI_Popup
         }
     }
 
+    // 퀘스트 목표 개수 반영
+    public void QuestTargetCount(GameObject go)
+    {
+        if (Managers.Game.CurrentQuest.Count == 0)
+            return;
+
+        if (go.GetComponent<MonsterStat>())
+        {
+            // 퀘스트 조건과 맞는지 id 확인
+            foreach(QuestData questData in Managers.Game.CurrentQuest)
+            {
+                if (questData.targetId == go.GetComponent<MonsterStat>().Id)
+                {
+                    questData.currnetTargetCount++;
+                    if (questData.currnetTargetCount == questData.targetCount)
+                    {
+                        string message = $"퀘스트 완료!\n<color=yellow>[{questData.titleName}]</color>\n\n\n\n\n\n\n\n\n";
+                        Managers.UI.MakeSubItem<UI_Guide>().SetInfo(message, Color.green);
+                    }
+                        
+                    return;
+                }
+            }
+        }
+    }
+
     void OnQuestPopup()
     {
         if (Input.GetKeyDown(KeyCode.J))

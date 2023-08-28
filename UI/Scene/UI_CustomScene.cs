@@ -47,13 +47,18 @@ public class UI_CustomScene : UI_Scene
 
     void OnClickCheckButton()
     {
+        custom.stopRotation = true;
         custom.SaveCustom();
 
         Managers.UI.ShowPopupUI<UI_InputPopup>().SetInfo((string inputText)=>
         {
             Managers.Game.Name = inputText;
             LoadPopup();
-        }, "이름을 입력해 주세요", "이름 입력란", Define.NameRegex);
+        }
+        , "이름을 입력해 주세요", "이름 입력란", Define.NameRegex,
+        ()=>{
+            custom.stopRotation = false;
+        });
     }
 
     void LoadPopup()

@@ -51,10 +51,12 @@ public class Managers : MonoBehaviour
     // 싱글톤 메소드
     static void Init()
     {
-        if (s_instance.IsNull() == true){
+        if (s_instance.IsNull() == true)
+        {
             GameObject go = GameObject.Find("@Manager");
 
-            if (go.IsNull() == true){
+            if (go.IsNull() == true)
+            {
                 go = new GameObject{name = "@Manager"};
                 go.AddComponent<Managers>();
                 Debug.Log("@Manager 생성.");

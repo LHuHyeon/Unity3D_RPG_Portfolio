@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 아이템 줍기 스크립트 ]
-1. 땅에 떨어져 있는 아이템에 들어있는 스크립트.
-2. 플레이어가 다가오면 이름을 표시한다.
-3. PlayerController에서 F를 눌렀을 때 ItemPickUp Class를 확인하여 아이템을 줍는다.
-*/
+ * File :   ItemPickUp.cs
+ * Desc :   땅에 떨어진 아이템의 정보를 가지고 있으며 플레이어와 가까우면 이름 생성
+ *
+ & Functions
+ &  : Start()       - 이름바 생성
+ &  : FixedUpdate() - 플레이어 근접 시 이름바 활성화
+ *
+ */
 
 public class ItemPickUp : MonoBehaviour
 {
-    public ItemData item;
-    public int itemCount = 1;   // 아이템 전용 개수
+    public  ItemData    item;
+    public  int         itemCount = 1;      // 아이템 전용 개수
 
-    UI_NameBar nameBarUI = null;
+    private float       scanRange = 5f;     // 플레이어 스캔 거리
 
-    float scanRange = 5f;
+    private UI_NameBar  nameBarUI = null;
 
     void Start()
     {
+        // 이름바 생성 및 자식으로 배치
         nameBarUI = Managers.UI.MakeWorldSpaceUI<UI_NameBar>(transform);
         if (itemCount > 1)
             nameBarUI.nameText = item.itemName + $" ({itemCount})";
@@ -31,12 +35,17 @@ public class ItemPickUp : MonoBehaviour
 
     void FixedUpdate()
     {
+        // 이름바 Null Check
         if (nameBarUI.IsNull() == false)
         {
+            // 플레이어 Null Check
             if (Managers.Game.GetPlayer().IsNull() == true)
                 return;
                 
+            // 플레이어와 거리 체크
             float distance = (Managers.Game.GetPlayer().transform.position - transform.position).magnitude;
+
+            // scanRange만큼 가까우면 활성화
             if (distance <= scanRange)
                 nameBarUI.gameObject.SetActive(true);
             else

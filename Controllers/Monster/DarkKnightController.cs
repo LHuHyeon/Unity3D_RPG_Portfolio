@@ -2,106 +2,166 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * File :   DarkKnightController.cs
+ * Desc :   어둠 기사의 모든 상태를 관리
+ *
+ & Functions
+ &  [Public]
+ &  : Init()     - 초기 설정
+ &
+ &  [Protected]
+ &  : IdleTargetDetection()     - Idle 상태에서 타겟 감지
+ &  : UpdateMoving()            - 움직일 때 Update  (플레이어 추격)
+ &  : UpdateAttack()            - 공격할 때 Update
+ &  : UpdateSkill()             - 스킬쓸 때 Update
+ &  : UpdateDie()               - 죽었을 때 Update
+ &  : OnAttackEvent()           - 공격 시작 (Animation Event)
+ &  : ExitAttack()              - 공격 끝   (Animation Event)
+ &
+ &  [Private]
+ &  : AttackCheck()             - 다음 공격 확인 (거리 체크하며)
+ &  : OnAttack()                - 공격 시작
+ &  : OnSkill()                 - 스킬 시작
+ &  : Skill01_Prick()           - 스킬1 찌르기 Coroutine
+ &  : Skill02_WeaponDown()      - 스킬2 내려찍기 Coroutine
+ &  : WeaponColliderDisable()   - 공격 접촉 비활성화 Coroutine
+ &  : SetAnimation()            - 애니메이션 시작 설정
+ &  : OnRotation()              - 즉각 회전 (떨림 완화)
+ &  : OnAnimationMove()         - 애니메이션 움직임으로 설정
+ &  : OnTrail()                 - 검기 On  (Animation Event)
+ &  : OffTrail()                - 검기 Off (Animation Event)
+ *
+ */
+
 public class DarkKnightController : MonsterController
 {
-    string[] skills = new string[]{"SKILL1", "SKILL2"};
-    string[] meleeAttacks = new string[]{"ATTACK1", "ATTACK2"};
-    string[] rangedAttacks = new string[]{"ATTACK3", "ATTACK4", "ATTACK5"};
+    // 스킬, 공격 애니메이션 이름
+    private string[]        skills          = new string[]{"SKILL1", "SKILL2"};
+    private string[]        meleeAttacks    = new string[]{"ATTACK1", "ATTACK2"};
+    private string[]        rangedAttacks   = new string[]{"ATTACK3", "ATTACK4", "ATTACK5"};
 
-    int attackCount = 0;    // 공격 횟수 ( 스킬을 사용하기 위함. )
-    int onSkillCount = 3;   // 스킬 시작 횟수 
+    private int             attackCount     = 0;        // 공격 횟수 ( 스킬을 사용하기 위함. )
+    private int             onSkillCount    = 3;        // 스킬 시작 횟수 
     
-    bool isRangedAttack = false;    // 원거리 공격 체크
-    bool isSkill = false;           // 다음 스킬 공격 확인
+    private bool            isRangedAttack  = false;    // 원거리 공격 체크
+    private bool            isSkill         = false;    // 다음 스킬 공격 확인
 
     [SerializeField]
-    float rangedAttackRange = 5f;   // 원거리 수치
+    private float           rangedAttackRange = 5f;     // 원거리 수치
+
+    private Portal          exitPortal;                 // 포탈 Prefab
 
     [SerializeField]
-    AttackCollider skillCollider;   // 스킬 사용 접촉 확인
+    private EffectParticle  particleCollider;           // 파티클 접촉 확인
 
     [SerializeField]
-    AttackCollider attackCollider;  // 일반 공격 사용 접촉 확인
+    private GameObject      swingTrail;                 // 검기 Trail
 
     [SerializeField]
-    EffectParticle particleCollider;// 파티클 접촉 확인
+    private Transform       attackRangeObj;             // 공격 예상 범위 오브젝트
 
     [SerializeField]
-    GameObject swingTrail;          // 검기 Trail
+    private MonsterAttackCollistion skillCollider;      // 스킬 사용 접촉 확인
 
     [SerializeField]
-    Transform attackRangeObj;       // 공격 예상 범위 오브젝트
+    private MonsterAttackCollistion attackCollider;     // 일반 공격 사용 접촉 확인
 
-    Portal exitPortal;
-
+    // 초기 설정
     public override void Init()
     {
         base.Init();
 
-        particleCollider.SetInfo(()=>{_lockTarget.GetComponent<PlayerController>().OnHitDown(_stat, (int)(_stat.Attack * 0.8f));});
+        // 파티클 피격 설정
+        particleCollider.SetInfo(()=>{ _lockTarget.GetComponent<PlayerController>().OnHitDown(_stat, (int)(_stat.Attack * 0.8f)); });
 
+        // 데미지 스탯 적용
         skillCollider.damage = (int)(_stat.Attack * 1.5f);
         attackCollider.damage = _stat.Attack;
 
+        // 포탈 객체 찾아오기 ( 사망 시 활성화하기 위함 )
         exitPortal = GameObject.FindObjectOfType<Portal>();
         if (exitPortal.IsNull() == false)
             exitPortal.gameObject.SetActive(false);
+
+        monsterType = Define.MonsterType.Boss;
     }
 
-    protected override void UpdateIdle()
+    // Idle 상태에서 타겟 감지
+    protected override void IdleTargetDetection()
     {
-        if (Managers.Game.GetPlayer().GetComponent<PlayerController>().State == Define.State.Die)
-            return;
+        // 50% 확률로 원거리, 근거리 공격 결정
+        isRangedAttack = Random.Range(0, 2) == 0;
 
-        distance = TargetDistance(Managers.Game.GetPlayer());
-        if (distance <= scanRange)
-        {
-            hpBarUI.SetActive(true);
-            _lockTarget = Managers.Game.GetPlayer();
-
-            isRangedAttack = Random.Range(0, 2) == 0;   // 50% 확률로 원거리, 근거리 공격 결정
-
-            State = Define.State.Moving;
-        }
+        base.IdleTargetDetection();
     }
 
+    // Moving Update
     protected override void UpdateMoving()
     {
+        // Scene UI 몬스터 정보 활성화
         Managers.Game._playScene.OnMonsterBar(_stat);
 
-        distance = TargetDistance(_lockTarget);
-        
+        // 도착좌표 설정
         nav.SetDestination(_lockTarget.transform.position);
-        OnRotation();
 
-        AttackCheck();
+        // 거리 체크
+        distance = TargetDistance(_lockTarget);
+
+        OnRotation();   // 회전
+        AttackCheck();  // 거리에 따른 공격 체크
     }
 
-    protected override void UpdateAttack()
-    {
-        OnAnimationMove();
-    }
+    // 공격/스킬 상태(State)일 때 애니메이션 움직임에 따르기
+    protected override void UpdateAttack() { OnAnimationMove(); }
+    protected override void UpdateSkill() { OnAnimationMove(); }
 
-    protected override void UpdateSkill()
-    {
-        OnAnimationMove();
-    }
-
+    // Die Update
     protected override void UpdateDie()
     {
         base.UpdateDie();
 
+        // 포탈이 활성화되면 Return
         if (exitPortal.IsNull() == true)
             return;
 
-        // 나가는 포탈 생성
+        // 포탈이 비활성화라면 True
         if (exitPortal.gameObject.activeSelf == false)
         {
+            // 클리어 안내문 생성
             string message = $"<size=170%>Clear!!</size> \n<color=yellow>Gold: 100</color> <color=green>Exp: 200</color>";
             Managers.UI.MakeSubItem<UI_Guide>().SetInfo(message, new Color(1f, 0.5f, 0f));
             
+            // 포탈 활성화
             exitPortal.gameObject.SetActive(true);
         }
+    }
+
+    // 공격할 때 (Animation Event)
+    Coroutine weaponDisableCo;
+    protected override void OnAttackEvent()
+    {
+        // 무기 콜라이더 활성화
+        attackCollider.IsCollider(true);
+
+        // 무기 콜라이더 비활성화 코루틴 실행
+        if (weaponDisableCo.IsNull() == false) StopCoroutine(WeaponColliderDisable());
+        weaponDisableCo = StartCoroutine(WeaponColliderDisable());
+    }
+
+    // 공격이 끝날때 (Animation Event)
+    protected override void ExitAttack()
+    {
+        // 2~3번 일반 공격 시 다음 공격 스킬 진행
+        if (++attackCount >= Random.Range(2, onSkillCount+1))
+        {
+            isSkill = true;
+            attackCount = 0;
+        }
+
+        // 무기 콜라이더 비활성화
+        attackCollider.IsCollider(false);
+        State = Define.State.Idle;
     }
 
     // 다음 공격 확인
@@ -129,23 +189,27 @@ public class DarkKnightController : MonsterController
         }
     }
 
-    // 공격 시작 시
+    // 공격 시작
     private void OnAttack(string attackName)
     {
+        // 공격 애니메이션 실행
         SetAnimation(attackName);
         State = Define.State.Attack;
     }
 
-    // 스킬 시작 시
+    // 스킬 시작
     private void OnSkill(string skillName)
     {
+        // 스킬 애니메이션 실행
         SetAnimation(skillName);
 
+        // 찌르기 스킬
         if (skillName == skills[0])
         {
             StopCoroutine(Skill01_Prick());
             StartCoroutine(Skill01_Prick());
         }
+        // 내려찍기 스킬
         else if (skillName == skills[1])
         {
             StopCoroutine(Skill02_WeaponDown());
@@ -156,8 +220,8 @@ public class DarkKnightController : MonsterController
         State = Define.State.Skill;
     }
 
-    // 찌르기 스킬
-    IEnumerator Skill01_Prick()
+    // 찌르기 스킬 코루틴
+    private IEnumerator Skill01_Prick()
     {
         // 공격 예상 범위 사이즈 설정
         attackRangeObj.localPosition = new Vector3(0, 0, 2.33f);
@@ -165,19 +229,19 @@ public class DarkKnightController : MonsterController
 
         yield return new WaitForSeconds(0.4f);  // 찌르기 준비
 
-        skillCollider.IsCollider(true);
+        skillCollider.IsCollider(true);         // 스킬 콜라이더 활성화
 
         yield return new WaitForSeconds(0.8f);  // 찌르기
 
-        skillCollider.IsCollider(false);
+        skillCollider.IsCollider(false);        // 스킬 콜라이더 비활성화
 
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(1.2f);  // 가만히 있기
 
         State = Define.State.Idle;
     }
 
-    // 내려찍기 스킬
-    IEnumerator Skill02_WeaponDown()
+    // 내려찍기 스킬 코루틴
+    private IEnumerator Skill02_WeaponDown()
     {
         // 공격 예상 범위 사이즈 설정
         attackRangeObj.localPosition = new Vector3(0, 0, 4.5f);
@@ -196,19 +260,31 @@ public class DarkKnightController : MonsterController
             yield return null;
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2f);  // 가만히 있기
 
         State = Define.State.Idle;
+    }
+
+    // 무기 콜라이더 비활성화 코루틴
+    private IEnumerator WeaponColliderDisable()
+    {
+        // 0.15초 뒤 비활성화
+        yield return new WaitForSeconds(0.15f);
+
+        attackCollider.IsCollider(false);
     }
 
     // 애니메이션 및 방향 설정
     private void SetAnimation(string animName)
     {
+        // 플레이어와 거리값
         Vector3 distance = _lockTarget.transform.position - transform.position;
 
+        // Nav 도착 좌표 설정
         nav.SetDestination(transform.position);
         transform.rotation = Quaternion.LookRotation(distance);
 
+        // 애니메이션 실행
         anim.CrossFade(animName, 0.1f, -1, 0);
     }
 
@@ -229,46 +305,17 @@ public class DarkKnightController : MonsterController
     // 애니메이션 움직임으로 설정
     private void OnAnimationMove()
     {
-        Vector3 rootPosition = anim.targetPosition;
-        rootPosition.y = nav.nextPosition.y;
+        Vector3 rootPosition = anim.targetPosition; // 애니메이션의 다음 위치
+        rootPosition.y = nav.nextPosition.y;        // Nav Y
+
+        // 현재 위치와 Nav 도착좌표 rootPosition으로 설정
         transform.position = rootPosition;
         nav.SetDestination(rootPosition);
     }
 
-    // 공격할 때 (Animation Event)
-    Coroutine weaponDisableCo;
-    protected override void OnAttackEvent()
-    {
-        attackCollider.IsCollider(true);
-
-        if (weaponDisableCo.IsNull() == false) StopCoroutine(WeaponDisable());
-        weaponDisableCo = StartCoroutine(WeaponDisable());
-    }
-
-    // 공격이 끝날때 (Animation Event)
-    protected override void ExitAttack()
-    {
-        // 2~3번 일반 공격 시 다음 공격은 스킬 진행
-        if (++attackCount >= Random.Range(2, onSkillCount+1))
-        {
-            attackCount = 0;
-            isSkill = true;
-        }
-
-        attackCollider.IsCollider(false);
-        State = Define.State.Idle;
-    }
-
-    IEnumerator WeaponDisable()
-    {
-        yield return new WaitForSeconds(0.15f);
-
-        attackCollider.IsCollider(false);
-    }
-
-    // 검기 Animation Event 사용 중
-    void OnTrail() { swingTrail.SetActive(true); }
-    void OffTrail() { swingTrail.SetActive(false); }
+    // 검기 Animation Event
+    private void OnTrail()  { swingTrail.SetActive(true);   }
+    private void OffTrail() { swingTrail.SetActive(false);  }
 
     // 보스는 변칙적인 공격이 있기 때문에 사용 x (이대로만 두기)
     protected override void AnimAttack() {}

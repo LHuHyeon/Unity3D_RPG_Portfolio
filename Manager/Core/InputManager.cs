@@ -31,9 +31,12 @@ public class InputManager
         if (EventSystem.current.IsPointerOverGameObject())
             return;
         
-        if (MouseAction.IsNull() == false){
-            if (Input.GetMouseButton(1)){
-                if (!_rightPressed){
+        if (MouseAction.IsNull() == false)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                if (!_rightPressed)
+                {
                     MouseAction.Invoke(Define.MouseEvent.RightDown);
                     _rightPressedTime = Time.time;
                 }
@@ -41,7 +44,8 @@ public class InputManager
                 _rightPressed = true;
             }
             else{
-                if (_rightPressed){
+                if (_rightPressed)
+                {
                     if (Time.time < _rightPressedTime * 0.2f)
                         MouseAction.Invoke(Define.MouseEvent.RightClick);
                         
@@ -64,7 +68,8 @@ public class InputManager
                 _leftPressed = true;
             }
             else{
-                if (_leftPressed){
+                if (_leftPressed)
+                {
                     if (Time.time < _leftPressedTime * 0.2f)
                         MouseAction.Invoke(Define.MouseEvent.LeftClick);
                         

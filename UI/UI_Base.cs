@@ -39,7 +39,8 @@ public abstract class UI_Base : MonoBehaviour
         UnityEngine.Object[] objects = new UnityEngine.Object[names.Length];
         _objects.Add(typeof(T), objects);
 
-        for(int i = 0; i < names.Length; i++){
+        for(int i = 0; i < names.Length; i++)
+        {
             if (typeof(T) == typeof(GameObject))
                 objects[i] = Util.FindChild(gameObject, names[i], true);
             else
@@ -82,7 +83,8 @@ public abstract class UI_Base : MonoBehaviour
         UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);
 
         // UI_EventHandler 안에 action을 받을 Action 델리게이트가 있음!
-        switch (type){
+        switch (type)
+        {
             case Define.UIEvent.Enter:
                 evt.OnEnterHandler -= action;
                 evt.OnEnterHandler += action;

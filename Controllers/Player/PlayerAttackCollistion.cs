@@ -5,9 +5,10 @@ using UnityEngine;
 /*
 [ 플레이어 공격 Collider 스크립트 ]
 1. 플레이어 전방에 원형 Collider를 활성화하여 닿은 몬스터에게 데미지를 준다.
+2. 플레이어 Prefab 안에 컴포넌트로 장착되어 있음.
 */
 
-public class AttackCollistion : MonoBehaviour
+public class PlayerAttackCollistion : MonoBehaviour
 {
     private CapsuleCollider capsuleCollider;
     

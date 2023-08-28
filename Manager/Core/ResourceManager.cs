@@ -9,7 +9,8 @@ public class ResourceManager
     public T Load<T>(string path) where T : Object
     {
         // 찾으려는 타입이 GameObject일 경우 Pool에서 찾음.
-        if (typeof(T) == typeof(GameObject)){
+        if (typeof(T) == typeof(GameObject))
+        {
             string name = path;
             int index = name.LastIndexOf('/');  // '/' 문자까지의 문자열 개수 반환
             if (index >= 0)
@@ -28,7 +29,8 @@ public class ResourceManager
 
     public GameObject Instantiate(GameObject obj, Transform parent = null)
     {
-        if (obj.IsNull() == true){
+        if (obj.IsNull() == true)
+        {
             Debug.Log("객체가 존재하지 않습니다.");
             return null;
         }
@@ -50,7 +52,8 @@ public class ResourceManager
         // original 프리팹 객체 읽어오기.
         GameObject original = Load<GameObject>($"Prefabs/{path}");
 
-        if (original.IsNull() == true){
+        if (original.IsNull() == true)
+        {
             Debug.Log($"Failed to load prefab : {path}");
             return null;
         }
@@ -80,7 +83,8 @@ public class ResourceManager
         
         // 만약에 풀링이 필요한 아이라면 PoolManager한테 위탁
         Poolable poolable = go.GetComponent<Poolable>();
-        if (poolable.IsNull() == false){
+        if (poolable.IsNull() == false)
+        {
             Managers.Pool.Push(poolable);
             return;
         }

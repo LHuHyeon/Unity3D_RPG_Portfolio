@@ -312,6 +312,17 @@ public class GameManager
         set { _gameData.ClearQuest = value; }
     }
 
+    // 추가 스탯
+    public int addDefense = 0;
+    public int addHp = 0;
+    public int addMp = 0;
+    public int addMoveSpeed = 0;
+
+    public void OnUpdate()
+    {
+        UpdateStatRecovery();
+    }
+
     // Exp 증가시 레벨업 확인
 	public void RefreshExp()
 	{
@@ -364,92 +375,6 @@ public class GameManager
         }
     }
 
-    // 퀘스트 목표 개수 반영
-    public void QuestTargetCount(GameObject go)
-    {
-        if (CurrentQuest.Count == 0)
-            return;
-
-        if (go.GetComponent<MonsterStat>())
-        {
-            // 퀘스트 조건과 맞는지 id 확인
-            foreach(QuestData questData in CurrentQuest)
-            {
-                if (questData.targetId == go.GetComponent<MonsterStat>().Id)
-                {
-                    questData.currnetTargetCount++;
-                    if (questData.currnetTargetCount == questData.targetCount)
-                    {
-                        string message = $"퀘스트 완료!\n<color=yellow>[{questData.titleName}]</color>\n\n\n\n\n\n\n\n\n";
-                        Managers.UI.MakeSubItem<UI_Guide>().SetInfo(message, Color.green);
-                    }
-                        
-                    return;
-                }
-            }
-        }
-    }
-
-#region Equipment
-
-    // 강화 비용 계산
-    public int EquipmentUpgradeGold(EquipmentData equipment)
-    {
-        // 강화 금액 : 아이템 판매 가격 + ((판매 가격 / 2) * 강화 횟수)
-        int gold = equipment.itemPrice + (int)((equipment.itemPrice / 2) * (equipment.upgradeCount));
-        return gold;
-    }
-
-    // 강화 적용
-    public void EquipmentUpgrade(EquipmentData equipment)
-    {
-        equipment.upgradeCount += 1;
-
-        // 장비 종류 확인 후 적용
-        if (equipment is WeaponItemData)
-        {
-            WeaponItemData weapon = equipment as WeaponItemData;
-
-            weapon.addAttack = weapon.upgradeValue * weapon.upgradeCount;
-        }
-        else if (equipment is ArmorItemData)
-        {
-            ArmorItemData armor = equipment as ArmorItemData;
-
-            armor.addDefnece = armor.upgradeValue * armor.upgradeCount;
-            armor.addHp = (armor.upgradeValue * 5) * armor.upgradeCount;
-            armor.addMp = (armor.upgradeValue * 5) * armor.upgradeCount;
-        }
-    }
-
-    // 업그레이드 일정 수치 넘으면 Mesh 적용
-    public void UpgradeMeshEffect(EquipmentData equipment)
-    {
-        // 해당 무기 오브젝트 찾기
-        GameObject weaponObj = (equipment as WeaponItemData).charEquipment;
-        if (weaponObj.IsFakeNull() == true)
-            weaponObj = (Managers.Data.Item[equipment.id] as WeaponItemData).charEquipment;
-
-        // 객체 안에 자식들 삭제
-        foreach(Transform child in weaponObj.transform)
-                Managers.Resource.Destroy(child.gameObject);
-
-        // 레벨 충족이 안되면 종료 
-        if (equipment.upgradeCount < 6)
-            return;
-
-        // 무기 객체 자식으로 이펙트 배치
-        string path = "Effect/Upgrade/UpgradeEffect_" + equipment.upgradeCount;
-        GameObject effectObj = Managers.Resource.Instantiate(path, weaponObj.transform);
-
-        PSMeshRendererUpdater meshRenderer = effectObj.GetComponent<PSMeshRendererUpdater>();
-        meshRenderer.UpdateMeshEffect(weaponObj);
-    }
-
-    public int addDefense = 0;
-    public int addHp = 0;
-    public int addMp = 0;
-    public int addMoveSpeed = 0;
     // 전체 장비 스탯 적용
     public void RefreshAllEquipment()
     {
@@ -494,24 +419,12 @@ public class GameManager
         }
     }
 
-#endregion
-
     // 상호작용 시 옮겨지는 슬롯에 관한 함수
     public Action<UI_InvenItem> _getSlotInteract;
     public void GetSlotInteract(UI_InvenItem invenSlot)
     {
         if (_getSlotInteract.IsNull() == false)
             _getSlotInteract.Invoke(invenSlot);
-    }
-
-    // 해당 키 스킬 반환 
-    public SkillData GetSkill(Define.KeySkill keySkill)
-    {
-        SkillData skill;
-        if (SkillBarList.TryGetValue(keySkill, out skill) == false)
-            return null;
-
-        return skill;
     }
 
     // 공격 받을때
@@ -524,7 +437,8 @@ public class GameManager
     {
         Hp -= Mathf.Max(0, damage - Defense);
 
-        if (Hp <= 0){
+        if (Hp <= 0)
+        {
             Hp = 0;
             OnDead();
         }
@@ -548,15 +462,9 @@ public class GameManager
         Mp = (int)(MaxMp * health);
     }
 
-    public void OnUpdate()
-    {
-        StatRecovery();
-
-    }
-
     // Hp, Mp 재생 ( 5초마다 10 회복 )
     float healthTime = 0f;
-    void StatRecovery()
+    void UpdateStatRecovery()
     {
         // 둘다 Full이면 재생 X
         if (Hp == MaxHp && Mp == MaxMp)
@@ -570,14 +478,6 @@ public class GameManager
 
             healthTime = 0;
         }
-    }
-
-    float saveTime = 0f;
-    void OnSave()
-    {
-        saveTime += Time.deltaTime;
-        if (saveTime >= 3f)
-            SaveGame();
     }
 
     public void Init()
@@ -619,7 +519,8 @@ public class GameManager
     {
         GameObject go = Managers.Resource.Instantiate(path, parent);
 
-        switch(type){
+        switch(type)
+        {
             case Define.WorldObject.Monster:
                 _monsters.Add(go);
                 if (OnSpawnEvent.IsNull() == false)
@@ -641,7 +542,8 @@ public class GameManager
     {
         GameObject go = Managers.Resource.Instantiate(obj, parent);
 
-        switch(type){
+        switch(type)
+        {
             case Define.WorldObject.Monster:
                 _monsters.Add(go);
                 if (OnSpawnEvent.IsNull() == false)
@@ -671,10 +573,12 @@ public class GameManager
     // 캐릭터 삭제
     public void Despawn(GameObject go)
     {
-        switch(GetWorldObjectType(go)){
+        switch(GetWorldObjectType(go))
+        {
             case Define.WorldObject.Monster:
                 {
-                    if (_monsters.Contains(go)){ // 존재 여부 확인
+                    if (_monsters.Contains(go)) // 존재 여부 확인
+                    { 
                         _monsters.Remove(go);
                         if (OnSpawnEvent.IsNull() == false)
                         {

@@ -78,7 +78,8 @@ public class PoolManager
     public void Init()
     {
         // Pool Object를 담을 부모 객체(_root) 경로 설정
-        if (_root.IsNull() == true){
+        if (_root.IsNull() == true)
+        {
             _root = new GameObject { name = "@Pool_Root" }.transform;
             Object.DontDestroyOnLoad(_root);
         }
@@ -114,7 +115,8 @@ public class PoolManager
     {
         string name = poolable.gameObject.name;
 
-        if (_pool.ContainsKey(name) == false){
+        if (_pool.ContainsKey(name) == false)
+        {
             GameObject.Destroy(poolable.gameObject);
             return;
         }
@@ -145,9 +147,9 @@ public class PoolManager
     public void Clear()
     {
         // @Pool_Root 안에 있는 객체 모두 제거
-        foreach(Transform child in _root){
+        foreach(Transform child in _root)
             GameObject.Destroy(child.gameObject);
-        }
+            
         _pool.Clear();  // Pool 초기화
     }
 }

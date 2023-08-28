@@ -33,14 +33,17 @@ public class Util
             return null;
 
         // recursive : 자기 자신의 자식 객체를 가져올지 판단
-        if (recursive == false){
+        if (recursive == false)
+        {
             // go의 자식객체 수 만큼
-            for(int i=0; i<go.transform.childCount; i++){
+            for(int i=0; i<go.transform.childCount; i++)
+            {
                 // 지정된 자식객체를 transform에 반환
                 Transform transform = go.transform.GetChild(i);
 
                 // string.IsNullOrEmpty = 빈문자열이면 true (null 또는 "")
-                if (string.IsNullOrEmpty(name) || transform.name == name){
+                if (string.IsNullOrEmpty(name) || transform.name == name)
+                {
                     // 해당 T(Button, Text, ...) 컴포넌트 반환
                     T component = transform.GetComponent<T>();
                     if (component.IsNull() == false)
@@ -50,7 +53,8 @@ public class Util
         }
         else{
             // true일 경우 자식의 자식까지 다 가져온다.
-            foreach(T component in go.GetComponentsInChildren<T>()){
+            foreach(T component in go.GetComponentsInChildren<T>())
+            {
                 if (string.IsNullOrEmpty(name) || component.name == name)
                     return component;
             }

@@ -503,6 +503,13 @@ public class PlayerController : BaseController
         {
             if (BlockCheck() == true)
                 return;
+            
+            // 마나 체크
+            if (Managers.Game.Mp < 10)
+            {
+                Managers.UI.MakeSubItem<UI_Guide>().SetInfo("마나가 부족합니다.", Color.blue);
+                return;
+            }
                 
             _isDown = false;
             _isDiveRoll = true;
@@ -544,20 +551,13 @@ public class PlayerController : BaseController
             return;
 
         // 스킬 진행
-        if (Input.GetKeyDown(KeyCode.Q))
-            OnSkill(Managers.Game.GetSkill(Define.KeySkill.Q));
-        else if (Input.GetKeyDown(KeyCode.W))
-            OnSkill(Managers.Game.GetSkill(Define.KeySkill.W));
-        else if (Input.GetKeyDown(KeyCode.E))
-            OnSkill(Managers.Game.GetSkill(Define.KeySkill.E));
-        else if (Input.GetKeyDown(KeyCode.A))
-            OnSkill(Managers.Game.GetSkill(Define.KeySkill.A));
-        else if (Input.GetKeyDown(KeyCode.S))
-            OnSkill(Managers.Game.GetSkill(Define.KeySkill.S));
-        else if (Input.GetKeyDown(KeyCode.D))
-            OnSkill(Managers.Game.GetSkill(Define.KeySkill.D));
-        else if (Input.GetKeyDown(KeyCode.R))
-            OnSkill(Managers.Game.GetSkill(Define.KeySkill.R));
+        if (Input.GetKeyDown(KeyCode.Q))        OnSkill(GetSkill(Define.KeySkill.Q));
+        else if (Input.GetKeyDown(KeyCode.W))   OnSkill(GetSkill(Define.KeySkill.W));
+        else if (Input.GetKeyDown(KeyCode.E))   OnSkill(GetSkill(Define.KeySkill.E));
+        else if (Input.GetKeyDown(KeyCode.A))   OnSkill(GetSkill(Define.KeySkill.A));
+        else if (Input.GetKeyDown(KeyCode.S))   OnSkill(GetSkill(Define.KeySkill.S));
+        else if (Input.GetKeyDown(KeyCode.D))   OnSkill(GetSkill(Define.KeySkill.D));
+        else if (Input.GetKeyDown(KeyCode.R))   OnSkill(GetSkill(Define.KeySkill.R));
     }
 
     // 스킬 진행
@@ -633,6 +633,16 @@ public class PlayerController : BaseController
         Vector3 hitPoint = hit.point;
         hitPoint.y = 0;
         return hitPoint;
+    }
+
+    // 해당 키 스킬 반환 
+    private SkillData GetSkill(Define.KeySkill keySkill)
+    {
+        SkillData skill;
+        if (Managers.Game.SkillBarList.TryGetValue(keySkill, out skill) == false)
+            return null;
+
+        return skill;
     }
 
     // 스킬 이펙트 비활성화
