@@ -4,7 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-// 씬 Load에 사용
+/*
+ * File :   SceneManagerEx.cs
+ * Desc :   씬 로드 매니저
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 public class SceneManagerEx
 {
     public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }

@@ -6,7 +6,11 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
 
-// 구글 스프레드시트를 통해 데이터를 가져온다.
+/*
+ * File :   DataManager.cs
+ * Desc :   구글 스프레드시트를 통해 데이터 불러오기
+ */
+
 public class DataManager
 {
     const string URL = "https://docs.google.com/spreadsheets/d/1wGzHHrNKnq8LYkQHWN3DWJLY5zRBllqKT69KmzN5oWo/export?format=csv&gid=";

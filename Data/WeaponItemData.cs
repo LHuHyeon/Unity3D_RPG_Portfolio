@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 무기 장비 아이템 데이터 ]
-1. 모든 무기 아이템은 해당 클래스를 받음.
-2. 공격력을 증가시킨다.
-*/
+ * File :   WeaponItemData.cs
+ * Desc :   무기 아이템 데이터 (공격력)
+ *
+ & Functions
+ &  : WeaponClone() - 무기 아이템 깊은 복사
+ *
+ */
 
 [Serializable]
 public class WeaponItemData : EquipmentData

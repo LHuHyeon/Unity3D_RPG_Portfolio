@@ -75,7 +75,7 @@ public abstract class UI_Base : MonoBehaviour
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected Image GetImage(int idx) { return Get<Image>(idx); }
 
-    // Event 핸들러에 관한 메소드
+    // Event 핸들러에 관한 메소드 (Command 패턴)
     public static void BindEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
     {
         // 객체에 컴포넌트 추가 및 읽어오기

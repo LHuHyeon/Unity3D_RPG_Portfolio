@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 장비 아이템 데이터 ]
-1. 모든 장비는 해당 클래스를 상속받음.
-*/
+ * File :   EquipmentData.cs
+ * Desc :   모든 장비 아이템의 부모
+ *
+ & Functions
+ &  : EquipmentClone()  - 장비 깊은 복사
+ *
+ */
 
 public class EquipmentData : ItemData
 {

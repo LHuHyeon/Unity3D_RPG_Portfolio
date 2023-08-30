@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 아이템 데이터 ]
-1. 모든 아이템은 해당 클래스를 상속받음.
-2. id, 이름, 타입, 등급, 판매금, 최대 개수, 오브젝트, 설명, 아이콘
-*/
+ * File :   ItemData.cs
+ * Desc :   모든 아이템의 부모
+ *
+ & Functions
+ &  : ItemClone()  - 아이템 깊은 복사
+ *
+ */
 
 [Serializable]
 public abstract class ItemData

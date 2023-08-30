@@ -6,10 +6,39 @@ using System.Text;
 using UnityEngine;
 
 /*
-[ GameManager 스크립트 ]
-1. 모든 플레이어 정보를 GameManager에서 저장한다.
-2. 장비 강화, 퀘스트 갱신, 세이브 등 기능을 담당한다.
-*/
+ * File :   GameManager.cs
+ * Desc :   1인 게임이기 때문에 이 곳에서 플레이어의 데이터를 관리한다.
+ *          새로고침, 세이브 등을 담당
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ *
+ & Functions
+ &  [Public]
+ &  : GetPlayer()           - 플레이어 반환
+ &  : StopPlayer()          - 플레이어 정지
+ &  : RefreshExp()          - 경험치 레벨업 확인
+ &  : RefreshStat()         - 레벨에 맞는 스탯 가져오기
+ &  : RefreshQuest()        - 퀘스트 클리어 확인
+ &  : RefreshAllEquipment() - 모든 장비의 스탯 적용
+ &  : RefreshArmor()        - 방어구 스탯 적용
+ &  : GetSlotInteract()     - 슬롯 상호작용 (인벤토리 <-> NPC간 사용)
+ &  : OnAttacked()          - 플레이어 피격
+ &  : OnDead()              - 플레이어 사망
+ &  : OnResurrection()      - 플레이어 부활
+ &  : UpdateStatRecovery()  - 체력/마나 재생
+ &  : Init()                - 초기 설정
+ &  : Spawn()               - 캐릭터 스폰 (플레이어 or 몬스터)
+ &  : GetWorldObjectType()  - 오브젝트 타입 반환
+ &  : Despawn()             - 캐릭터 삭제
+ &  : IsSaveLoad()          - 세이브 불러올 수 있는지 확인
+ &  : SaveGame()            - 세이브 진행
+ &  : LoadGame()            - 세이브 로드
+ &  : ToInvenItem()         - 인벤토리 세이브 진행
+ &  : FromInvenItem()       - 인벤토리 세이브 로드
+ &  : ToDictionary()        - 딕셔너리 세이브 진행
+ &  : FromDictionary()      - 딕셔너리 세이브 로드
+ &  : Clear()               - 초기화
+ *
+ */
 
 [Serializable]
 public class DataDictionary<TKey,TValue>
@@ -88,24 +117,22 @@ public class GameData
 // 컨텐츠에서 사용될 매니저 (플레이어, 몬스터 등..)
 public class GameManager
 {
-    GameObject _player;
+    private GameData            _gameData = new GameData();
+    public GameData             SaveData { get { return _gameData; } set { _gameData = value; } }
 
-    HashSet<GameObject> _monsters = new HashSet<GameObject>();
+    private GameObject          _player;
+    private HashSet<GameObject> _monsters = new HashSet<GameObject>();
 
-    GameData _gameData = new GameData();
-    public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
+    public bool                 isSaveLoad = false;     // 세이브 불러왔는지 여부
 
-    public bool isSaveLoad = false;
+    public MonsterStat          currentMonster;         // 전투 중인 몬스터
+    public Vector3              defualtSpawn;           // 기본 스폰 장소
 
-    public GameObject GetPlayer() { return _player; }
-
-    public MonsterStat currentMonster;   // 전투 중인 몬스터
-    public Vector3 defualtSpawn;        // 기본 스폰 장소
-
-    public UI_PlayScene _playScene;
+    public UI_PlayScene         _playScene;             // 게임 플레이 Scene UI
 
     public Dictionary<Define.Popup, bool> isPopups;     // 팝업 bool 관리
 
+    // NPC와 상호작용 여부
     private bool isInteract = false;
     public bool IsInteract
     {
@@ -124,6 +151,8 @@ public class GameManager
             isInteract = value;
         }
     }
+
+    public GameObject GetPlayer() { return _player; }
 
     public void StopPlayer()
     {

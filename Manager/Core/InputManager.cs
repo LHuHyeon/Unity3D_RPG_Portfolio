@@ -4,7 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 
-// 플레이어의 모든 입력은 여기서 관리
+/*
+ * File :   InputManager.cs
+ * Desc :   플레이어의 모든 입력(마우스, 키보드)을 확인하고 반환
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 public class InputManager
 {
     // 키 입력 메소드들을 한번에 실행하기 위한 변수

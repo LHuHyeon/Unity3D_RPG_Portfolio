@@ -3,6 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * File :   QuestData.cs
+ * Desc :   퀘스트 데이터
+ *
+ & Functions
+ &  : QuestClear()  - 퀘스트 성공 보상 지급
+ *
+ */
+
 [Serializable]
 public class RewardItem
 {

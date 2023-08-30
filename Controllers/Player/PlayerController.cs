@@ -5,11 +5,47 @@ using System.Threading;
 using UnityEngine;
 
 /*
-[ 플레이어 컨트롤러 스크립트 ]
-1. SetInfo : 장비 파츠(SkinnedMeshRenderer) 찾아서 저장
-2. State : Idle, Moving, DiveRoll(구르기), Attack, Hit
-3. 기능 : 마우스 입력, 키 입력, 연속 공격, 스킬, 아이템 줍기
-*/
+ * File :   PlayerController.cs
+ * Desc :   플레이어 캐릭터 조종 기능
+ *
+ & Functions
+ &  [Public]
+ &  : Init()            - 초기 설정
+ &  : OnHitDown()       - 피격 받아 넘어지기
+ &  : LevelUpEffect()   - 레벨업 이펙트 생성
+ &
+ &  [Protected]
+ &  : UpdateIdle()      - 멈춤일 때 Update
+ &  : UpdateMoving()    - 움직일 때 Update (마우스 포인트 따라가기)
+ &  : UpdateDiveRoll()  - 구르기 때 Update (마우스 위치로 구르기)
+ &  : UpdateAttack()    - 공격할 때 Update (공격 시간 확인)
+ &
+ &  [Private]
+ &  : OnMouseEvent()        - 마우스 입력 확인 (InputManager 관리)
+ &  : GetMouseEvent()       - 마우스 활동 확인
+ &  : OnAttack()            - 공격 시작
+ &  : OnKeyEvent()          - 키보드 입력 확인 (InputManager 관리)
+ &  : GetPickUp()           - 아이템 줍기
+ &  : GetDiveRoll()         - 구르기
+ &  : GetUseItem()          - 아이템 사용
+ &  : GetSkill()            - 스킬 입력 확인
+ &  : OnSkill()             - 스킬 사용
+ &  : HitDown()             - 넘어지기 코루틴
+ &  : LevelUpCoroutine()    - 레벨업 이펙트 코루틴
+ &  : GetMousePoint()       - 마우스 포인트 좌표 반환
+ &  : GetSkill()            - 스킬바의 Key 존재 확인
+ &  : BlockCheck()          - 전방 블록 확인
+ &  : ExitAttack()          - 공격 끝   (Animation Event)
+ &  : EventDiveRoll()       - 구르기 끝 (Animation Event)
+ &  : EventEndSkill()       - 스킬 끝   (Animation Event)
+ &  : StopAttack()          - 공격 중단
+ &  : ClearDiveRoll()       - 구르기 초기화
+ &  : EffectClose()         - 이펙트 비활성화 (스킬)
+ &  : SetPart()             - 캐릭터 장비 파츠 저장
+ &  : SetSkinned()          - SkinnedMeshRenderer 설정
+ &
+ *
+ */
 
 public class PlayerController : BaseController
 {
@@ -17,7 +53,6 @@ public class PlayerController : BaseController
     public Dictionary<int, List<GameObject>> charEquipment;
 
     public GameObject   clickMoveEffect;    // 클릭 이동 파티클 Prefab
-    public GameObject   waeponObjList;      // 무기 Prefab List
     public GameObject   currentEffect;      // 현재 이펙트
     public SkillData    currentSkill;       // 현재 스킬
 
@@ -29,27 +64,28 @@ public class PlayerController : BaseController
     private bool        _isDown     = false;    // 넘어진 상태 여부
     
     private float       currentDiveTime = 0f;   // 현재 구르는 시간
+    private float       _attackCloseTime = 0;   // 공격 취소 시간
 
     private Vector3     dir;
 
     [SerializeField]
-    private float       _attackCloseTime = 0;   // 공격 취소 시간
+    private GameObject  rootBone;               // SkinnedMeshRenderer 대표 뼈대
 
     [SerializeField]
-    private GameObject  rootBone;               // SkinnedMeshRenderer 대표 뼈대
+    private GameObject  waeponObjList;          // 무기 Prefab List
 
     [SerializeField]
     private List<EffectData> effects;           // 이펙트 관리 변수
 
     public override void Init()
     {
-        WorldObjectType = Define.WorldObject.Player;
-        State = Define.State.Idle;
-        
+        anim = GetComponent<Animator>();
+
         charEquipment = new Dictionary<int, List<GameObject>>();
         currentEffect = null;
 
-        anim = GetComponent<Animator>();
+        WorldObjectType = Define.WorldObject.Player;
+        State = Define.State.Idle;
 
         // 입력 매니저에서 관리
         Managers.Input.KeyAction -= OnKeyEvent;
@@ -299,6 +335,7 @@ public class PlayerController : BaseController
             State = Define.State.Attack;
             _onAttack = true;
 
+            // 회전
             dir = _destPos - transform.position;
             transform.rotation = Quaternion.LookRotation(GetMousePoint() - transform.position);
         }
@@ -372,15 +409,16 @@ public class PlayerController : BaseController
             // 넘어진 상태라면 취소시키기
             StopCoroutine(HitDown(null));
 
-            State = Define.State.DiveRoll;
-
-            Managers.Game.Mp -= 10;
-
+            // 도착 좌표
             _destPos = GetMousePoint();
             dir = _destPos - transform.position;
             
+            Managers.Game.Mp -= 10;
             Managers.Game.MoveSpeed = 8;
 
+            State = Define.State.DiveRoll;
+
+            // 이펙트 취소
             EffectClose();
         }
     }
@@ -388,10 +426,8 @@ public class PlayerController : BaseController
     // 번호키를 눌러 소비 아이템 사용
     private void GetUseItem()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            Managers.Game._playScene.UsingItem(1);
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            Managers.Game._playScene.UsingItem(2);
+        if (Input.GetKeyDown(KeyCode.Alpha1))       Managers.Game._playScene.UsingItem(1);
+        else if (Input.GetKeyDown(KeyCode.Alpha2))  Managers.Game._playScene.UsingItem(2);
     }
 
     // 스킬 사용 (Q, W, E, A, S, D, R)
@@ -418,19 +454,21 @@ public class PlayerController : BaseController
     // 스킬 진행
     private void OnSkill(SkillData skill)
     {
+        // Null Check
         if (skill.IsNull() == true)
         {
             Debug.Log("등록된 스킬이 없습니다!");
             return;
         }
 
+        // 쿨타임 확인
         if (skill.isCoolDown == true)
         {
             Debug.Log("쿨타임 중입니다.");
             return;
         }
 
-        // 마나 체크
+        // 마나 확인
         if (skill.skillConsumMp > Managers.Game.Mp)
         {
             Managers.UI.MakeSubItem<UI_Guide>().SetInfo("마나가 부족합니다.", Color.blue);
@@ -472,9 +510,11 @@ public class PlayerController : BaseController
 
     // 플레이어 넘어지기
     private IEnumerator HitDown(MonsterStat attacker, int addDamge = 0)
-    {   
+    {
+        // 플레이어 데미지 반영
         Managers.Game.OnAttacked(attacker, addDamge);
 
+        // 사망 시 중지
         if (State == Define.State.Die)
             yield break;
 
@@ -487,6 +527,7 @@ public class PlayerController : BaseController
 
         yield return new WaitForSeconds(2f);
 
+        // 구르는게 아니면 Idle 변경
         if (_isDiveRoll == false)
             State = Define.State.Idle;
             
@@ -496,20 +537,23 @@ public class PlayerController : BaseController
     // 레벨업 이펙트 효과
     private IEnumerator LevelUpCoroutine()
     {
+        // 레벨업 이펙트 Prefab 생성
         GameObject effect = Managers.Resource.Instantiate("Effect/LevelUpEffect", this.transform);
         effect.transform.localPosition = Vector3.zero;
 
         yield return new WaitForSeconds(4f);
 
-        Managers.Resource.Destroy(effect);
+        Managers.Resource.Destroy(effect);  // 제거
     }
 
     // 마우스 Ray 위치 반환
     private Vector3 GetMousePoint()
     {
+        // 마우스 Ray 쏘기
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out hit, 150f, _mask);
         
+        // 마우스 포인트 좌표 반환
         Vector3 hitPoint = hit.point;
         hitPoint.y = 0;
         return hitPoint;
@@ -518,16 +562,17 @@ public class PlayerController : BaseController
     // 해당 키 스킬 반환 
     private SkillData GetSkill(Define.KeySkill keySkill)
     {
-        SkillData skill;
-        if (Managers.Game.SkillBarList.TryGetValue(keySkill, out skill) == false)
+        // Scene UI의 스킬바에 스킬이 존재하는지 확인
+        if (Managers.Game.SkillBarList.TryGetValue(keySkill, out SkillData skill) == false)
             return null;
 
         return skill;
     }
 
-    // 전방 Block 체크하여 멈추기 (1.0f 거리에서 멈추기)
+    // 전방 벽 체크
     private bool BlockCheck()
     {
+        // 전방 Block 체크하여 멈추기 (1.0f 거리에서 멈추기)
         if (Physics.Raycast(transform.position + (Vector3.up * 0.5f), dir, 1.0f, 1 << 10)) // 10 : Block
             return true;
 
@@ -538,11 +583,14 @@ public class PlayerController : BaseController
     // 공격이 끝나면 발동.
     private void ExitAttack()
     {
+        // 다음 공격 확인
         if (_onComboAttack == true)
         {
+            // 공격 진행
             State = Define.State.Attack;
             _onComboAttack = false;
 
+            // 회전
             dir = _destPos - transform.position;
             transform.rotation = Quaternion.LookRotation(GetMousePoint() - transform.position);
         }
@@ -578,20 +626,23 @@ public class PlayerController : BaseController
     private void ClearDiveRoll()
     {
         _isDiveRoll = false;
-        Managers.Game.MoveSpeed = 5;
         currentDiveTime = 0f;
+        Managers.Game.MoveSpeed = 5;
         State = Define.State.Idle;
     }
 
     // 스킬 이펙트 비활성화
     private void EffectClose()
     {
+        // Null Check
         if (currentEffect.IsFakeNull() == true)
             return;
         
+        // Effect 비활성화 진행
         currentEffect.GetComponent<EffectData>().EffectDisableDelay();
     }
 
+    // 캐릭터 파츠 세팅
     private void SetPart()
     {
         // 캐릭터 파츠 가져오기
@@ -651,6 +702,7 @@ public class PlayerController : BaseController
             string result = Regex.Replace(child.name, @"\D", "");
             int id = int.Parse(result);
 
+            // Data 저장
             WeaponItemData weapon = Managers.Data.Item[id] as WeaponItemData;
             weapon.charEquipment = child.gameObject;
 
@@ -661,6 +713,7 @@ public class PlayerController : BaseController
     // SkinnedMeshReaderer 변경
     private void SetSkinned(Define.DefaultPart partType, Transform go)
     {
+        // SkinnedMeshRenderer 컴포넌트 받기
         SkinnedMeshRenderer objSkinned = go.GetComponent<SkinnedMeshRenderer>();
 
         SkinnedData skinnedInfo = Managers.Game.DefaultPart[partType];
@@ -668,6 +721,7 @@ public class PlayerController : BaseController
         // 파츠를 가지고 있는 Model FBX를 찾아 파츠 이름 검색하여 Mesh 받기
         GameObject meshObj = Managers.Resource.Load<GameObject>("Art/PolygonFantasyHeroCharacters/Models/ModularCharacters");
 
+        // SkinnedMeshRenderer 세팅
         objSkinned.sharedMesh = Util.FindChild<SkinnedMeshRenderer>(meshObj, skinnedInfo.sharedMeshName, true).sharedMesh;
         objSkinned.localBounds = skinnedInfo.bounds;
         objSkinned.rootBone = Util.FindChild<Transform>(rootBone, skinnedInfo.rootBoneName, true);

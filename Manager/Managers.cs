@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * File :   Managers.cs
+ * Desc :   싱글톤 패턴을 사용하여 모든 매니저에 접근 가능
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 public class Managers : MonoBehaviour
 {
     private static Managers s_instance;
@@ -22,7 +28,6 @@ public class Managers : MonoBehaviour
     private PoolManager _pool = new PoolManager();
     private ResourceManager _resource = new ResourceManager();
     private SceneManagerEx _scene = new SceneManagerEx();
-    private SoundManager _sound = new SoundManager();
     private UIManager _ui = new UIManager();
 
     public static DataManager Data { get { return Instance._data; } }
@@ -30,7 +35,6 @@ public class Managers : MonoBehaviour
     public static PoolManager Pool { get { return Instance._pool; } }
     public static ResourceManager Resource { get { return Instance._resource; } }
     public static SceneManagerEx Scene { get { return Instance._scene; } }
-    public static SoundManager Sound { get { return Instance._sound; } }
     public static UIManager UI { get { return Instance._ui; } }
 
 #endregion
@@ -67,7 +71,6 @@ public class Managers : MonoBehaviour
             
             s_instance._data.Init();
             s_instance._game.Init();
-            s_instance._sound.Init();
             s_instance._pool.Init();
             // s_instance._data.Init();
         }
@@ -75,7 +78,6 @@ public class Managers : MonoBehaviour
 
     public static void Clear()
     {
-        Sound.Clear();
         UI.Clear();
         Scene.Clear();
         Game.Clear();

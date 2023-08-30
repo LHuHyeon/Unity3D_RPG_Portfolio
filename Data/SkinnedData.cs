@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ SkinnedMeshRenderer 데이터 ]
-1. 커스텀이나 세이브를 불러올 때 사용될 저장 데이터
-2. Mesh, Bones는 string으로 받아 이름으로 찾아 사용됨.
-*/
+ * File :   SkinnedData.cs
+ * Desc :   커스텀이나 세이브를 불러올 때 사용될 데이터
+ *          [SkinnedMeshRenderer 교체 방법]: https://lhuhyeon.github.io/posts/Unity-SkinnedMeshRenderer-Change/
+ */
 
 [Serializable]
 public class SkinnedData

@@ -51,17 +51,9 @@ public class CursorController : MonoBehaviour
 
     private void CursorUpdate()
     {
-        // 좌클릭 시 공격 icon
+        // 꾹 누르면 아이콘 유지
         if (Input.GetMouseButton(0))
-        {
-            // Attack
-            if (_cursorType != CursorType.Attack)
-            {
-                Cursor.SetCursor(_attackIcon, new Vector2(_attackIcon.width / 3.9f, 0), CursorMode.Auto);
-                _cursorType = CursorType.Attack;
-            }
             return;
-        }
 
         // 마우스 포인트 가져오기
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -78,9 +70,18 @@ public class CursorController : MonoBehaviour
                 }
                 return;
             }
-            
+            // Monster
+            else if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
+            {
+                if (_cursorType != CursorType.Attack)
+                {
+                    Cursor.SetCursor(_attackIcon, new Vector2(_attackIcon.width / 3.9f, 0), CursorMode.Auto);
+                    _cursorType = CursorType.Attack;
+                }
+                return;
+            }
             // Default
-            if (_cursorType != CursorType.Hand)
+            else if (_cursorType != CursorType.Hand)
             {
                 Cursor.SetCursor(_handIcon, new Vector2(_handIcon.width / 3.1f, 0), CursorMode.Auto);
                 _cursorType = CursorType.Hand;

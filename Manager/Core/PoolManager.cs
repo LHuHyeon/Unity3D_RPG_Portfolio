@@ -2,7 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ResourceManager의 보조역할 느낌
+/*
+ * File :   PoolManager.cs
+ * Desc :   Poolable 컴포넌트가 있는 오브젝트를 Pool 관리해준다 ( ResourceManager의 보조역할 )
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 public class PoolManager
 {
     class Pool

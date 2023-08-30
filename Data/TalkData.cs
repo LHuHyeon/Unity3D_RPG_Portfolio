@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * File :   TalkData.cs
+ * Desc :   대화 데이터
+ */
+
 public class TalkData
 {
     public int id;

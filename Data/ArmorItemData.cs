@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 방어 장비 아이템 데이터 ]
-1. 모든 방어 아이템은 해당 클래스를 받음.
-2. 스탯 : 방어도, 체력, 마나, 속도
-*/
+ * File :   ArmorItemData.cs
+ * Desc :   방어 아이템 스탯 데이터 (방어도, 체력, 마나, 속도)
+ *
+ & Functions
+ &  : ArmorClone()  - 방어구 깊은 복사
+ *
+ */
 
 [Serializable]
 public class ArmorItemData : EquipmentData

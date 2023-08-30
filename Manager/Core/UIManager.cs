@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * File :   UIManager.cs
+ * Desc :   UI의 Scene, Popup, WorldSpace 생성/제거를 도와주는 매니저
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 public class UIManager
 {
     int _order = 10;

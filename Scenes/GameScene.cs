@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 게임 씬
+/*
+ * File :   GameScene.cs
+ * Desc :   GameScene이 Load되면 호출된다. ( 플레이어, PlayScene 등 생성 )
+ */
+
 public class GameScene : BaseScene
 {
     [SerializeField]

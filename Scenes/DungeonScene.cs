@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-// 던전 씬
+/*
+ * File :   DungeonScene.cs
+ * Desc :   DungeonScene이 Load되면 호출된다.
+ */
+
 public class DungeonScene : BaseScene
 {
     [SerializeField]

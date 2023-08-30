@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 보스 씬
+/*
+ * File :   BossScene.cs
+ * Desc :   BossScene이 Load되면 호출된다.
+ */
+
 public class BossScene : BaseScene
 {
     [SerializeField]

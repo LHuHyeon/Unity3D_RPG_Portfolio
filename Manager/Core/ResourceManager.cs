@@ -2,7 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 유니티에서 제공하는 명령어를 더 쉽게 사용하기 위한 매니저
+/*
+ * File :   ResourceManager.cs
+ * Desc :   Resource 폴더 사용 및 유니티에서 제공하는 명령어를 더 쉽게 사용하기 위한 매니저
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 public class ResourceManager
 {
     // 객체 읽기
