@@ -67,7 +67,6 @@ public class DarkKnightController : MonsterController
     [SerializeField]
     private MonsterAttackCollistion attackCollider;     // 일반 공격 사용 접촉 확인
 
-    // 초기 설정
     public override void Init()
     {
         base.Init();
@@ -96,7 +95,6 @@ public class DarkKnightController : MonsterController
         base.IdleTargetDetection();
     }
 
-    // Moving Update
     protected override void UpdateMoving()
     {
         // Scene UI 몬스터 정보 활성화
@@ -116,7 +114,6 @@ public class DarkKnightController : MonsterController
     protected override void UpdateAttack() { OnAnimationMove(); }
     protected override void UpdateSkill() { OnAnimationMove(); }
 
-    // Die Update
     protected override void UpdateDie()
     {
         base.UpdateDie();

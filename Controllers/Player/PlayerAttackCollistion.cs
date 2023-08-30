@@ -3,20 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 플레이어 공격 Collider 스크립트 ]
-1. 플레이어 전방에 원형 Collider를 활성화하여 닿은 몬스터에게 데미지를 준다.
-2. 플레이어 Prefab 안에 컴포넌트로 장착되어 있음.
-*/
+ * File :   PlayerAttackCollistion.cs
+ * Desc :   플레이어 전방에 Collider를 활성화하여 접촉된 몬스터에게 데미지 반영
+ *
+ & Functions
+ &  : OnEnable()            - 활성화    시 0.1f 후 비활성화 (DelayActiveFalse() Invoke 호출)
+ &  : OnDisable()           - 비활성화  시 스킬 콤보 체크 및 콜라이더 사이즈 초기화
+ &  : OnTriggerEnter()      - 몬스터 접촉 시 데미지 반영 
+ &
+ &  [Private]
+ &  : DelayActiveFalse()    - 비활성화 딜레이
+ &  : BasicColliderSize()   - 콜라이더 기본 사이즈 초기화
+ *
+ */
 
 public class PlayerAttackCollistion : MonoBehaviour
 {
-    private CapsuleCollider capsuleCollider;
+    private int                 skillIndex = 0;     // 스킬 콤보 공격력 List index
+
+    private CapsuleCollider     capsuleCollider;
     
     [SerializeField]
-    PlayerController player;
-
-    // 콤보 스킬 공격력 리스트 index
-    int skillIndex = 0;
+    private PlayerController    player;
 
     void Start()
     {
@@ -25,24 +33,6 @@ public class PlayerAttackCollistion : MonoBehaviour
         skillIndex = 0;
 
         gameObject.SetActive(false);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Monster"))
-        {
-            if (player.State == Define.State.Skill)
-            {
-                if (player.currentSkill.powerList.Contains(skillIndex) == false)
-                    skillIndex = 0;
-
-                // 스킬 공격
-                int skillDamage = player.currentSkill.powerList[skillIndex] * (Managers.Game.Attack / 2);
-                other.GetComponent<MonsterStat>().OnAttacked(skillDamage);
-            }
-            else
-                other.GetComponent<MonsterStat>().OnAttacked(); // 기본 공격
-        }   
     }
 
     void OnEnable()
@@ -64,12 +54,32 @@ public class PlayerAttackCollistion : MonoBehaviour
         }
     }
 
-    void DelayActiveFalse()
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Monster"))
+        {
+            if (player.State == Define.State.Skill)
+            {
+                if (player.currentSkill.powerList.Contains(skillIndex) == false)
+                    skillIndex = 0;
+
+                // 스킬 공격
+                int skillDamage = player.currentSkill.powerList[skillIndex] * (Managers.Game.Attack / 2);
+                other.GetComponent<MonsterStat>().OnAttacked(skillDamage);
+            }
+            else
+                other.GetComponent<MonsterStat>().OnAttacked(); // 기본 공격
+        }   
+    }
+
+    // Invoke 호출
+    private void DelayActiveFalse()
     {
         gameObject.SetActive(false);
     }
 
-    void BasicColliderSize()
+    // 기본 콜라이더 사이즈
+    private void BasicColliderSize()
     {
         capsuleCollider.center = new Vector3(0, 0, 0.4f);
         capsuleCollider.radius = 1.2f;

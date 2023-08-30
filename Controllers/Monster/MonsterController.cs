@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 /*
  * File :   MonsterController.cs
- * Desc :   몬스터의 모든 상태를 관리
+ * Desc :   Monster 기본 기능 및 모든 Monster의 부모
  *
  & Functions
  &  [Public]
@@ -45,7 +45,6 @@ public class MonsterController : BaseController
     [SerializeField] protected float attackRange;       // 공격 사거리
     [SerializeField] protected float spawnRange = 16;   // 스폰 사거리 Max 거리
 
-    // 초기 설정
     public override void Init()
     {
         monsterType = Define.MonsterType.Normal;
@@ -71,7 +70,6 @@ public class MonsterController : BaseController
         State = Define.State.Moving;
     }
 
-    // Idle Update
     protected override void UpdateIdle()
     {
         // 플레이어 사망 시 작동 X
@@ -84,7 +82,6 @@ public class MonsterController : BaseController
             IdleTargetDetection();
     }
 
-    // Moving Update
     protected override void UpdateMoving()
     {
         // 스폰거리 초과 체크
@@ -129,7 +126,6 @@ public class MonsterController : BaseController
         }
     }
 
-    // Attack Update
     protected override void UpdateAttack()
     {
         // 플레이어가 죽었다면
@@ -145,7 +141,6 @@ public class MonsterController : BaseController
         transform.rotation = Quaternion.LookRotation(dir);
     }
 
-    // Hit Update
     protected override void UpdateHit()
     {
         // 멈추기
@@ -159,7 +154,6 @@ public class MonsterController : BaseController
         }
     }
 
-    // Die Update
     protected override void UpdateDie()
     {
         // 멈추기

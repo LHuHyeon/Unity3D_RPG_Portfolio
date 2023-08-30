@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 맵 카메라 컨트롤러 스크립트 ]
-1. 미니맵 전용 카메라다.
-*/
+ * File :   MapCameraController.cs
+ * Desc :   미니맵 전용 카메라
+ *
+ & Functions
+ &  : FixedUpdate() - 하늘에서 플레이어 추격
+ *
+ */
 
 public class MapCameraController : MonoBehaviour
 {

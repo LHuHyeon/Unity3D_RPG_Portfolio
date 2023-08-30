@@ -72,7 +72,7 @@ public class MonsterStat : MonoBehaviour
         Managers.Game._playScene.OnMonsterBar(this);
 
         int damage;
-        // 스킬 데미지 체크
+        // 스킬 데미지 확인
         if (skillAttack != 0)
             damage = Mathf.Max(0, skillAttack);
         else 

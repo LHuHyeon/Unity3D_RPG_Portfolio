@@ -3,43 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 상점 NPC 컨트롤러 스크립트 ]
-1. 플레이어와 상호작용하면 상점 UI를 활성화 한다. (UI_ShopPopup)
-*/
+ * File :   ShopNpcController.cs
+ * Desc :   상점 Npc 기능 구현
+ *
+ & Functions
+ &  [Protected]
+ &  : OpenPopup()   - Popup 활성화   (OpenShop() 호출)
+ &  : ExitPopup()   - Popup 비활성화 (ExitShop() 호출)
+ &
+ &  [Private]
+ &  : OpenShop()    - 상점 Popup 열기
+ &  : ExitShop()    - 상점 Popup 나가기
+ *
+ */
 
 public class ShopNpcController : NpcController
 {
-    public Define.ShopType shopType = Define.ShopType.Unknown;
+    public Define.ShopType  shopType = Define.ShopType.Unknown;
 
-    [SerializeField] private int shopBuyId;
+    [SerializeField]
+    private int             shopBuyId;      // Shop Npc 구매 목록 Id
 
-    public override void Init()
+    protected override void OpenPopup() { OpenShop(); }
+    protected override void ExitPopup() { ExitShop(); }
+
+    private void OpenShop()
     {
-        base.Init();
-    }
-
-    public override void Interact()
-    {
-        if (Managers.Game.IsInteract)
-        {
-            Managers.UI.CloseAllPopupUI();
-            Managers.Game.StopPlayer();
-            OnShop();
-        }
-        else
-            ExitShop();
-    }
-
-    void OnShop()
-    {
+        // 상점 Popup 활성화
         Managers.UI.OnPopupUI(Managers.Game._playScene._shop);
         Managers.Game._playScene._shop.RefreshUI(this, shopBuyId);
 
+        // 인벤토리 Popup 활성화
         Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
         Managers.Game._playScene._inventory.ResetPos();
     }
 
-    void ExitShop()
+    private void ExitShop()
     {
         Managers.Game._playScene._shop.ExitShop();
     }

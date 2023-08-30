@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,16 +73,7 @@ public class UI_ShopPopup : UI_Popup
 
     public void RefreshUI(ShopNpcController npc, int shopBuyId)
     {
-        shopType = npc.shopType;
-
-        if (shopType == Define.ShopType.Used)
-            GetText((int)Texts.TitleText).text = "Used Shop";
-        else if (shopType == Define.ShopType.Armor)
-            GetText((int)Texts.TitleText).text = "Armor Shop";
-        else if (shopType == Define.ShopType.Weapon)
-            GetText((int)Texts.TitleText).text = "Weapon Shop";
-        else if (shopType == Define.ShopType.Accessory)
-            GetText((int)Texts.TitleText).text = "Accessory Shop";
+        GetText((int)Texts.TitleText).text = $"{npc.shopType.ToString()} Shop";
 
         SettingBuySlot(shopBuyId);
     }

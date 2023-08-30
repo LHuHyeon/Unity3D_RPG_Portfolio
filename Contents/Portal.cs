@@ -7,9 +7,9 @@ using UnityEngine;
  * Desc :   포탈 생성 및 Scene 이동
  *
  & Functions
- &  : OnTriggerEnter()  - 플레이어 Enter 체크 후 포탈 활성화
+ &  : OnTriggerEnter()  - 플레이어 Enter 확인 후 포탈 활성화
  &  : OnTriggerStay()   - 플레이어와 근접하면 Scene Load
- &  : OnTriggerExit()   - 플레이어 Exit 체크 후 포탈 비활성화
+ &  : OnTriggerExit()   - 플레이어 Exit 확인 후 포탈 비활성화
  *
  */
 

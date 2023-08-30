@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 플레이어 애니메이션 Event 스크립트 ]
-1. 플레이어의 공격, 스킬 등의 애니메이션 Event를 관리한다.
-2. 공격마다 각 사거리가 다르므로 하드코딩 해줬다.
-*/
+ * File :   PlayerAnimEvent.cs
+ * Desc :   플레이어의 공격, 스킬 등의 애니메이션 Event 관리 (공격마다 각 사거리가 다르므로 하드코딩)
+ *
+ ^ Tip : OnParticleCollision() 통해 파티클로도 접촉을 확인할 수 있기 때문에 다음 부터는 이걸 사용해야겠다.
+ *
+ */
 
 public class PlayerAnimEvent : MonoBehaviour
 {
     [SerializeField]
     private CapsuleCollider capsuleCollider;
 
-    private int nextSkillIndex = 0;
+    private int             nextSkillIndex = 0;     // 스킬 콤보 체크용
 
     private const int X_Axis = 0, Y_Axis = 1, Z_Axis = 2;
 
 #region 공격 사거리
 
     // 공격 사이즈 클래스
-    public class AttackSize
+    private class AttackSize
     {
         public float x;
         public float y;
@@ -101,19 +103,19 @@ public class PlayerAnimEvent : MonoBehaviour
 #endregion
 
     // 기본 검 공격
-    public void OnBasicAttack()
+    private void OnBasicAttack()
     {
         capsuleCollider.gameObject.SetActive(true);
     }
 
     // skill 101 : 트리플 슬래쉬
-    public void OnTripleSlash()
+    private void OnTripleSlash()
     {
         OnSize(skill101);
     }
 
     // skill 102 : 라이징 슬래쉬
-    public void OnRisingSlash()
+    private void OnRisingSlash()
     {
         OnSize(skill102[nextSkillIndex]);
         
@@ -123,25 +125,25 @@ public class PlayerAnimEvent : MonoBehaviour
     }
 
     // skill 103 : 회전의 칼날
-    public void OnRotationBlade()
+    private void OnRotationBlade()
     {
         OnSize(skill103);
     }
 
     // skill 104 : 어둠의 칼날
-    public void OnDarkBlade()
+    private void OnDarkBlade()
     {
         OnSize(skill104);
     }
 
     // skill 105 : 궁극의 일격
-    public void OnBigSwordSlash()
+    private void OnBigSwordSlash()
     {
         OnSize(skill105);
     }
 
     // skill 106 : 칼날 섬멸
-    public void OnBladeAnnihilation()
+    private void OnBladeAnnihilation()
     {
         OnSize(skill106[nextSkillIndex]);
         
@@ -151,7 +153,7 @@ public class PlayerAnimEvent : MonoBehaviour
     }
 
     // skill 107 : 궁극의 칼날
-    public void OnEventualityBlade()
+    private void OnEventualityBlade()
     {
         OnSize(skill107);
     }

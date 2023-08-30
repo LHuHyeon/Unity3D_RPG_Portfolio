@@ -3,37 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 업그레이드 NPC 컨트롤러 스크립트 ]
-1. 플레이어와 상호작용하면 업그레이드 UI를 활성화 한다. (UI_UpgradePopup)
-*/
+ * File :   UpgradeNpcController.cs
+ * Desc :   장비 강화 NPC 기능 구현
+ *
+ & Functions
+ &  [Protected]
+ &  : OpenPopup()   - Popup 활성화   (OpenUpgrade() 호출)
+ &  : ExitPopup()   - Popup 비활성화 (ExitUpgrade() 호출)
+ &
+ &  [Private]
+ &  : OpenUpgrade() - 업그레이드 Popup 열기
+ &  : ExitUpgrade() - 업그레이드 Popup 나가기
+ *
+ */
 
 public class UpgradeNpcController : NpcController
 {
-    public override void Init()
-    {
-        base.Init();
-    }
+    protected override void OpenPopup() { OpenUpgrade(); }
+    protected override void ExitPopup() { ExitUpgrade(); }
 
-    public override void Interact()
+    private void OpenUpgrade()
     {
-        if (Managers.Game.IsInteract)
-        {
-            Managers.UI.CloseAllPopupUI();
-            Managers.Game.StopPlayer();
-            OnUpgrade();
-        }
-        else
-            ExitUpgrade();
-    }
-
-    void OnUpgrade()
-    {
+        // 업그레이드 Popup 활성화
         Managers.UI.OnPopupUI(Managers.Game._playScene._upgrade);
+
+        // 인벤토리 Popup 활성화
         Managers.UI.OnPopupUI(Managers.Game._playScene._inventory);
         Managers.Game._playScene._inventory.ResetPos();
     }
 
-    void ExitUpgrade()
+    private void ExitUpgrade()
     {
         Managers.Game._playScene._upgrade.ExitUpgrade();
     }

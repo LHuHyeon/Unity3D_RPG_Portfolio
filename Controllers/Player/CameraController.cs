@@ -3,26 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 카메라 컨트롤러 스크립트 ]
-1. 플레이어를 쿼터뷰 방식으로 따라다닌다.
-2. 장애물이 플레이어를 가리면 플레이어에게 더 가깝게 이동한다.
-*/
+ * File :   CameraController.cs
+ * Desc :   플레이어를 쿼터뷰 모드로 따라다니는 카메라 기능
+ *
+ & Functions
+ &  [Public]
+ &  : SetPlayer()           - 플레이어 Prefab 받기
+ &
+ &  [Private]
+ &  : QuarterViewUpdate()   - 쿼터뷰 모드로 플레이어 따라가기
+ *
+ */
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField]
-    private Define.CameraMode _mode = Define.CameraMode.QuarterView;
+    private Define.CameraMode   _mode = Define.CameraMode.QuarterView;
     [SerializeField]
-    private Vector3 _delta;
+    private Vector3             _delta;
     [SerializeField]
-    private GameObject _player = null;
+    private GameObject          _player = null;
+
+    private RaycastHit          hit;
 
     public void SetPlayer(GameObject go) { _player = go; }
-
-    RaycastHit hit;
     
-    // 카메라 위치 이동을 마지막 업데이트에 실행함으로 써 떨림현상 완화
     void LateUpdate()
+    {
+        QuarterViewUpdate();
+    }
+
+    // 카메라 위치 이동을 마지막 업데이트에 실행함으로 써 떨림현상 완화
+    private void QuarterViewUpdate()
     {
         if (_mode == Define.CameraMode.QuarterView)
         {
@@ -41,12 +53,5 @@ public class CameraController : MonoBehaviour
                 transform.LookAt(_player.transform);
             }
         }
-    }
-
-    // 카메라 위치 메소드
-    public void SetQuaterView(Vector3 delta)
-    {
-        _mode = Define.CameraMode.QuarterView;
-        _delta = delta;
     }
 }
