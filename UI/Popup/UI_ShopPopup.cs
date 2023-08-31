@@ -204,7 +204,7 @@ public class UI_ShopPopup : UI_Popup
             UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
             if (numberCheckPopup.IsNull() == true) return;
 
-            numberCheckPopup.RefreshUI(invenSlot, (int subItemCount)=>
+            numberCheckPopup.SetInfo(invenSlot, (int subItemCount)=>
             {
                 SaleItemRegister(invenSlot, subItemCount);
             });

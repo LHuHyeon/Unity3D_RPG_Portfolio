@@ -7,11 +7,19 @@ using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
 /*
-[ 입력 Popup 스크립트 ]
-1. 입력이 필요한 상황에 띄울 수 있는 Popup이다.
-2. 자주 호출되는 함수 : SetInfo()
-3. 현재는 닉네임 입력 전용으로 사용하고 있다.
-*/
+ * File :   UI_InputPopup.cs
+ * Desc :   입력이 필요할 때 Popup (닉네임 입력 등..)
+ *
+ & Functions
+ &  [Public]
+ &  : Init()                - 초기 설정
+ &  : SetInfo()             - 새 정보 설정 ( 확인 클릭 시 Invoke 호출할 Action 받기 )
+ &
+ &  [Private]
+ &  : OnClickYesButton()    - 확인 버튼 클릭 시 호출
+ &  : OnClickNoButton()     - 취소 버튼 클릭 시 호출
+ *
+ */
 
 public class UI_InputPopup : UI_Popup
 {
@@ -22,12 +30,12 @@ public class UI_InputPopup : UI_Popup
     }
 
     [SerializeField]
-    TMP_InputField _inputField;
+    private TMP_InputField  _inputField;
 
     [SerializeField]
-    TextMeshProUGUI _messageText;
+    private TextMeshProUGUI _messageText;
 
-    string _regex;
+    private string          _regex;         // 정규식
 
     public override bool Init()
     {
@@ -36,12 +44,14 @@ public class UI_InputPopup : UI_Popup
 
         BindButton(typeof(Buttons));
 
+        // 버튼 기능 등록
         GetButton((int)Buttons.YesButton).onClick.AddListener(OnClickYesButton);
         GetButton((int)Buttons.NoButton).onClick.AddListener(OnClickNoButton);
 
         return true;
     }
 
+    // 기능 설정
     Action<string> _onClickYesButton;
     Action _onClickNoButton;
     public void SetInfo(Action<string> onClickYesButton, string messageText, string placeholderText, string regex, Action onClickNoButton=null)
@@ -55,25 +65,29 @@ public class UI_InputPopup : UI_Popup
         _inputField.Select();
     }
 
-    void OnClickYesButton()
+    private void OnClickYesButton()
     {
         Regex regex = new Regex(_regex);
         if (regex.IsMatch(_inputField.text))
         {
             Managers.UI.ClosePopupUI(this);
+
+            // 확인 기능 실행
             if (_onClickYesButton.IsNull() == false)
                 _onClickYesButton.Invoke(_inputField.text);
         }
         else
         {
+            // 경고문 생성
             Managers.UI.MakeSubItem<UI_Guide>().SetInfo("한글|영어|숫자 2글자 이상 8글자 이하", Color.red);
         }
     }
 
-    void OnClickNoButton()
+    private void OnClickNoButton()
     {
         Managers.UI.ClosePopupUI(this);
 
+        // 취소 기능 실행
         if (_onClickNoButton.IsNull() == false)
             _onClickNoButton.Invoke();
     }

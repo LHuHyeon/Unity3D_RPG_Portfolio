@@ -12,6 +12,26 @@ using UnityEngine;
 2-4. CloseQuestNotice() : 퀘스트 알림을 끄고 싶을 때 사용된다.
 */
 
+/*
+ * File :   UI_QuestPopup.cs
+ * Desc :   현재 수락한 퀘스트 확인 Popup
+ *
+ & Functions
+ &  [Public]
+ &  : Init()                - 초기 설정
+ &  : SetQeust()            - 새 퀘스트 받기
+ &  : QuestTargetCount()    - 퀘스트 목표 개수 반영
+ &  : OnQuest()             - 퀘스트 목록 누를 시 퀘스트 정보 활성화
+ &  : SetQuestNotice()      - Scene UI 알람 활성화
+ &  : CloseQuestNotice()    - Scene UI 알람 비활성화
+ &
+ &  [Private]
+ &  : OnQuestPopup()        - 퀘스트창 활성화or비활성화
+ &  : SetInfo()             - 기본 설정
+ &  : RefreshUI()           - 새로고침 UI
+ *
+ */
+
 public class UI_QuestPopup : UI_Popup
 {
     enum Gameobejcts
@@ -36,11 +56,10 @@ public class UI_QuestPopup : UI_Popup
         QuestNoticeCountText,
     }
 
-    // 퀘스트 알림 개수
-    int maxquestNoticeCount = 5;
-    public List<UI_QuestNoticeSlot> questNoticeList;
+    public List<UI_QuestNoticeSlot> questNoticeList;    // Scene UI에 등록된 퀘스트 List
 
-    QuestData currentClickQuest;
+    private QuestData   currentClickQuest;              // 현재 클릭한 퀘스트 
+    private int         maxquestNoticeCount = 5;        // 퀘스트 알림 최대 개수
 
     public override bool Init()
     {
@@ -48,15 +67,16 @@ public class UI_QuestPopup : UI_Popup
             return false;
 
         popupType = Define.Popup.Quest;
-
         questNoticeList = new List<UI_QuestNoticeSlot>();
-
-        Managers.Input.KeyAction -= OnQuestPopup;
-        Managers.Input.KeyAction += OnQuestPopup;
         
+        // 자식 객체 불러오기
         BindObject(typeof(Gameobejcts));
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
+
+        // InputManager에 입력 등록
+        Managers.Input.KeyAction -= OnQuestPopup;
+        Managers.Input.KeyAction += OnQuestPopup;
 
         SetInfo();
 
@@ -67,12 +87,22 @@ public class UI_QuestPopup : UI_Popup
 
     void Update()
     {
-        // 퀘스트 목표 계속 새로고침
+        // 퀘스트창이 활성화되면 퀘스트 목표 실시간 새로고침
         if (Managers.Game.isPopups[Define.Popup.Quest] == true && currentClickQuest != null)
         {
             string str = currentClickQuest.targetDescription + "\n" + currentClickQuest.currnetTargetCount + " / " + currentClickQuest.targetCount;
             GetText((int)Texts.QuestTargetText).text = str;
         }
+    }
+
+    // 새로운 퀘스트 받기
+    public void SetQeust(QuestData quest)
+    {
+        quest.isAccept = true;
+        Managers.Game.CurrentQuest.Add(quest);
+
+        RefreshUI();
+        SetQuestNotice(quest);
     }
 
     // 퀘스트 목표 개수 반영
@@ -99,32 +129,6 @@ public class UI_QuestPopup : UI_Popup
                 }
             }
         }
-    }
-
-    void OnQuestPopup()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            Managers.Game.isPopups[Define.Popup.Quest] = !Managers.Game.isPopups[Define.Popup.Quest];
-
-            if (Managers.Game.isPopups[Define.Popup.Quest])
-            {
-                Managers.UI.OnPopupUI(this);
-                RefreshUI();
-            }
-            else
-                Managers.UI.ClosePopupUI(this);
-        }
-    }
-
-    // 새로운 퀘스트 받기
-    public void SetQeust(QuestData quest)
-    {
-        quest.isAccept = true;
-        Managers.Game.CurrentQuest.Add(quest);
-
-        RefreshUI();
-        SetQuestNotice(quest);
     }
 
     // 퀘스트 목록을 누르면
@@ -186,7 +190,25 @@ public class UI_QuestPopup : UI_Popup
         GetText((int)Texts.QuestNoticeCountText).text = questNoticeList.Count + " / " + maxquestNoticeCount;
     }
 
-    void SetInfo()
+    // 퀘스트창 활성화
+    private void OnQuestPopup()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            Managers.Game.isPopups[Define.Popup.Quest] = !Managers.Game.isPopups[Define.Popup.Quest];
+
+            // 퀘스트 Popup On/Off
+            if (Managers.Game.isPopups[Define.Popup.Quest])
+            {
+                Managers.UI.OnPopupUI(this);
+                RefreshUI();
+            }
+            else
+                Managers.UI.ClosePopupUI(this);
+        }
+    }
+
+    private void SetInfo()
     {
         GetButton((int)Buttons.ExitButton).onClick.AddListener(()=>{Managers.UI.ClosePopupUI(this);});
 
@@ -200,7 +222,7 @@ public class UI_QuestPopup : UI_Popup
             SetQuestNotice(Managers.Game.CurrentQuest[i]);
     }
 
-    void RefreshUI()
+    private void RefreshUI()
     {
         // 현재 퀘스트 확인
         Managers.Game.RefreshQuest();

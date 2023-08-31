@@ -95,7 +95,7 @@ public class UI_ShopBuyItem : UI_Base
             UI_NumberCheckPopup numberCheckPopup = Managers.UI.ShowPopupUI<UI_NumberCheckPopup>();
             if (numberCheckPopup.IsNull() == true) return;
 
-            numberCheckPopup.RefreshUI(_item, (int itemCount)=>
+            numberCheckPopup.SetInfo(_item, (int itemCount)=>
             {
                 Managers.Game.Gold -= _item.itemPrice * itemCount;
                 Managers.Game._playScene._inventory.AcquireItem(_item.ItemClone(), itemCount);

@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ Popup 스크립트 ]
-1. 모든 Popup의 부모이다.
-*/
+ * File :   UI_Popup.cs
+ * Desc :   모든 Popup의 부모
+ *
+ & Functions
+ &  [Public]
+ &  : Init()    - 초기 설정
+ *
+ */
 
 public class UI_Popup : UI_Base
 {
@@ -16,12 +21,8 @@ public class UI_Popup : UI_Base
         if (base.Init() == false)
             return false;
 
+        // Canvas 생성
         Managers.UI.SetCanvas(gameObject, true);
         return true;
-    }
-
-    public virtual void ClosePopupUI()
-    {
-        Managers.UI.ClosePopupUI(this);
     }
 }

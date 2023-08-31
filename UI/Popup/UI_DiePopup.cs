@@ -2,6 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * File :   UI_DiePopup.cs
+ * Desc :   플레이어 사망 시 부활 Popup
+ *
+ & Functions
+ &  [Public]
+ &  : Init() - 초기 설정 ( 버튼 Event 설정 )
+ *
+ */
+
 public class UI_DiePopup : UI_Popup
 {
     enum Buttons
@@ -17,6 +27,7 @@ public class UI_DiePopup : UI_Popup
         if (base.Init() == false)
             return false;
 
+        // 자식 객체 불러오기
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
 
