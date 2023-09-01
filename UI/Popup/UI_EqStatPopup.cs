@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 /*
  * File :   UI_EqStatPopup.cs
- * Desc :   장비, 스탯을 관리하는 Popup
+ * Desc :   장비, 스탯을 관리하는 Popup UI
  *
  & Functions
  &  [Public]

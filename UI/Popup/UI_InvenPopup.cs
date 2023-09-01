@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 /*
  * File :   UI_InvenPopup.cs
- * Desc :   인벤토리 관리 Popup 
+ * Desc :   인벤토리 관리 Popup UI
  *
  & Functions
  &  [Public]

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 /*
  * File :   UI_InputPopup.cs
- * Desc :   입력이 필요할 때 Popup (닉네임 입력 등..)
+ * Desc :   입력이 필요할 때 Popup UI (닉네임 입력 등..)
  *
  & Functions
  &  [Public]

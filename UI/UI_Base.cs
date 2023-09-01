@@ -6,6 +6,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/*
+ * File :   UI_Base.cs
+ * Desc :   UI 자동화
+ *          Bind()를 사용하여 Enum으로 필요한 하위 객체를 찾아 딕셔너리로 저장하여 관리한다.
+ *          BindEvent()를 사용하여 EventHandler를 간단하게 등록하여 사용할 수 있다.
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 // 모든 UI의 부모
 public abstract class UI_Base : MonoBehaviour
 {
@@ -82,7 +90,7 @@ public abstract class UI_Base : MonoBehaviour
         // EventSystem 관련 클래스이기 때문에 스크립트를 추가하면 클릭 드래그에 관한 메소드를 바로 사용 가능하다.
         UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);
 
-        // UI_EventHandler 안에 action을 받을 Action 델리게이트가 있음!
+        // UI_EventHandler 안에 action을 받을 Action이 있음!
         switch (type)
         {
             case Define.UIEvent.Enter:

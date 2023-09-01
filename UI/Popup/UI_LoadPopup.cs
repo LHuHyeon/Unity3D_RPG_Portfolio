@@ -6,7 +6,7 @@ using TMPro;
 
 /*
  * File :   UI_LoadPopup.cs
- * Desc :   Scene을 Load할 때 호출
+ * Desc :   Scene을 Load할 때 호출되는 Popup UI
  *
  & Functions
  &  [Public]

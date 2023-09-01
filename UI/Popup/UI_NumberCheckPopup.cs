@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 /*
  * File :   UI_NumberCheckPopup.cs
- * Desc :   개수 확인 Popup ( 현재 상점에서 사용 중 )
+ * Desc :   개수 확인 Popup UI ( 현재 상점에서 사용 중 )
  *
  & Functions
  &  [Public]

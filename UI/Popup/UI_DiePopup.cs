@@ -4,7 +4,7 @@ using UnityEngine;
 
 /*
  * File :   UI_DiePopup.cs
- * Desc :   플레이어 사망 시 부활 Popup
+ * Desc :   플레이어 사망 시 부활 Popup UI
  *
  & Functions
  &  [Public]

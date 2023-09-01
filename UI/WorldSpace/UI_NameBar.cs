@@ -3,7 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// 이름 띄우는 바 (아이템)
+/*
+ * File :   UI_NameBar.cs
+ * Desc :   Item 위에 생성되는 Name바 UI
+ *
+ & Functions
+ &  Init()          - 초기 설정 
+ &  FixedUpdate()   - 객체 상단 위치 고정 및 카메라 바라보도록 회전
+ *
+ */
+
 public class UI_NameBar : UI_Base
 {
     enum Gameobjects
@@ -16,7 +25,7 @@ public class UI_NameBar : UI_Base
         NameText,
     }
 
-    public string nameText;
+    public string       nameText;
 
     public override bool Init()
     {

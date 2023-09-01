@@ -4,7 +4,7 @@ using UnityEngine;
 
 /*
  * File :   UI_MenuPopup.cs
- * Desc :   Esc Menu Popup
+ * Desc :   Esc Menu Popup UI
  *          현재 띄어진 Popup이 없다면 Menu Popup을 활성화한다.
  *
  & Functions

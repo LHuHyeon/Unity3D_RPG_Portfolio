@@ -3,12 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 대화 Popup 스크립트 ]
-1. 특정 NPC와 대화할 때 사용되는 Popup이다.
-2. 자주 호출되는 함수 : SetInfo()
-2-1. 일반 대화 SetInfo() : string text를 받아 대화를 진행한다.
-2-2. 퀘스트 대화 SetInfo() : QuestData를 받아 퀘스트 대화를 진행 후 수락/거절한다.
-*/
+ * File :   UI_TalkPopup.cs
+ * Desc :   NPC와 대화할 때 사용되는 Popup UI
+ *
+ & Functions
+ &  [Public]
+ &  : Init()        - 초기 설정
+ &  : SetInfo()     - 대화 기능 설정
+ &  : SetInfo()     - 퀘스트 대화 기능 설정
+ &  : Clear()       - 초기화
+ &
+ &  [Private]
+ &  : Update()                  - 키 입력으로 대화 속도 증가 및 다음 대화 진행
+ &  : NextTalk()                - 대화 진행
+ &  : TypingText()              - 대화 출력 Coroutine
+ &  : OnClickNextButton()       - 다음 대화 버튼
+ &  : OnClickRefusalButton()    - 퀘스트 거절 버튼
+ &  : OnClickAcceptButton()     - 퀘스트 수락 버튼
+ &  : IsQuestActive()           - 퀘스트 관련 객체 활성화 여부
+ &  : SetQuestUI()              - 퀘스트 정보 설정
+ *
+ */
 
 public class UI_TalkPopup : UI_Popup
 {
@@ -37,34 +52,38 @@ public class UI_TalkPopup : UI_Popup
         QuestRewardExpText,
     }
 
-    TalkData talkData;
-    QuestData questData;
+    private TalkData    talkData;               // 대화 데이터
+    private QuestData   questData;              // 퀘스트 데이터
+
+    private int         nextTalkIndex = 0;
+
+    private bool        isNext = false;         // 다음 대화로 넘어갈 수 있는지
+    private bool        isNextTalk = false;     // 다음 대화가 있는지
 
     [SerializeField]
-    float delayTime = 0.1f;
-
-    int nextIndex = 0;
-
-    bool isNext = false;        // 다음 대화로 넘어갈 수 있는지
-    bool isNextTalk = false;    // 다음 대화가 있는지
+    private float       talkDelayTime = 0.1f;   // 대화 속도 딜레이  
 
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
+        popupType = Define.Popup.Talk;
+
+        // 자식 객체 가져오기
         BindObject(typeof(Gameobejcts));
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
 
-        popupType = Define.Popup.Talk;
-
+        // 퀘스트 정보 비활성화
         GetObject((int)Gameobejcts.QuestJournal).SetActive(false);
 
+        // 버튼 기능 등록
         GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextButton);
         GetButton((int)Buttons.RefusalButton).onClick.AddListener(OnClickRefusalButton);
         GetButton((int)Buttons.AcceptButton).onClick.AddListener(OnClickAcceptButton);
 
+        // 버튼 비활성화
         GetButton((int)Buttons.NextButton).gameObject.SetActive(false);
         GetButton((int)Buttons.RefusalButton).gameObject.SetActive(false);
         GetButton((int)Buttons.AcceptButton).gameObject.SetActive(false);
@@ -83,7 +102,7 @@ public class UI_TalkPopup : UI_Popup
             if (isNext == false)
             {
                 // 대화 속도 빠르게
-                delayTime = delayTime / 2;
+                talkDelayTime = talkDelayTime / 2;
                 return;
             }
 
@@ -129,28 +148,28 @@ public class UI_TalkPopup : UI_Popup
         talkData = talk;
         questData = quest;
 
-        nextIndex = 0;
+        nextTalkIndex = 0;
 
-        SetQuestUI();
-        NextTalk();
+        SetQuestUI();       // 퀘스트 정보 설정
+        NextTalk();         // 대화 시작
     }
 
-    void NextTalk()
+    private void NextTalk()
     {
         // 할 대화가 없으면 종료
-        if (nextIndex >= talkData.questStartTalk.Count)
+        if (nextTalkIndex >= talkData.questStartTalk.Count)
         {
             Clear();
             return;
         }
 
         // 대화 시작
-        StartCoroutine(TypingText(talkData.questStartTalk[nextIndex]));
+        StartCoroutine(TypingText(talkData.questStartTalk[nextTalkIndex]));
 
-        nextIndex++;
+        nextTalkIndex++;
 
-        // 다음 대화가 없으면 퀘스트 On
-        if (nextIndex >= talkData.questStartTalk.Count)
+        // 다음 대화가 없으면 퀘스트 정보 활성화
+        if (nextTalkIndex >= talkData.questStartTalk.Count)
         {
             isNextTalk = false;
             GetObject((int)Gameobejcts.QuestJournal).SetActive(true);
@@ -160,18 +179,18 @@ public class UI_TalkPopup : UI_Popup
     }
 
     // 타이핑 모션 코루틴
-    IEnumerator TypingText(string sentence)
+    private IEnumerator TypingText(string sentence)
     {
         GetText((int)Texts.TalkText).text = "";
 
         isNext = false;
-        delayTime = 0.05f;
+        talkDelayTime = 0.05f;
 
         // 대화 타이밍 모션 실행
         foreach(var letter in sentence)
         {
             GetText((int)Texts.TalkText).text += letter;
-            yield return new WaitForSeconds(delayTime);
+            yield return new WaitForSeconds(talkDelayTime);
         }
 
         isNext = true;
@@ -186,21 +205,21 @@ public class UI_TalkPopup : UI_Popup
     }
 
     // 다음 버튼
-    void OnClickNextButton()
+    private void OnClickNextButton()
     {
         GetButton((int)Buttons.NextButton).gameObject.SetActive(false);
         NextTalk();
     }
 
     // 거절 버튼
-    void OnClickRefusalButton()
+    private void OnClickRefusalButton()
     {
         IsQuestActive(false);
         SetInfo(talkData.refusalTalk);
     }
 
     // 수락 버튼
-    void OnClickAcceptButton()
+    private void OnClickAcceptButton()
     {
         Managers.Game._playScene._quest.SetQeust(questData);
 
@@ -210,14 +229,16 @@ public class UI_TalkPopup : UI_Popup
         Managers.UI.MakeWorldSpaceUI<UI_Navigation>().SetInfo(questData.targetPos);
     }
 
-    void IsQuestActive(bool isTrue)
+    // 퀘스트 활성화/비활성화
+    private void IsQuestActive(bool isTrue)
     {
         GetButton((int)Buttons.AcceptButton).gameObject.SetActive(isTrue);
         GetButton((int)Buttons.RefusalButton).gameObject.SetActive(isTrue);
         GetObject((int)Gameobejcts.QuestJournal).SetActive(isTrue);
     }
 
-    void SetQuestUI()
+    // 퀘스트 정보 설정
+    private void SetQuestUI()
     {
         GetText((int)Texts.QuestTitleText).text = questData.titleName;
         GetText((int)Texts.QuestDescText).text = questData.description;

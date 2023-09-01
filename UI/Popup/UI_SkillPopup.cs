@@ -4,11 +4,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
-[ 스킬 Popup 스크립트 ]
-1. 레벨에 따른 스킬을 흭득할 수 Popup이다.
-2. 해당 클래스는 Popup만 활성화/비활성화 해주면 그 안의 슬롯들이 기능을 담당하고 있다.
-3. 슬롯 : UI_SkillItem.cs(스킬 슬롯), UI_SkillBarItem.cs(스킬 등록 슬롯)
-*/
+ * File :   UI_SkillPopup.cs
+ * Desc :   스킬 슬롯을 관리하는 Popup UI
+ *
+ & Functions
+ &  [Public]
+ &  : Init()            - 초기 설정
+ &
+ &  [Private]
+ &  : OnSkillPopup()    - 스킬창 활성화or비활성화
+ &  : SetInfo()         - 기본 설정
+ &  : Exit()            - 나가기 (초기화)
+ *
+ */
 
 public class UI_SkillPopup : UI_Popup
 {
@@ -24,6 +32,7 @@ public class UI_SkillPopup : UI_Popup
         if (base.Init() == false)
             return false;
     
+        // 자식 객체 불러오기
         BindObject(typeof(Gameobjects));
 
         popupType = Define.Popup.SkillUI;
@@ -38,12 +47,14 @@ public class UI_SkillPopup : UI_Popup
         return true;
     }
 
-    void OnSkillPopup()
+    // 스킬창 활성화
+    private void OnSkillPopup()
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
             Managers.Game.isPopups[Define.Popup.SkillUI] = !Managers.Game.isPopups[Define.Popup.SkillUI];
 
+            // 스킬창 Popup On/Off
             if (Managers.Game.isPopups[Define.Popup.SkillUI])
                 Managers.UI.OnPopupUI(this);
             else
@@ -51,7 +62,7 @@ public class UI_SkillPopup : UI_Popup
         }
     }
 
-    void SetInfo()
+    private void SetInfo()
     {
         // Title 잡고 인벤토리 이동
         RectTransform skillPopupPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
@@ -77,7 +88,7 @@ public class UI_SkillPopup : UI_Popup
         }, Define.UIEvent.Click);
     }
 
-    void Exit()
+    private void Exit()
     {
         Managers.Game._playScene._slotTip.OnSlotTip(false);
         Managers.UI.ClosePopupUI(this);

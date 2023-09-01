@@ -4,10 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /*
-[ 시작 Scene 스크립트 ]
-1. TitleScene이 로드되면 TitleScene.cs에 의해서 생성되어 사용된다.
-2. 게임 시작, 이어 하기, 종료 하기 버튼을 가지고 있다.
-*/
+ * File :   UI_TitleScene.cs
+ * Desc :   게임 플레이 Scene UI
+ *
+ & Functions
+ &  [Public]
+ &  : Init()                - 초기 설정
+ &
+ &  [Private]
+ &  : OnClickStartButton()  - 게임 시작 버튼
+ &  : OnClickLoadButton()   - 세이브 로드 버튼
+ &  : OnClickExitButton()   - 게임 나가기 버튼
+ *
+ */
 
 public class UI_TitleScene : UI_Scene
 {
@@ -28,13 +37,16 @@ public class UI_TitleScene : UI_Scene
         if (base.Init() == false)
             return false;
 
+        // 자식 객체 불러오기
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
 
+        // 버튼 기능 등록
         GetButton((int)Buttons.StartButton).onClick.AddListener(OnClickStartButton);
         GetButton((int)Buttons.LoadButton).onClick.AddListener(OnClickLoadButton);
         GetButton((int)Buttons.ExitButton).onClick.AddListener(OnClickExitButton);
 
+        // 세이브 로드 여부 확인
         if (Managers.Game.IsSaveLoad() == false)
         {
             Color _color = GetText((int)Texts.LoadButtonText).color;
@@ -48,12 +60,14 @@ public class UI_TitleScene : UI_Scene
         return true;
     }
     
-    void OnClickStartButton()
+    // 시작 버튼
+    private void OnClickStartButton()
     {
         Managers.Scene.LoadScene(Define.Scene.PlayerCustom);
     }
 
-    void OnClickLoadButton()
+    // 세이브 로드 버튼
+    private void OnClickLoadButton()
     {
         if (Managers.Game.LoadGame() == false)
             return;
@@ -75,7 +89,8 @@ public class UI_TitleScene : UI_Scene
         }
     }
 
-    void OnClickExitButton()
+    // 나가기 버튼
+    private void OnClickExitButton()
     {
         Application.Quit();
     }

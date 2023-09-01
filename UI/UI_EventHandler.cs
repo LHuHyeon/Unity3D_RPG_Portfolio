@@ -4,7 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-// PointerEventData 정리 코드
+/*
+ * File :   UI_EventHandler.cs
+ * Desc :   각각의 PointerEvetntData를 Action으로 받아 한번에 처리
+ *          [ Rookiss의 MMORPG Game Part 3 참고. ]
+ */
+
 public class UI_EventHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     public Action<PointerEventData> OnEnterHandler = null;

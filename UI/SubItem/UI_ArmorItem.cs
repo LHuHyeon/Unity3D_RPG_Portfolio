@@ -10,10 +10,31 @@ using UnityEngine.UI;
 2. 드래그 드랍 or 우클릭으로 장비 장착이 가능하다.
 */
 
+/*
+ * File :   UI_ArmorItem.cs
+ * Desc :   방어구 아이템을 장착/해제할 수 있다.
+ *
+ & Functions
+ &  [Public]
+ &  : Init()                - 초기 설정
+ &  : IsMiniMap()           - 미니맵 활성화 여부
+ &  : RefreshUI()           - 새로고침 UI
+ &  : SetQuestNoticeBar()   - Scene UI 퀘스트 알림 추가
+ &  : UsingItem()           - 퀵슬롯 아이템 사용
+ &  : OnMonsterBar()        - 몬스터바 활성화
+ &  : CloseMonsterBar()     - 몬스터바 비활성화
+ &
+ &  [Private]
+ &  : RefreshStat()         - 스탯 새로고침
+ &  : SetRatio()            - Slider NaN 방지용
+ &  : SetInfo()             - 기능 설정
+ *
+ */
+
 public class UI_ArmorItem : UI_ItemDragSlot
 {
-    public Define.ArmorType armorType = Define.ArmorType.Unknown;
-    public ArmorItemData armorItem;
+    public Define.ArmorType     armorType = Define.ArmorType.Unknown;
+    public ArmorItemData        armorItem;
 
     public override void SetInfo()
     {
@@ -27,6 +48,34 @@ public class UI_ArmorItem : UI_ItemDragSlot
         }
 
         base.SetInfo();
+    }
+
+    public void ChangeArmor(UI_ItemSlot itemSlot)
+    {
+        ChangeSlot(itemSlot); 
+    }
+
+    public override void AddItem(ItemData _item, int count = 1)
+    {
+        base.AddItem(_item, count);
+
+        armorItem = _item as ArmorItemData;
+        
+        // 장착 중인 장비가 있다면 비활성화
+        if (Managers.Game.CurrentArmor.ContainsKey(armorType) == true)
+        {
+            // 현재 장착한 장비 가져오기
+            ArmorItemData currentArmor = Managers.Game.CurrentArmor[armorType];
+
+            // 플레이어가 현재 입고 있는 장비 오브젝트 비활성화
+            EquipmentActive(currentArmor, false);
+
+            // 스탯 해제
+            Managers.Game.RefreshArmor(currentArmor, false);
+        }
+
+        // 방어구 장착
+        AddArmor(armorItem);
     }
 
     // 우클릭하여 장비 벗기
@@ -73,8 +122,6 @@ public class UI_ArmorItem : UI_ItemDragSlot
         }
     }
 
-    public void ChangeArmor(UI_ItemSlot itemSlot) { ChangeSlot(itemSlot); }
-
     protected override void ChangeSlot(UI_ItemSlot itemSlot)
     {
         // 장비 확인
@@ -106,31 +153,8 @@ public class UI_ArmorItem : UI_ItemDragSlot
             inven.ClearSlot();
     }
 
-    public override void AddItem(ItemData _item, int count = 1)
-    {
-        base.AddItem(_item, count);
-
-        armorItem = _item as ArmorItemData;
-        
-        // 장착 중인 장비가 있다면 비활성화
-        if (Managers.Game.CurrentArmor.ContainsKey(armorType) == true)
-        {
-            // 현재 장착한 장비 가져오기
-            ArmorItemData currentArmor = Managers.Game.CurrentArmor[armorType];
-
-            // 플레이어가 현재 입고 있는 장비 오브젝트 비활성화
-            EquipmentActive(currentArmor, false);
-
-            // 스탯 해제
-            Managers.Game.RefreshArmor(currentArmor, false);
-        }
-
-        // 방어구 장착
-        AddArmor(armorItem);
-    }
-
     // 장비 장착
-    void AddArmor(ArmorItemData armorItem)
+    private void AddArmor(ArmorItemData armorItem)
     {
         // 장비 장착 진행
         if (Managers.Game.CurrentArmor.ContainsKey(armorType) == false)
@@ -146,7 +170,7 @@ public class UI_ArmorItem : UI_ItemDragSlot
     }
 
     // 캐릭터 장비 파츠 활성화 여부
-    void EquipmentActive(ArmorItemData armor, bool isActive)
+    private void EquipmentActive(ArmorItemData armor, bool isActive)
     {
         // 아이템이 현재 입고 있는 장비를 알고 있다면
         if (armor.charEquipment.IsNull() == false)

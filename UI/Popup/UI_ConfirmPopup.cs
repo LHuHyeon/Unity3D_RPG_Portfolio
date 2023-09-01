@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 /*
  * File :   UI_ConfirmPopup.cs
- * Desc :   확인/취소 Popup
+ * Desc :   확인/취소 Popup UI
  *
  & Functions
  &  [Public]

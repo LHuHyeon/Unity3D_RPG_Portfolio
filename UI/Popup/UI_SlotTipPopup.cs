@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 슬롯 정보 Popup 스크립트 ]
-1. 슬롯안에 들어있는 아이템의 정보를 확인할 수 있는 Popup이다.
-2. 자주 호출되는 함수 : OnSlotTip(활성화 여부), RefreshUI(아이템)
-2-1. OnSlotTip(활성화 여부) : 슬롯들이 호출하여 사용한다.
-*/
+ * File :   UI_SlotTipPopup.cs
+ * Desc :   슬롯의 아이템 정보를 확인하는 Popup UI
+ *
+ & Functions
+ &  [Public]
+ &  : Init()        - 초기 설정
+ &
+ &  [Private]
+ &  : OnSlotTip()   - 슬롯 정보 활성화
+ &  : RefreshUI()   - 새로고침 UI (슬롯 정보 새로고침)
+ &  : SetColor()    - 색 설정
+ *
+ */
 
 public class UI_SlotTipPopup : UI_Popup
 {
@@ -30,7 +38,7 @@ public class UI_SlotTipPopup : UI_Popup
         ItemStatText,
     }
 
-    public RectTransform background;
+    public RectTransform    background;
 
     public override bool Init()
     {
@@ -48,6 +56,7 @@ public class UI_SlotTipPopup : UI_Popup
         return true;
     }
 
+    // 슬롯 팁 활성화
     public void OnSlotTip(bool isActive)
     {
         if (isActive)
@@ -122,15 +131,15 @@ public class UI_SlotTipPopup : UI_Popup
             // 강화 확인
             if (armor.upgradeCount > 0)
             {
-                statStr += armor.defnece > 0 ? $"방어력 {armor.defnece} (+{armor.addDefnece})\n" : "";
-                statStr += armor.hp > 0 ? $"체력 {armor.hp} (+{armor.addHp})\n" : "";
-                statStr += armor.mp > 0 ? $"마나 {armor.mp} (+{armor.addMp})\n" : "";
+                statStr += armor.defnece    > 0 ? $"방어력 {armor.defnece} (+{armor.addDefnece})\n" : "";
+                statStr += armor.hp         > 0 ? $"체력 {armor.hp} (+{armor.addHp})\n" : "";
+                statStr += armor.mp         > 0 ? $"마나 {armor.mp} (+{armor.addMp})\n" : "";
             }
             else
             {
-                statStr += armor.defnece > 0 ? $"방어력 {armor.defnece}\n" : "";
-                statStr += armor.hp > 0 ? $"체력 {armor.hp}\n" : "";
-                statStr += armor.mp > 0 ? $"마나 {armor.mp}\n" : "";
+                statStr += armor.defnece    > 0 ? $"방어력 {armor.defnece}\n" : "";
+                statStr += armor.hp         > 0 ? $"체력 {armor.hp}\n" : "";
+                statStr += armor.mp         > 0 ? $"마나 {armor.mp}\n" : "";
             }
             
             statStr += armor.moveSpeed > 0 ? $"이동속도 {armor.moveSpeed}\n" : "";
@@ -150,15 +159,9 @@ public class UI_SlotTipPopup : UI_Popup
         }
     }
 
-    void SetColor(Color color)
+    private void SetColor(Color color)
     {
         GetText((int)Texts.ItemNameText).color = color;
         GetText((int)Texts.ItemGradeText).color = color;
-    }
-
-    // 스킬 정보 확인시 새로고침
-    public void RefreshUI(SkillData skill)
-    {
-
     }
 }

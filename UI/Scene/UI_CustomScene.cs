@@ -4,11 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-[ 커스텀 Scene 스크립트 ]
-1. CustomScene이 로드되면 CustomScene.cs에 의해서 생성되어 사용된다.
-2. Init할 때 CharacterCustom.cs를 Find하여 커스텀한다.
-3. 커스텀 방법은 UI_CustomButton.cs으로 진행한다.
-*/
+ * File :   UI_CustomScene.cs
+ * Desc :   캐릭터 커스텀 Scene UI
+ *
+ & Functions
+ &  [Public]
+ &  : Init()        - 초기 설정
+ &
+ &  [Private]
+ &  : OnClickCheckButton()  - 커스텀이 끝날 때 확인 버튼 
+ &  : LoadPopup()           - Scene을 로드할 Popup 생성
+ &  : OnClickExitButton()   - 커스텀 나가기 버튼
+ *
+ */
 
 public class UI_CustomScene : UI_Scene
 {
@@ -23,45 +31,53 @@ public class UI_CustomScene : UI_Scene
         ExitButton,
     }
 
-    public CharacterCustom custom;
+    public CharacterCustom      custom;
 
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
+        // 자식 객체 불러오기
         BindObject(typeof(GameObjects));
         BindButton(typeof(Buttons));
 
+        // 커스텀할 캐릭터 찾기
         if (custom.IsNull() == true)
             custom = GameObject.FindObjectOfType<CharacterCustom>();
 
+        // 커스텀 버튼에 캐릭터 객체 보내주기
         foreach(Transform child in GetObject((int)GameObjects.Grid).transform)
             child.GetComponent<UI_CustomButton>().SetInfo(custom);
 
+        // 버튼 기능 등록
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
         GetButton((int)Buttons.ExitButton).onClick.AddListener(OnClickExitButton);
 
         return true;
     }
 
-    void OnClickCheckButton()
+    // 커스텀이 끝날 때 확인 버튼
+    private void OnClickCheckButton()
     {
+        // 캐릭터 회전 중지
         custom.stopRotation = true;
         custom.SaveCustom();
 
+        // 입력 Popup 생성 후 이름 받기
         Managers.UI.ShowPopupUI<UI_InputPopup>().SetInfo((string inputText)=>
         {
             Managers.Game.Name = inputText;
             LoadPopup();
         }
-        , "이름을 입력해 주세요", "이름 입력란", Define.NameRegex,
-        ()=>{
+        , "이름을 입력해 주세요", "이름 입력란", Define.NameRegex
+        , ()=>{
             custom.stopRotation = false;
         });
     }
 
-    void LoadPopup()
+    // Scene을 로드할 Popup 생성
+    private void LoadPopup()
     {
         if(Application.internetReachability == NetworkReachability.NotReachable)
         {
@@ -80,7 +96,8 @@ public class UI_CustomScene : UI_Scene
         }
     }
 
-    void OnClickExitButton()
+    // 커스텀 나가기 버튼
+    private void OnClickExitButton()
     {
         Managers.Scene.LoadScene(Define.Scene.Title);
     }
