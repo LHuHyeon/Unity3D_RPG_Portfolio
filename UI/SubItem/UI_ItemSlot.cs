@@ -4,41 +4,35 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /*
-[ 아이템 Slot SubItem 스크립트 ]
-1. 모든 아이템 Slot은 UI_ItemSlot을 상속받는다.
-2. 아이템 Slot에서 공통적으로 사용되는 기능을 가지고 있다.
-*/
+ * File :   UI_ItemSlot.cs
+ * Desc :   모든 Item관련 Slot은 해당 클래스를 상속받는다.
+ *
+ & Functions
+ &  [Public]
+ &  : SetInfo()         - 기능 설정
+ &  : AddItem()         - 아이템 추가
+ &  : SetCount()        - 개수 설정
+ &  : ClearSlot()       - 초기화
+ &
+ &  [Protected]
+ &  : OnEnterSlot()     - 마우스가 Slot과 접촉하면 SlotTip 활성화
+ &  : OnExitSlot()      - 마우스가 Slot과 접촉이 해제되면 SlotTip 비활성화
+ &  : SetColor()        - 색깔 설정
+ *
+ */
 
 public class UI_ItemSlot : UI_Slot
 {
     enum Texts { ItemCountText, }
 
-    public ItemData item;
-    public int itemCount;
+    public ItemData     item;
+    public int          itemCount;
 
     public override void SetInfo()
     {
         base.SetInfo();
 
         BindText(typeof(Texts));
-    }
-
-    // 마우스가 슬롯에 닿았다면 정보 활성화
-    protected override void OnEnterSlot(PointerEventData eventData)
-    {
-        if (item.IsNull() == false)
-        {
-            Managers.Game._playScene._slotTip.OnSlotTip(true);
-            Managers.Game._playScene._slotTip.background.position = icon.transform.position;
-            Managers.Game._playScene._slotTip.RefreshUI(item);
-        }
-    }
-
-    // 마우스가 슬롯에서 빠져나오면 정보 비활성화
-    protected override void OnExitSlot(PointerEventData eventData)
-    {
-        if (item.IsNull() == false)
-            Managers.Game._playScene._slotTip.OnSlotTip(false);
     }
 
     // 아이템 등록
@@ -91,6 +85,24 @@ public class UI_ItemSlot : UI_Slot
         // 개수가 없다면
         if (itemCount <= 0)
             ClearSlot();
+    }
+
+    // 마우스가 슬롯에 닿았다면 정보 활성화
+    protected override void OnEnterSlot(PointerEventData eventData)
+    {
+        if (item.IsNull() == false)
+        {
+            Managers.Game._playScene._slotTip.OnSlotTip(true);
+            Managers.Game._playScene._slotTip.background.position = icon.transform.position;
+            Managers.Game._playScene._slotTip.RefreshUI(item);
+        }
+    }
+
+    // 마우스가 슬롯에서 빠져나오면 정보 비활성화
+    protected override void OnExitSlot(PointerEventData eventData)
+    {
+        if (item.IsNull() == false)
+            Managers.Game._playScene._slotTip.OnSlotTip(false);
     }
 
     // 투명도 설정 (0 ~ 255)

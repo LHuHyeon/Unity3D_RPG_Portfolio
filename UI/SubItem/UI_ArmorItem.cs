@@ -5,29 +5,25 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /*
-[ 방어구 Slot 스크립트 ]
-1. EqStatPopup안에 있는 방어구 Slot으로 장비를 장착/해제할 수 있다.
-2. 드래그 드랍 or 우클릭으로 장비 장착이 가능하다.
-*/
-
-/*
  * File :   UI_ArmorItem.cs
- * Desc :   방어구 아이템을 장착/해제할 수 있다.
+ * Desc :   UI_EqStatPopup.cs의 하위객체에서 사용되며 방어구 아이템을 장착/해제할 수 있다.
  *
  & Functions
  &  [Public]
- &  : Init()                - 초기 설정
- &  : IsMiniMap()           - 미니맵 활성화 여부
- &  : RefreshUI()           - 새로고침 UI
- &  : SetQuestNoticeBar()   - Scene UI 퀘스트 알림 추가
- &  : UsingItem()           - 퀵슬롯 아이템 사용
- &  : OnMonsterBar()        - 몬스터바 활성화
- &  : CloseMonsterBar()     - 몬스터바 비활성화
+ &  : SetInfo()         - 기능 설정
+ &  : ChangeArmor()     - 방어구 장착 및 교체
+ &  : AddItem()         - 아이템 추가
+ &  : ClearSlot()       - 초기화
+ &
+ &  [Protected]
+ &  : OnClickSlot()     - 슬롯 우클릭 시                       (장비 해제)
+ &  : OnEndDragSlot()   - 마우스 클릭을 해제한 위치가 UI라면    (인벤으로 보내기)
+ &  : OnDropSlot()      - 현재 슬롯에 마우스 클릭을 때면        (장비 장착)
+ &  : ChangeSlot()      - 슬롯 교체
  &
  &  [Private]
- &  : RefreshStat()         - 스탯 새로고침
- &  : SetRatio()            - Slider NaN 방지용
- &  : SetInfo()             - 기능 설정
+ &  : AddArmor()        - 장비 장착 진행
+ &  : EquipmentActive() - 장비 파츠 확인
  *
  */
 
@@ -50,6 +46,7 @@ public class UI_ArmorItem : UI_ItemDragSlot
         base.SetInfo();
     }
 
+    // 방어구 교체
     public void ChangeArmor(UI_ItemSlot itemSlot)
     {
         ChangeSlot(itemSlot); 
@@ -78,12 +75,12 @@ public class UI_ArmorItem : UI_ItemDragSlot
         AddArmor(armorItem);
     }
 
-    // 우클릭하여 장비 벗기
     protected override void OnClickSlot(PointerEventData eventData)
     {
         if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
             return;
 
+        // 우클릭하여 장비 벗기
         if (Input.GetMouseButtonUp(1))
         {
             // 인벤으로 보내고 초기화
@@ -92,7 +89,6 @@ public class UI_ArmorItem : UI_ItemDragSlot
         }
     }
 
-    // 드래그 끝날 때
     protected override void OnEndDragSlot(PointerEventData eventData)
     {
         // 아이템을 버린 위치가 UI가 아니라면
@@ -106,7 +102,6 @@ public class UI_ArmorItem : UI_ItemDragSlot
         base.OnEndDragSlot(eventData);
     }
 
-    // Slot을 Drop 받을 때
     protected override void OnDropSlot(PointerEventData eventData)
     {
         UI_Slot dragSlot = UI_DragSlot.instance.dragSlotItem;
@@ -133,7 +128,7 @@ public class UI_ArmorItem : UI_ItemDragSlot
         if (armorType != armor.armorType)
             return;
 
-        // 레벨 체크
+        // 레벨 확인
         if (Managers.Game.Level < armor.minLevel)
         {
             Managers.UI.MakeSubItem<UI_Guide>().SetInfo("레벨이 부족합니다.", new Color(1f, 0.5f, 0f));

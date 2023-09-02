@@ -6,16 +6,32 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /*
-[ 인벤토리 Slot 스크립트 ]
-1. 인벤토리 안에서 아이템을 받는 Slot이다.
-2. 장비, 상점, 소비 등의 Slot들과 자주 드나드는 곳이다.
-*/
+ * File :   UI_InvenItem.cs
+ * Desc :   UI_InvenPopup.cs에서 생성되며  인벤토리 안에서 아이템을 관리하는 Slot
+ *
+ & Functions
+ &  [Public]
+ &  : SetInfo()             - 기능 설정
+ &  : AddItem()             - 아이템 추가
+ &  : ClearSlot()           - 초기화
+ &
+ &  [Protected]
+ &  : OnClickSlot()         - 슬롯 우클릭 시                        (장비 장착 또는 아이템 사용)
+ &  : OnBeginDragSlot()     - 마우스 클릭을 해제하면 임시 슬롯 초기화
+ &  : OnDropSlot()          - 현재 슬롯에 마우스 클릭을 때면          (아이템 받기)
+ &  : ChangeSlot()          - 슬롯 교체
+ &
+ &  [Private]
+ &  : ItemTypeCheck()       - 현재 슬롯의 아이템 타입 체크
+ &  : AddSlot()             - 슬롯 받기
+ *
+ */
 
 public class UI_InvenItem : UI_ItemDragSlot
 {
     enum GameObjects { Lock, }
 
-    public int invenNumber;     // 인벤 자리 번호
+    public int  invenNumber;     // 인벤 자리 번호
 
     // 상점 판매 등록될 시 인벤 Lock
     private bool isLock = false;
@@ -36,6 +52,18 @@ public class UI_InvenItem : UI_ItemDragSlot
         BindObject(typeof(GameObjects));
 
         GetObject((int)GameObjects.Lock).SetActive(false);
+    }
+
+    // 아이템 등록
+    public override void AddItem(ItemData _item, int count = 1)
+    {
+        base.AddItem(_item, count);
+
+        // 매니저에 저장
+        if (Managers.Game.InvenItem.ContainsKey(invenNumber) == false)
+            Managers.Game.InvenItem.Add(invenNumber, _item);
+        else
+            Managers.Game.InvenItem[invenNumber] = _item;
     }
 
     // 슬롯 우클릭
@@ -159,17 +187,6 @@ public class UI_InvenItem : UI_ItemDragSlot
         }
     }
 
-    private bool ItemTypeCheck<T>() where T : EquipmentData
-    {
-        if (item.IsNull() == false)
-        {
-            if ((item is T) == true)
-                return true;
-        }
-
-        return false;
-    }
-
     protected override void ChangeSlot(UI_ItemSlot itemSlot)
     {
         ItemData _tempItem = item;
@@ -186,6 +203,18 @@ public class UI_InvenItem : UI_ItemDragSlot
             invenSlot.ClearSlot();
     }
 
+    // 현재 슬롯의 아이템 타입 체크
+    private bool ItemTypeCheck<T>() where T : EquipmentData
+    {
+        if (item.IsNull() == false)
+        {
+            if ((item is T) == true)
+                return true;
+        }
+
+        return false;
+    }
+
     // 슬롯 받기
     private void AddSlot<T>(T slot, int count = 1) where T : UI_ItemDragSlot
     {
@@ -196,18 +225,6 @@ public class UI_InvenItem : UI_ItemDragSlot
             AddItem(slot.item, count);
 
         slot.ClearSlot();
-    }
-
-    // 아이템 등록
-    public override void AddItem(ItemData _item, int count = 1)
-    {
-        base.AddItem(_item, count);
-
-        // 매니저에 저장
-        if (Managers.Game.InvenItem.ContainsKey(invenNumber) == false)
-            Managers.Game.InvenItem.Add(invenNumber, _item);
-        else
-            Managers.Game.InvenItem[invenNumber] = _item;
     }
 
     // 슬롯 초기화

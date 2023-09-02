@@ -4,22 +4,28 @@ using UnityEngine;
 using TMPro;
 
 /*
-[ 가이드 UI 스크립트 ]
-1. Level Up, 돈 부족 등.. 상황에 띄울 수 있는 Text UI이다.
-2. 자주 호출되는 함수 : SetInfo()
-*/
+ * File :   UI_Guide.cs
+ * Desc :   안내문, 경고문 등 상황에 띄울 수 있는 가이드 UI
+ *
+ & Functions
+ &  [Public]
+ &  : SetInfo()             - 기능 설정 (안내 메시지 설정)
+ &
+ &  [Private]
+ &  : MessageCoroutine()    - 메시지가 붕뜨며 사라지는 코루틴
+ *
+ */
 
 public class UI_Guide : UI_Base
 {
     [SerializeField]
-    TextMeshProUGUI _messageText;
-
-    Color _color;
-
-    Coroutine co;
+    private TextMeshProUGUI     _messageText;
+    private Color               _color;
+    private Coroutine           co;
 
     public void SetInfo(string messageText, Color color)
     {
+        // 초기화
         _messageText.text = messageText;
         _messageText.transform.localPosition = Vector3.zero;
         _color = color;
@@ -29,7 +35,7 @@ public class UI_Guide : UI_Base
         co = StartCoroutine(MessageCoroutine());
     }
 
-    IEnumerator MessageCoroutine()
+    private IEnumerator MessageCoroutine()
     {
         yield return new WaitForSeconds(1f);
 

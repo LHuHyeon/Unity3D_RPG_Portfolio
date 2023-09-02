@@ -249,7 +249,7 @@ public class UI_QuestPopup : UI_Popup
         // 퀘스트 목록 채우기
         foreach(QuestData questData in Managers.Game.CurrentQuest)
         {
-            UI_QuestSlot questSlot = Managers.UI.MakeSubItem<UI_QuestSlot>(parent: GetObject((int)Gameobejcts.Content).transform);
+            UI_QuestButton questSlot = Managers.UI.MakeSubItem<UI_QuestButton>(parent: GetObject((int)Gameobejcts.Content).transform);
             questSlot.SetInfo(questData);
         }
         
