@@ -16,9 +16,9 @@ using UnityEngine.UI;
  &  : ClearSlot()           - 초기화
  &
  &  [Protected]
- &  : OnClickSlot()         - 슬롯 우클릭 시                        (장비 장착 또는 아이템 사용)
- &  : OnBeginDragSlot()     - 마우스 클릭을 해제하면 임시 슬롯 초기화
- &  : OnDropSlot()          - 현재 슬롯에 마우스 클릭을 때면          (아이템 받기)
+ &  : OnClickSlot()         - 슬롯 우클릭 시 "장비 장착 또는 아이템 사용"
+ &  : OnBeginDragSlot()     - 마우스 클릭을 해제하면 "임시 슬롯 초기화"
+ &  : OnDropSlot()          - 현재 슬롯에 마우스 클릭을 때면 "아이템 받기"
  &  : ChangeSlot()          - 슬롯 교체
  &
  &  [Private]
@@ -189,14 +189,17 @@ public class UI_InvenItem : UI_ItemDragSlot
 
     protected override void ChangeSlot(UI_ItemSlot itemSlot)
     {
+        // 임시 변수
         ItemData _tempItem = item;
         int _tempItemCount = itemCount;
 
+        // 인벤 가져오기
         UI_InvenItem invenSlot = itemSlot as UI_InvenItem;
 
+        // 새로 받은 슬롯 Add
         AddItem(invenSlot.item, invenSlot.itemCount);
 
-        // 현재 슬롯 아이템을 드래그된 슬롯에 Add
+        // 자신의 아이템을 상대 슬롯에 전달
         if (_tempItem.IsNull() == false)
             invenSlot.AddItem(_tempItem, _tempItemCount);
         else

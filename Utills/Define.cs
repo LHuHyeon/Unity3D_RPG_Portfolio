@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 타입 정의
+/*
+ * File :   Define.cs
+ * Desc :   타입 정의
+ */
+
 public class Define : MonoBehaviour
 {
     public enum DefaultPart // 캐릭터 기본 부위, 커스텀

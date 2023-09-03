@@ -5,10 +5,24 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 /*
-[ 업그레이드 Slot 스크립트 ]
-1. 업그레이드 Popup의 slot이다.
-2. 인벤으로 부터 장비를 받을 수 있고, 강화를 할 수 있다.
-*/
+ * File :   UI_UpgradeItem.cs
+ * Desc :   UI_UpgradePopup.cs에서 사용되며 장비를 업그레이드하는 등록 Slot
+ *
+ & Functions
+ &  [Public]
+ &  : SetInfo()             - 기능 설정
+ &  : ClearSlot()           - 초기화
+ &
+ &  [Protected]
+ &  : OnClickSlot()         - 슬롯 우클릭 시 "장비 등록 해제"
+ &  : OnEndDragSlot()       - 마우스 클릭을 해제하면 "등록 해제"
+ &  : OnDropSlot()          - 현재 슬롯에 마우스 클릭을 때면 "장비 등록"
+ &  : ChangeSlot()          - 슬롯 교체
+ &
+ &  [Private]
+ &  : GetSlotInteract()     - 현재 슬롯의 아이템 타입 체크
+ *
+ */
 
 public class UI_UpgradeItem : UI_ItemDragSlot
 {
@@ -16,6 +30,7 @@ public class UI_UpgradeItem : UI_ItemDragSlot
     {
         base.SetInfo();
 
+        // 인벤으로 부터 우클릭 아이템 받기 등록
         Managers.Game._getSlotInteract -= GetSlotInteract;
         Managers.Game._getSlotInteract += GetSlotInteract;
     }
@@ -25,9 +40,10 @@ public class UI_UpgradeItem : UI_ItemDragSlot
         if (item.IsNull() == true || UI_DragSlot.instance.dragSlotItem.IsNull() == false)
             return;
 
-        // 슬롯 우클릭
+        // 슬롯 우클릭 시
         if (Input.GetMouseButtonUp(1))
         {
+            // 인벤토리로 이동
             Managers.Game._playScene._inventory.AcquireItem(item);
             ClearSlot();
         }
@@ -38,6 +54,7 @@ public class UI_UpgradeItem : UI_ItemDragSlot
         // 아이템을 버린 위치가 UI가 아니라면
         if (item.IsNull() == false && !EventSystem.current.IsPointerOverGameObject())
         {
+            // 인벤토리로 이동
             Managers.Game._playScene._inventory.AcquireItem(item);
             ClearSlot();
         }
@@ -53,6 +70,7 @@ public class UI_UpgradeItem : UI_ItemDragSlot
         if (dragSlot == this)
             return;
 
+        // 슬롯 교체 
         ChangeSlot(dragSlot as UI_ItemSlot);
     }
 
@@ -74,9 +92,10 @@ public class UI_UpgradeItem : UI_ItemDragSlot
         (itemSlot as UI_InvenItem).ClearSlot();
     }
 
-    // 우클릭 아이템 받기
-    void GetSlotInteract(UI_InvenItem invenSlot)
+    // 인벤토리로 부터 우클릭으로 장비 받기
+    private void GetSlotInteract(UI_InvenItem invenSlot)
     {
+        // UI_UpgradePopup Prefab이 활성화 되어 있다면
         if (Managers.Game._playScene._upgrade.gameObject.activeSelf == true)
             ChangeSlot(invenSlot);
     }

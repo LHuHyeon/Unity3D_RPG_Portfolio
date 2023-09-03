@@ -4,10 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /*
-[ 상점 판매 Slot 스크립트 ]
-1. 상점 Popup의 판매 Slot이다.
-2. 인벤으로 부터 판매 아이템을 받는다.
-*/
+ * File :   UI_ShopSaleItem.cs
+ * Desc :   UI_ShopPopup.cs에서 생성되며 아이템 판매가 등록됐을 때 기능
+ *
+ & Functions
+ &  [Public]
+ &  : Init()                - 초기 설정
+ &  : SetInfo()             - 기능 설정
+ &  : GetSale()             - 판매 진행
+ &  : Clear()               - 초기화
+ &
+ &  [Prviate]
+ &  : OnClickCloseButton()  - 판매 등록 취소
+ *
+ */
 
 public class UI_ShopSaleItem : UI_Base
 {
@@ -26,11 +36,11 @@ public class UI_ShopSaleItem : UI_Base
         SaleItemCountText,
     }
 
-    UI_InvenItem _invenItem;
-    int _saleItemCount = 0;
+    private UI_InvenItem    _invenItem;             // 인벤토리 슬롯
+    private Image           _icon;
 
-    Image _icon;
-    string _itemCountText;
+    private int             _saleItemCount = 0;     // 판매될 개수
+    private string          _itemCountText;
 
     public override bool Init()
     {
@@ -53,10 +63,12 @@ public class UI_ShopSaleItem : UI_Base
     {
         _invenItem = invenItem;
         _saleItemCount = subItemCount;
+        _icon = _invenItem.icon;
 
+        // 판매할 인벤토리의 슬롯 잠그기
         _invenItem.IsLock = true;
 
-        _icon = _invenItem.icon;
+        // 소비 아이템이면 개수 활성화
         if (invenItem.item is UseItemData)
             _itemCountText = _saleItemCount.ToString();
         else
@@ -66,6 +78,7 @@ public class UI_ShopSaleItem : UI_Base
     // 판매 진행
     public void GetSale()
     {
+        // 장비면 강화 확인 후 판매
         if ((_invenItem.item is EquipmentData) == true)
         {
             EquipmentData equipment = _invenItem.item as EquipmentData;
@@ -74,12 +87,14 @@ public class UI_ShopSaleItem : UI_Base
         else
             Managers.Game.Gold += _invenItem.item.itemPrice * _saleItemCount;
 
+        // 판매된 슬롯에 개수 차감
         _invenItem.SetCount(-_saleItemCount);
 
         Clear();
     }
 
-    void OnClickCloseButton()
+    // 판매 등록 취소
+    private void OnClickCloseButton()
     {
         Managers.Game._playScene._shop.saleList.Remove(this);
 

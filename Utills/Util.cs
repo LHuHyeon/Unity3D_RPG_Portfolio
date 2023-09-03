@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 활용도
+/*
+ * File :   Util.cs
+ * Desc :   기능 활용
+ */
+
 public class Util
 {
     // 컴포넌트 찾은 후 추가하기

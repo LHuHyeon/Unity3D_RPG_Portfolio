@@ -4,18 +4,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
-[ 스킬 Slot 스크립트 ]
-1. 스킬 Slot의 부모 스크립트다.
-*/
+ * File :   UI_SkillSlot.cs
+ * Desc :   모든 Skill 관련 슬롯은 해당 클래스를 상속 받는다.
+ *
+ & Functions
+ &  [Protected]
+ &  : OnBeginDragSlot() - 슬롯 드래그 시작
+ &  : OnDragSlot()      - 슬롯 드래그 진행
+ &  : OnEndDragSlot()   - 슬롯 드래그 끝
+ *
+ */
 
 public class UI_SkillSlot : UI_Slot
 {
-    public SkillData skillData;
-
-    public override void SetInfo()
-    {
-        base.SetInfo();
-    }
+    public SkillData        skillData;
 
     // 스킬이 등록된 상태라면 마우스로 들기 가능.
     protected override void OnBeginDragSlot(PointerEventData eventData)

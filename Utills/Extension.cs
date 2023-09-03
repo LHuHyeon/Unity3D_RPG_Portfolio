@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-// 확장
+/*
+ * File :   Extension.cs
+ * Desc :   기능 확장
+ */
+
 public static class Extension
 {
     public static T GetOrAddComponent<T>(this GameObject go) where T : UnityEngine.Component

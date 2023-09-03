@@ -6,15 +6,29 @@ using TMPro;
 using UnityEngine.EventSystems;
 
 /*
-[ 소비아이템 Slot 스크립트 ]
-1. PlayScene 하단에 있는 소비아이템 slot이다.
-2. 각 담당 key가 있고 아이템이 등록되면 player는 해당 key의 아이템을 사용할 수 있다.
-*/
+ * File :   UI_UseItemSlot.cs
+ * Desc :   Scene UI의 하단 퀵슬롯에서 소비아이템바로 사용되며
+ *          아이템 적용될 시 key를 눌러 아이템을 사용할 수 있다.
+ *
+ & Functions
+ &  [Public]
+ &  : SetInfo()         - 기능 설정
+ &  : AddItem()         - 아이템 등록
+ &  : ClearSlot()       - 초기화
+ &
+ &  [Protected]
+ &  : OnEndDragSlot()   - 마우스 클릭을 해제하면 "초기화"
+ &  : OnDropSlot()      - 현재 슬롯에 마우스 클릭을 때면 "아이템 등록"
+ &  : ChangeSlot()      - 슬롯 교체
+ *
+ */
 
 public class UI_UseItemSlot : UI_ItemDragSlot
 {
-    public int key;
-    public TextMeshProUGUI keyText;
+    public int                  key;
+
+    [SerializeField]
+    private TextMeshProUGUI     keyText;
 
     public override void SetInfo()
     {
@@ -27,6 +41,16 @@ public class UI_UseItemSlot : UI_ItemDragSlot
             UseItemData useItem = Managers.Game.UseItemBarList[key];
             AddItem(useItem, useItem.itemCount);
         }
+    }
+
+    public override void AddItem(ItemData _item, int count = 1)
+    {
+        base.AddItem(_item, count);
+
+        if (Managers.Game.UseItemBarList.ContainsKey(key) == false)
+            Managers.Game.UseItemBarList.Add(key, _item as UseItemData);
+        else
+            Managers.Game.UseItemBarList[key] = _item as UseItemData;
     }
 
     protected override void OnEndDragSlot(PointerEventData eventData)
@@ -81,16 +105,6 @@ public class UI_UseItemSlot : UI_ItemDragSlot
         // 기존에 온 슬롯 삭제시키기 
         if (itemSlot is UI_UseItemSlot) (itemSlot as UI_UseItemSlot).ClearSlot();
         if (itemSlot is UI_InvenItem) (itemSlot as UI_InvenItem).ClearSlot();
-    }
-
-    public override void AddItem(ItemData _item, int count = 1)
-    {
-        base.AddItem(_item, count);
-
-        if (Managers.Game.UseItemBarList.ContainsKey(key) == false)
-            Managers.Game.UseItemBarList.Add(key, _item as UseItemData);
-        else
-            Managers.Game.UseItemBarList[key] = _item as UseItemData;
     }
 
     public override void ClearSlot()

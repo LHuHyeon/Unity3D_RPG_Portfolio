@@ -16,9 +16,9 @@ using UnityEngine.UI;
  &  : ClearSlot()       - 초기화
  &
  &  [Protected]
- &  : OnClickSlot()     - 슬롯 우클릭 시                       (장비 해제)
- &  : OnEndDragSlot()   - 마우스 클릭을 해제한 위치가 UI라면    (인벤으로 보내기)
- &  : OnDropSlot()      - 현재 슬롯에 마우스 클릭을 때면        (장비 장착)
+ &  : OnClickSlot()     - 슬롯 우클릭 시 "장비 해제"
+ &  : OnEndDragSlot()   - 마우스 클릭을 해제한 위치가 UI라면 "인벤으로 보내기"
+ &  : OnDropSlot()      - 현재 슬롯에 마우스 클릭을 때면 "장비 장착"
  &  : ChangeSlot()      - 슬롯 교체
  &
  &  [Private]

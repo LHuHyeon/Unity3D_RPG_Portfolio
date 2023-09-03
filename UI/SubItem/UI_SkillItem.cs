@@ -5,10 +5,25 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
-[ 스킬 Slot 스크립트 ]
-1. 스킬 Popup의 slot이다.
-2. 레벨이 충족되면 스킬을 활성화할 수 있고, SkillBar에 드래그드랍하여 등록이 가능하다.
-*/
+ * File :   UI_SkillItem.cs
+ * Desc :   UI_SkillPopup.cs에서 사용되며 스킬을 저장한다.
+ *          레벨이 충족 되면 우클릭을 통해 스킬을 활성화할 수 있다.
+ *
+ & Functions
+ &  [Public]
+ &  : SetInfo()         - 기능 설정
+ &  : ClearSlot()       - 초기화
+ &
+ &  [Protected]
+ &  : OnClickSlot()     - 우클릭하여 스킬 활성화
+ &  : OnBeginDragSlot() - 슬롯 드래그 시작
+ &  : OnDragSlot()      - 슬롯 드래그 진행
+ &  : OnEndDragSlot()   - 슬롯 드래그 끝
+ &
+ &  [Prviate]
+ &  : LevelCheck()      - 스킬 레벨 확인
+ *
+ */
 
 public class UI_SkillItem : UI_SkillSlot
 {
@@ -22,13 +37,16 @@ public class UI_SkillItem : UI_SkillSlot
         SkillLevelText,
     }
 
-    public int skillId;
+    [SerializeField]
+    private int     skillId;
 
     public override void SetInfo()
     {
+        // 자식 객체 불러오기
         BindObject(typeof(Gameobjects));
         BindText(typeof(Texts));
 
+        // 게임데이터에 스킬 아이디 존재 확인
         if (Managers.Data.Skill.TryGetValue(skillId, out skillData) == false)
             Debug.Log($"SkillData {skillId} : Failed");
 
@@ -38,6 +56,7 @@ public class UI_SkillItem : UI_SkillSlot
         // 시작 시 스킬이 흭득 상태인지 확인
         foreach(SkillData skill in Managers.Game.CurrentSkill)
         {
+            // 획득 상태면 Lock 해제
             if (skillId == skill.skillId)
             {
                 skillData.isLock = skill.isLock;
@@ -74,12 +93,14 @@ public class UI_SkillItem : UI_SkillSlot
 
     protected override void OnBeginDragSlot(PointerEventData eventData)
     {
-        if (skillData.isLock == false) base.OnBeginDragSlot(eventData);
+        if (skillData.isLock == false)
+            base.OnBeginDragSlot(eventData);
     }
 
     protected override void OnDragSlot(PointerEventData eventData)
     {
-        if (skillData.isLock == false) base.OnDragSlot(eventData);
+        if (skillData.isLock == false)
+            base.OnDragSlot(eventData);
     }
 
     protected override void OnEndDragSlot(PointerEventData eventData)
@@ -89,13 +110,5 @@ public class UI_SkillItem : UI_SkillSlot
     }
 
     // 스킬 레벨 체크
-    bool LevelCheck()
-    {
-        if (Managers.Game.Level >= skillData.minLevel)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    private bool LevelCheck() { return Managers.Game.Level >= skillData.minLevel; }
 }

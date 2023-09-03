@@ -9,9 +9,9 @@ using UnityEngine.EventSystems;
  *
  & Functions
  &  [Protected]
- &  : OnBeginDragSlot()     - 드래그를 시작할 때 DragSlot 생성
- &  : OnDragSlot()          - 드래그 중일 때 드래그 방향으로 DragSlot 이동
- &  : OnEndDragSlot()       - 드래그가 끝나면 DragSlot 초기화
+ &  : OnBeginDragSlot()     - 드래그 시작 "DragSlot 생성"
+ &  : OnDragSlot()          - 드래그 진행 "드래그 방향으로 DragSlot 이동"
+ &  : OnEndDragSlot()       - 드래그 종료 "DragSlot 초기화"
  &  : ChangeSlot()          - 슬롯 교체
  *
  */
