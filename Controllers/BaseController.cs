@@ -42,14 +42,13 @@ public abstract class BaseController : MonoBehaviour
     protected Animator      anim;
     protected RaycastHit    hit;
 
-    // 캐릭터 상태에 따라 애니메이션이 작동하는 _state의 프로퍼티
+    // 캐릭터 상태에 따라 애니메이션 작동
     public virtual Define.State State
     {
         get { return _state; }
         set {
             _state = value;
 
-            // anim.CrossFade(재생 클립 이름, 바뀌는데에 지연 시간, 레이어, 재생 시작 시점)
             switch (_state)
             {
                 case Define.State.Moving:

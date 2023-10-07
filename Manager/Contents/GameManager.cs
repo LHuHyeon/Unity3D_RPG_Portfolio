@@ -449,8 +449,8 @@ public class GameManager
     }
 
     // 플레이어가 NPC와 상호작용할 때 슬롯 기능을 각각에 맞게 수행
-    public Action<UI_InvenItem> _getSlotInteract;
-    public void GetSlotInteract(UI_InvenItem invenSlot)
+    public Action<UI_InvenSlot> _getSlotInteract;
+    public void GetSlotInteract(UI_InvenSlot invenSlot)
     {
         if (_getSlotInteract.IsNull() == false)
             _getSlotInteract.Invoke(invenSlot);

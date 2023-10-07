@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /*
- * File :   UI_InvenItem.cs
+ * File :   UI_InvenSlot.cs
  * Desc :   UI_InvenPopup.cs에서 생성되며  인벤토리 안에서 아이템을 관리하는 Slot
  *
  & Functions
@@ -27,7 +27,7 @@ using UnityEngine.UI;
  *
  */
 
-public class UI_InvenItem : UI_ItemDragSlot
+public class UI_InvenSlot : UI_ItemDragSlot
 {
     enum GameObjects { Lock, }
 
@@ -126,12 +126,12 @@ public class UI_InvenItem : UI_ItemDragSlot
         // 어떤 슬롯에서 왔는지 체크
         switch (dragSlot)
         {
-            case UI_UpgradeItem upgradeSlot:            // 업그레이드 Slot
+            case UI_UpgradeSlot upgradeSlot:            // 업그레이드 Slot
             {
-                AddSlot<UI_UpgradeItem>(upgradeSlot);
+                AddSlot<UI_UpgradeSlot>(upgradeSlot);
             }
             break;
-            case UI_ArmorItem armorSlot:                // 방어구 Slot
+            case UI_ArmorSlot armorSlot:                // 방어구 Slot
             {
                 // 현재 아이템이 같은 종류의 방어구라면 교체
                 if (ItemTypeCheck<ArmorItemData>() == true)
@@ -143,10 +143,10 @@ public class UI_InvenItem : UI_ItemDragSlot
                     }
                 }
 
-                AddSlot<UI_ArmorItem>(armorSlot);
+                AddSlot<UI_ArmorSlot>(armorSlot);
             }
             break;
-            case UI_WeaponItem weaponSlot:              // 무기 Slot
+            case UI_WeaponSlot weaponSlot:              // 무기 Slot
             {
                 // 현재 아이템이 무기라면 교체
                 if (ItemTypeCheck<WeaponItemData>() == true)
@@ -155,7 +155,7 @@ public class UI_InvenItem : UI_ItemDragSlot
                     return;
                 }
 
-                AddSlot<UI_WeaponItem>(weaponSlot);
+                AddSlot<UI_WeaponSlot>(weaponSlot);
             }
             break;
             case UI_UseItemSlot useSlot:                // 소비 Slot
@@ -163,7 +163,7 @@ public class UI_InvenItem : UI_ItemDragSlot
                 AddSlot<UI_UseItemSlot>(useSlot, useSlot.itemCount);
             }
             break;
-            case UI_InvenItem invenSlot:                // 인벤 Slot
+            case UI_InvenSlot invenSlot:                // 인벤 Slot
             {
                 // 두 슬롯의 아이템이 같은 아이템일 경우 개수 체크
                 if (item == invenSlot.item && (invenSlot.item is UseItemData))
@@ -194,7 +194,7 @@ public class UI_InvenItem : UI_ItemDragSlot
         int _tempItemCount = itemCount;
 
         // 인벤 가져오기
-        UI_InvenItem invenSlot = itemSlot as UI_InvenItem;
+        UI_InvenSlot invenSlot = itemSlot as UI_InvenSlot;
 
         // 새로 받은 슬롯 Add
         AddItem(invenSlot.item, invenSlot.itemCount);

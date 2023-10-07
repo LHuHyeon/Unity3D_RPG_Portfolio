@@ -31,7 +31,7 @@ public class UI_SkillPopup : UI_Popup
     {
         if (base.Init() == false)
             return false;
-    
+
         // 자식 객체 불러오기
         BindObject(typeof(Gameobjects));
 
@@ -66,7 +66,7 @@ public class UI_SkillPopup : UI_Popup
     {
         // Title 잡고 인벤토리 이동
         RectTransform skillPopupPos = GetObject((int)Gameobjects.Background).GetComponent<RectTransform>();
-        GetObject((int)Gameobjects.Title).BindEvent((PointerEventData eventData)=>
+        GetObject((int)Gameobjects.Title).BindEvent((PointerEventData eventData) =>
         {
             skillPopupPos.anchoredPosition = new Vector2
             (
@@ -76,13 +76,13 @@ public class UI_SkillPopup : UI_Popup
         }, Define.UIEvent.Drag);
 
         // Order 설정
-        GetObject((int)Gameobjects.Background).BindEvent((PointerEventData eventData)=>
+        GetObject((int)Gameobjects.Background).BindEvent((PointerEventData eventData) =>
         {
             Managers.UI.SetOrder(GetComponent<Canvas>());
         }, Define.UIEvent.Click);
 
         // Exit 버튼
-        GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData)=>
+        GetObject((int)Gameobjects.ExitButton).BindEvent((PointerEventData eventData) =>
         {
             Managers.UI.ClosePopupUI(this);
         }, Define.UIEvent.Click);

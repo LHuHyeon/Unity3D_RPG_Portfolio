@@ -145,7 +145,7 @@ public class UI_UpgradePopup : UI_Popup
         Clear();
 
         // 강화 슬롯 초기화
-        GetObject((int)Gameobjects.ItemSlot).GetComponent<UI_UpgradeItem>().ClearSlot();
+        GetObject((int)Gameobjects.ItemSlot).GetComponent<UI_UpgradeSlot>().ClearSlot();
 
         Managers.Game.IsInteract = false;
         

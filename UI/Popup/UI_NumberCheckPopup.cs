@@ -43,7 +43,7 @@ public class UI_NumberCheckPopup : UI_Popup
     private int             itemMaxCount = 0;   // 최대 개수
 
     private Action<int>     _onClickYesButton;  // 확인 버튼 누를 시 호출
-    private UI_InvenItem    _invenItem;         // 인벤토리 슬롯
+    private UI_InvenSlot    _invenItem;         // 인벤토리 슬롯
 
     [SerializeField]
     private Slider          numberSlider;
@@ -83,7 +83,7 @@ public class UI_NumberCheckPopup : UI_Popup
     }
 
     // 인벤토리 받으며 세팅 (판매할 때 사용 중)
-    public void SetInfo(UI_InvenItem invenItem, Action<int> onClickYesButton)
+    public void SetInfo(UI_InvenSlot invenItem, Action<int> onClickYesButton)
     {
         _onClickYesButton = onClickYesButton;
         _invenItem = invenItem;

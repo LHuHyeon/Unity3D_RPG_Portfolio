@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 /*
- * File :   UI_UpgradeItem.cs
+ * File :   UI_UpgradeSlot.cs
  * Desc :   UI_UpgradePopup.cs에서 사용되며 장비를 업그레이드하는 등록 Slot
  *
  & Functions
@@ -24,7 +24,7 @@ using UnityEngine.EventSystems;
  *
  */
 
-public class UI_UpgradeItem : UI_ItemDragSlot
+public class UI_UpgradeSlot : UI_ItemDragSlot
 {
     public override void SetInfo()
     {
@@ -89,11 +89,11 @@ public class UI_UpgradeItem : UI_ItemDragSlot
         Managers.Game._playScene._upgrade.RefreshUI(equipment);
         AddItem(itemSlot.item);
 
-        (itemSlot as UI_InvenItem).ClearSlot();
+        (itemSlot as UI_InvenSlot).ClearSlot();
     }
 
     // 인벤토리로 부터 우클릭으로 장비 받기
-    private void GetSlotInteract(UI_InvenItem invenSlot)
+    private void GetSlotInteract(UI_InvenSlot invenSlot)
     {
         // UI_UpgradePopup Prefab이 활성화 되어 있다면
         if (Managers.Game._playScene._upgrade.gameObject.activeSelf == true)

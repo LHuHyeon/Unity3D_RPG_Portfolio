@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 /*
- * File :   UI_ShopBuyItem.cs
+ * File :   UI_ShopBuySlot.cs
  * Desc :   UI_ShopPopup.cs에서 생성되며 아이템 구매 버튼을 담당
  *
  & Functions
@@ -19,7 +19,7 @@ using UnityEngine.EventSystems;
  *
  */
 
-public class UI_ShopBuyItem : UI_ItemSlot
+public class UI_ShopBuySlot : UI_ItemSlot
 {
     enum Images
     {

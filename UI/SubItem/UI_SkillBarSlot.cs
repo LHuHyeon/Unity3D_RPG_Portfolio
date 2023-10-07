@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 /*
- * File :   UI_SkillBarItem.cs
+ * File :   UI_SkillBarSlot.cs
  * Desc :   Scene UI의 하단 퀵슬롯에서 스킬바로 사용되며
  *          스킬이 적용될 시 key를 눌러 스킬 사용이 가능하다.
  *
@@ -27,7 +27,7 @@ using UnityEngine.EventSystems;
  *
  */
 
-public class UI_SkillBarItem : UI_SkillSlot
+public class UI_SkillBarSlot : UI_SkillSlot
 {
     enum Images
     {
@@ -110,8 +110,8 @@ public class UI_SkillBarItem : UI_SkillSlot
         IsCoolDown(skillData.isCoolDown);
 
         // 기존 슬롯 삭제
-        if (skillSlot is UI_SkillBarItem)
-            (skillSlot as UI_SkillBarItem).ClearSlot();
+        if (skillSlot is UI_SkillBarSlot)
+            (skillSlot as UI_SkillBarSlot).ClearSlot();
     }
 
     private void SetSkill(SkillData skill)

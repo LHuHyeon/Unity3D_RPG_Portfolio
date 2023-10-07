@@ -55,8 +55,8 @@ public class UI_EqStatPopup : UI_Popup
         StatText,
     }
 
-    public List<UI_ArmorItem>   armorSlots; // 방어구 슬롯 List
-    public UI_WeaponItem        weaponSlot; // 무기 슬롯
+    public List<UI_ArmorSlot>   armorSlots; // 방어구 슬롯 List
+    public UI_WeaponSlot        weaponSlot; // 무기 슬롯
 
     private bool                isClickStatButton = false;  // 스탯 버튼을 눌렀는가?
 
@@ -65,7 +65,7 @@ public class UI_EqStatPopup : UI_Popup
         if (base.Init() == false)
             return false;
 
-        armorSlots = new List<UI_ArmorItem>();
+        armorSlots = new List<UI_ArmorSlot>();
         popupType = Define.Popup.Equipment;
 
         // 자식 객체 불러오기
@@ -101,7 +101,7 @@ public class UI_EqStatPopup : UI_Popup
             ArmorItemData armor = itemSlot.item as ArmorItemData;
 
             // 장비 부위 체크
-            foreach(UI_ArmorItem armorSlot in armorSlots)
+            foreach(UI_ArmorSlot armorSlot in armorSlots)
             {
                 // 같은 부위면 장착
                 if (armorSlot.armorType == armor.armorType)

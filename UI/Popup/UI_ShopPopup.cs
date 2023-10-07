@@ -48,8 +48,8 @@ public class UI_ShopPopup : UI_Popup
 
     public Define.ShopType          shopType = Define.ShopType.Unknown;
 
-    public List<UI_ShopSaleItem>    saleList;     // 판매 슬롯
-    private List<UI_ShopBuyItem>    buyList;       // 구매 슬롯
+    public List<UI_ShopSaleSlot>    saleList;     // 판매 슬롯
+    private List<UI_ShopBuySlot>    buyList;       // 구매 슬롯
 
     private int                     currentShopId = 0;
 
@@ -105,7 +105,7 @@ public class UI_ShopPopup : UI_Popup
         // 구매 슬롯 채우기
         for(int i=0; i<itemIdList.Count; i++)
         {
-            UI_ShopBuyItem buyShop = Managers.UI.MakeSubItem<UI_ShopBuyItem>(parent: GetObject((int)Gameobjects.BuyList).transform);
+            UI_ShopBuySlot buyShop = Managers.UI.MakeSubItem<UI_ShopBuySlot>(parent: GetObject((int)Gameobjects.BuyList).transform);
             buyShop.SetInfo(Managers.Data.Item[itemIdList[i]]);
             buyList.Add(buyShop);
         }
@@ -152,7 +152,7 @@ public class UI_ShopPopup : UI_Popup
     }
 
     // 판매 아이템 등록
-    private void SetSaleItemRegister(UI_InvenItem invenSlot)
+    private void SetSaleItemRegister(UI_InvenSlot invenSlot)
     {
         // 장비거나 개수가 한개라면 판매 등록
         if (invenSlot.item is EquipmentData || invenSlot.itemCount == 1)
@@ -174,18 +174,18 @@ public class UI_ShopPopup : UI_Popup
     }
 
     // 판매 등록
-    private void SaleItemRegister(UI_InvenItem invenItem, int count = 1)
+    private void SaleItemRegister(UI_InvenSlot invenItem, int count = 1)
     {
         // 판매 슬로 생성 후 아이템 등록
-        UI_ShopSaleItem saleItem = Managers.UI.MakeSubItem<UI_ShopSaleItem>(GetObject((int)Gameobjects.SaleList).transform);
+        UI_ShopSaleSlot saleItem = Managers.UI.MakeSubItem<UI_ShopSaleSlot>(GetObject((int)Gameobjects.SaleList).transform);
         saleItem.SetInfo(invenItem, count);
         saleList.Add(saleItem);
     }
 
     private void SetInfo()
     {
-        buyList = new List<UI_ShopBuyItem>();
-        saleList = new List<UI_ShopSaleItem>();
+        buyList = new List<UI_ShopBuySlot>();
+        saleList = new List<UI_ShopSaleSlot>();
 
         // 판매 슬롯 초기화
         foreach(Transform child in GetObject((int)Gameobjects.SaleList).transform)
@@ -229,8 +229,8 @@ public class UI_ShopPopup : UI_Popup
             UI_Slot dragSlot = UI_DragSlot.instance.dragSlotItem;
 
             // 인벤토리 슬롯 확인
-            if (dragSlot is UI_InvenItem == true)
-                SetSaleItemRegister(dragSlot as UI_InvenItem);
+            if (dragSlot is UI_InvenSlot == true)
+                SetSaleItemRegister(dragSlot as UI_InvenSlot);
 
         }, Define.UIEvent.Drop);
 
@@ -244,7 +244,7 @@ public class UI_ShopPopup : UI_Popup
     }
 
     // 우클릭 아이템 받기
-    private void GetSlotInteract(UI_InvenItem invenSlot)
+    private void GetSlotInteract(UI_InvenSlot invenSlot)
     {
         // 판매 리스트가 현재 활성화 중이라면
         if (GetObject((int)Gameobjects.SaleList).activeSelf == true)

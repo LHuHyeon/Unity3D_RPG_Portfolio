@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
- * File :   UI_SkillItem.cs
+ * File :   UI_SkillPopupSlot.cs
  * Desc :   UI_SkillPopup.cs에서 사용되며 스킬을 저장한다.
  *          레벨이 충족 되면 우클릭을 통해 스킬을 활성화할 수 있다.
  *
@@ -25,7 +25,7 @@ using UnityEngine.EventSystems;
  *
  */
 
-public class UI_SkillItem : UI_SkillSlot
+public class UI_SkillPopupSlot : UI_SkillSlot
 {
     enum Gameobjects
     {

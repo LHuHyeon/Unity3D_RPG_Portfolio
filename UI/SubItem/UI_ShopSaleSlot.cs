@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /*
- * File :   UI_ShopSaleItem.cs
+ * File :   UI_ShopSaleSlot.cs
  * Desc :   UI_ShopPopup.cs에서 생성되며 아이템 판매가 등록됐을 때 기능
  *
  & Functions
@@ -19,7 +19,7 @@ using UnityEngine.UI;
  *
  */
 
-public class UI_ShopSaleItem : UI_Base
+public class UI_ShopSaleSlot : UI_Base
 {
     enum Buttons
     {
@@ -36,7 +36,7 @@ public class UI_ShopSaleItem : UI_Base
         SaleItemCountText,
     }
 
-    private UI_InvenItem    _invenItem;             // 인벤토리 슬롯
+    private UI_InvenSlot    _invenItem;             // 인벤토리 슬롯
     private Image           _icon;
 
     private int             _saleItemCount = 0;     // 판매될 개수
@@ -59,7 +59,7 @@ public class UI_ShopSaleItem : UI_Base
         return true;
     }
 
-    public void SetInfo(UI_InvenItem invenItem, int subItemCount = 1)
+    public void SetInfo(UI_InvenSlot invenItem, int subItemCount = 1)
     {
         _invenItem = invenItem;
         _saleItemCount = subItemCount;

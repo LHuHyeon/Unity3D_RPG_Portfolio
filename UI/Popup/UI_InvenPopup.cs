@@ -40,7 +40,7 @@ public class UI_InvenPopup : UI_Popup
         GoldText,
     }
 
-    private List<UI_InvenItem>  invenSlots;         // 슬롯 List
+    private List<UI_InvenSlot>  invenSlots;         // 슬롯 List
 
     [SerializeField]
     private int                 invenCount = 42;    // 인벤 슬롯 개수
@@ -50,7 +50,7 @@ public class UI_InvenPopup : UI_Popup
         if (base.Init() == false)
             return false;
 
-        invenSlots = new List<UI_InvenItem>();
+        invenSlots = new List<UI_InvenSlot>();
         popupType = Define.Popup.Inventory;
 
         // 자식 객체 불러오기
@@ -79,7 +79,7 @@ public class UI_InvenPopup : UI_Popup
     // 인벤토리 자리 확인
     public bool IsInvenMaxSize()
     {
-        foreach(UI_InvenItem slot in invenSlots)
+        foreach(UI_InvenSlot slot in invenSlots)
         {
             if (slot.item.IsNull() == true)
                 return false;
@@ -92,7 +92,7 @@ public class UI_InvenPopup : UI_Popup
     public bool AcquireItem(ItemData item, int count = 1)
     {
         // 모든 슬롯 확인
-        foreach(UI_InvenItem slot in invenSlots)
+        foreach(UI_InvenSlot slot in invenSlots)
         {
             // 슬롯에 아이템이 없으면
             if (slot.item.IsNull() == true)
@@ -163,7 +163,7 @@ public class UI_InvenPopup : UI_Popup
         for(int i=0; i<invenCount; i++)
         {
             // 슬롯 생성
-            UI_InvenItem invenItem = Managers.UI.MakeSubItem<UI_InvenItem>(parent: grid.transform);
+            UI_InvenSlot invenItem = Managers.UI.MakeSubItem<UI_InvenSlot>(parent: grid.transform);
 
             // 슬롯 위치 번호
             invenItem.invenNumber = i;

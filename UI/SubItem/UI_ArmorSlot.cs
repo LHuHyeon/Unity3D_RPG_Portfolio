@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /*
- * File :   UI_ArmorItem.cs
+ * File :   UI_ArmorSlot.cs
  * Desc :   UI_EqStatPopup.cs의 하위객체에서 사용되며 방어구 아이템을 장착/해제할 수 있다.
  *
  & Functions
@@ -27,7 +27,7 @@ using UnityEngine.UI;
  *
  */
 
-public class UI_ArmorItem : UI_ItemDragSlot
+public class UI_ArmorSlot : UI_ItemDragSlot
 {
     public Define.ArmorType     armorType = Define.ArmorType.Unknown;
     public ArmorItemData        armorItem;
@@ -141,7 +141,7 @@ public class UI_ArmorItem : UI_ItemDragSlot
         AddItem(itemSlot.item);
 
         // 기존 장비 인벤 이동
-        UI_InvenItem inven = itemSlot as UI_InvenItem;
+        UI_InvenSlot inven = itemSlot as UI_InvenSlot;
         if (_tempItem.IsNull() == false)
             inven.AddItem(_tempItem);
         else

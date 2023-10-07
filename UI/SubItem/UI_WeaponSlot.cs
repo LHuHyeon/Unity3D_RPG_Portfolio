@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
- * File :   UI_WeaponItem.cs
+ * File :   UI_WeaponSlot.cs
  * Desc :   UI_EqStatPopup.cs의 하위객체에서 사용되며 무기 아이템을 장착/해제할 수 있다.
  *
  & Functions
@@ -26,7 +26,7 @@ using UnityEngine.EventSystems;
  *
  */
 
-public class UI_WeaponItem : UI_ItemDragSlot
+public class UI_WeaponSlot : UI_ItemDragSlot
 {
     [SerializeField]
     private Define.WeaponType   weaponType = Define.WeaponType.Unknown;
@@ -161,7 +161,7 @@ public class UI_WeaponItem : UI_ItemDragSlot
         AddItem(itemSlot.item);
 
         // 기존 장비 인벤 이동
-        UI_InvenItem inven = itemSlot as UI_InvenItem;
+        UI_InvenSlot inven = itemSlot as UI_InvenSlot;
         if (_tempItem.IsNull() == false)
             inven.AddItem(_tempItem);
         else

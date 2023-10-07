@@ -75,7 +75,7 @@ public class UI_UseItemSlot : UI_ItemDragSlot
                 return;
 
             // 같은 종류의 슬롯이거나 인벤 슬롯일 때 통과
-            if ((dragSlot is UI_UseItemSlot) == true || (dragSlot is UI_InvenItem) == true)
+            if ((dragSlot is UI_UseItemSlot) == true || (dragSlot is UI_InvenSlot) == true)
                 ChangeSlot(dragSlot as UI_ItemSlot);
         }
     }
@@ -104,7 +104,7 @@ public class UI_UseItemSlot : UI_ItemDragSlot
 
         // 기존에 온 슬롯 삭제시키기 
         if (itemSlot is UI_UseItemSlot) (itemSlot as UI_UseItemSlot).ClearSlot();
-        if (itemSlot is UI_InvenItem) (itemSlot as UI_InvenItem).ClearSlot();
+        if (itemSlot is UI_InvenSlot) (itemSlot as UI_InvenSlot).ClearSlot();
     }
 
     public override void ClearSlot()
