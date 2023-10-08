@@ -58,11 +58,14 @@
     - WorldSpace
         - 피격 데미지 Effect, 체력 Bar, 이름 Bar, 네비게이션, 퀘스트 Icon
 
-## 5. 기능 블로그
+## 5. 기술 문서
++ https://docs.google.com/presentation/d/1jDW8nCpSjZaHVW5mElcxNQNMD1Ai76vOAgrC0b9hbXA/edit?usp=sharing
+
+## 6. 기능 블로그
 + https://lhuhyeon.github.io/categories/3d-unity-my-rpg/
 
-## 6. 플레이 영상
+## 7. 플레이 영상
 + https://www.youtube.com/watch?v=mVkvd95_ezo
 
-## 7. 게임 다운로드
+## 8. 게임 다운로드
 + https://drive.google.com/drive/folders/1X-CLIYkAuRs7gpSAvIbH40HmISIl5l-7
