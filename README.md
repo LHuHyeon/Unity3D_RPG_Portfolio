@@ -17,6 +17,7 @@
 
 + Window 10
 
+<!--
 ## 3. 사용 기술
 | 기술 | 설명 |
 |:---:|:---|
@@ -26,8 +27,9 @@
 | Save | 게임 데이터를 모두 json으로 변환하여 관리 ( Dictionary 포함 ) |
 | Object Pooling | 자주 사용되는 객체는 Pool 관리하여 재사용 |
 | UI 자동화 | 유니티 UI 상에서 컴포넌트로 Drag&Drop되는 일을 줄이기 위한 편의성 |
+-->
 
-## 4. 구현 기능
+## 3. 구현 기능
 + Object
     - 플레이어:
         - 전사
@@ -58,14 +60,14 @@
     - WorldSpace
         - 피격 데미지 Effect, 체력 Bar, 이름 Bar, 네비게이션, 퀘스트 Icon
 
-## 5. 기술 문서
+## 4. 기술 문서
 + https://docs.google.com/presentation/d/1jDW8nCpSjZaHVW5mElcxNQNMD1Ai76vOAgrC0b9hbXA/edit?usp=sharing
 
-## 6. 기능 블로그
+## 5. 기능 블로그
 + https://lhuhyeon.github.io/categories/3d-unity-my-rpg/
 
-## 7. 플레이 영상
+## 6. 플레이 영상
 + https://www.youtube.com/watch?v=mVkvd95_ezo
 
-## 8. 게임 다운로드
+## 7. 게임 다운로드
 + https://drive.google.com/drive/folders/1X-CLIYkAuRs7gpSAvIbH40HmISIl5l-7
