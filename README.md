@@ -17,7 +17,6 @@
 
 + Window 10
 
-<!--
 ## 3. 사용 기술
 | 기술 | 설명 |
 |:---:|:---|
@@ -27,7 +26,6 @@
 | Save | 게임 데이터를 모두 json으로 변환하여 관리 ( Dictionary 포함 ) |
 | Object Pooling | 자주 사용되는 객체는 Pool 관리하여 재사용 |
 | UI 자동화 | 유니티 UI 상에서 컴포넌트로 Drag&Drop되는 일을 줄이기 위한 편의성 |
--->
 
 ## 3. 구현 기능
 + Object
@@ -63,7 +61,7 @@
 ## 4. 기술 문서
 + https://docs.google.com/presentation/d/1jDW8nCpSjZaHVW5mElcxNQNMD1Ai76vOAgrC0b9hbXA/edit?usp=sharing
 
-## 5. 기능 블로그
+## 5. History 블로그
 + https://lhuhyeon.github.io/categories/3d-unity-my-rpg/
 
 ## 6. 플레이 영상
