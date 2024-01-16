@@ -1,4 +1,5 @@
 # [Unity 3D] RPG Game Portfolio
+## 1. 소개
 
 <div align="center">
 
@@ -11,7 +12,6 @@
 
 </div>
 
-## 1. 소개
 + Unity 3D RPG 게임입니다.
 
 + 게임 개발자가 되기 위해 스스로 역량을 쌓고 처음으로 제작한 RPG 포트폴리오입니다.
@@ -22,12 +22,16 @@
 
 + 형상관리: Git SourceTree
 
+<br>
+
 ## 2. 개발 환경
 + Unity 2021.3.21f1 LTS
 
 + C#
 
 + Window 10
+
+<br>
 
 ## 3. 사용 기술
 | 기술 | 설명 |
@@ -38,6 +42,8 @@
 | Save | 게임 데이터를 모두 json으로 변환하여 관리 ( Dictionary 포함 ) |
 | Object Pooling | 자주 사용되는 객체는 Pool 관리하여 재사용 |
 | UI 자동화 | 유니티 UI 상에서 컴포넌트로 Drag&Drop되는 일을 줄이기 위한 편의성 |
+
+<br>
 
 ## 4. 구현 기능
 + Object
@@ -69,6 +75,8 @@
         - 확인창, 개수 입력창, 메뉴창, 부활창, 슬롯Tip창, Scene Load창
     - WorldSpace
         - 피격 데미지 Effect, 체력 Bar, 이름 Bar, 네비게이션, 퀘스트 Icon
+
+<br>
 
 ## 5. 기술 문서
 + https://docs.google.com/presentation/d/1jDW8nCpSjZaHVW5mElcxNQNMD1Ai76vOAgrC0b9hbXA/edit?usp=sharing
